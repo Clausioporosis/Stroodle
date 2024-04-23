@@ -1,10 +1,6 @@
 .dashboard-container {
     background-color: #575757;
-    /* Dunkle Hintergrundfarbe */
     color: #fff;
-    /* Helle Textfarbe */
     min-height: 100vh;
-    /* Mindesthöhe auf 100% der Ansichtshöhe setzen */
     width: 100%;
-    /* Breite auf 100% setzen */
 }

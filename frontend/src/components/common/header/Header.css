@@ -1,6 +1,5 @@
 .header-container {
     position: relative;
-    z-index: 2;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -8,7 +7,7 @@
     padding-top: 20px;
     background-color: #333;
     color: #ddd;
-    border-bottom: 3px solid #777777;
+    border-bottom: 2px solid #777777;
 }
 
 .logo {
@@ -56,25 +55,24 @@
 .dropdown-menu {
     position: absolute;
     right: 0;
-    top: 100%;
+    top: 75px;
+    width: 120px;
     background-color: #333;
     border: 1px solid #777777;
-    border-top: 3px solid #777777;
-    width: 120px;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-20px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
-    z-index: 1;
 }
 
 .dropdown-open {
     opacity: 1;
-    /* Volle Sichtbarkeit */
-    visibility: visible;
-    /* Klickbar */
     transform: translateY(0px);
-    /* Bewege in sichtbare Position */
+    pointer-events: auto;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.dropdown-close {
+    opacity: 0;
+    transform: translateY(-20px);
+    pointer-events: none;
+    transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 .dropdown-menu a {
@@ -84,3 +82,10 @@
     padding: 10px;
     border-bottom: 1px solid #777;
 }
+
+/*
+TODO (css time waste)
+menu button and option highlights
+dashboard link highlight
+css beautification
+*/
