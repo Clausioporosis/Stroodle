@@ -2,6 +2,7 @@
     width: 100%;
     table-layout: fixed;
     border-spacing: 0;
+    user-select: none;
 }
 
 .week-view-table td {
@@ -20,10 +21,15 @@
 
 .quarterCell {
     height: 25%;
+    box-sizing: border-box;
 }
 
 .quarterCell:not(:last-child) {
     border-bottom: 0.5px solid #6a6a6a;
+}
+
+.quarterCell:hover {
+    background-color: #bcedff;
 }
 
 .scroll-container {

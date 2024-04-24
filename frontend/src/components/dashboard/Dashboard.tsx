@@ -1,7 +1,7 @@
 import React from 'react';
 import './Dashboard.css';
 import Header from "../common/header/Header"
-import WeekView from "../shared/WeekView"
+import WeekView from "../shared/weekView/WeekView"
 
 const Dashboard: React.FC = () => {
     return (
