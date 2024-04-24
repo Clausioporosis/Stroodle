@@ -1,0 +1,31 @@
+.week-view-table {
+    width: 100%;
+    table-layout: fixed;
+    border-spacing: 0;
+}
+
+.week-view-table td {
+    border: 0.5px solid #000;
+    background-color: #fff;
+    height: 30px;
+    padding: 0;
+    margin: 0;
+}
+
+.week-view-table th {
+    position: sticky;
+    top: 0;
+    background-color: #313131;
+}
+
+.quarterCell {
+    height: 25%;
+}
+
+.quarterCell:not(:last-child) {
+    border-bottom: 0.5px solid #6a6a6a;
+}
+
+.scroll-container {
+    overflow: auto;
+}
