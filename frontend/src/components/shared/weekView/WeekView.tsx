@@ -43,7 +43,7 @@ const WeekView: React.FC<WeekViewProps> = ({ width, visibleRows }) => {
         setSelectionEnd(end);
 
         if (selectionStart === end) {
-            alert(`Mouse clicked on ${day} at ${formatMinutesIntoTime(selectionStart as number)}`);
+            alert(`Clicked on ${day} at ${formatMinutesIntoTime(selectionStart as number)}`);
         } else {
             alert(`Selection from ${selectionStartDay} ${formatMinutesIntoTime(selectionStart as number)} to ${day} ${formatMinutesIntoTime(selectionEnd as number)}`);
         }
