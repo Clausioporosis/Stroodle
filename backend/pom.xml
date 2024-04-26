@@ -49,11 +49,11 @@
 		</dependency>
 
 		<!-- Keycloack Version noch eintragen -->
-		<dependency>
+		<!--<dependency>
 			<groupId>org.keycloack</groupId>
 			<artifactId>keycloack-spring-boot-starter</artifactId>
 			<version>24.0.3</version>
-		</dependency>
+		</dependency> -->
     </dependencies>
 
 	<build>
