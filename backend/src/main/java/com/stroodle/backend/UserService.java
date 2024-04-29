@@ -25,5 +25,9 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
+    public List<User> getUserByName(String name) {
+        return userRepository.findByName(name);
+    }
+
     // Methoden zur Verwaltung von Benutzern
 }

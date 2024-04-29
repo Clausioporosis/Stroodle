@@ -8,6 +8,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
+    // HTTP-Methoden für Benutzer
     @Autowired
     private UserService userService;
 
@@ -23,11 +24,15 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/search")
+    @GetMapping("/search/email")
     public ResponseEntity<List<User>> findByEmail(@RequestParam String email) {
         List<User> users = userService.getUserByEmail(email);
         return ResponseEntity.ok(users);
     }
 
-    // HTTP-Methoden für Benutzerressourcen
+    @GetMapping("/search/name")
+    public ResponseEntity<List<User>> findByName(@RequestParam String name) {
+        List<User> users = userService.getUserByName(name);
+        return ResponseEntity.ok(users);
+    }
 }
