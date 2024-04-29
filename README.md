@@ -3,7 +3,9 @@
 ## Postman URLs
 User anlegen:
 http://localhost:8080/api/users
+
 JSON Format:
+```json
 {
 	"id": "123"
 	"name": "Max Mustermann"
@@ -24,7 +26,9 @@ http://localhost:8080/api/users/search/name?name=Max Mustermann
 
 Poll anlegen:
 http://localhost:8080/api/polls
+
 JSON Format:
+```json
 {
 	"id": "123"
 	"title": "Example"
