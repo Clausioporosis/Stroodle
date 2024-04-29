@@ -3,6 +3,7 @@ package com.stroodle.backend;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PollService {
@@ -19,6 +20,10 @@ public class PollService {
 
     public List<Poll> getAllPolls() {
         return pollRepository.findAll();
+    }
+
+    public Optional<Poll> getPollById(String id) {
+        return pollRepository.findById(id);
     }
 
     public List<Poll> getPollByTitle(String title) {

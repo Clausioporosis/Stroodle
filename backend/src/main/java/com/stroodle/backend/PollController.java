@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/polls")
@@ -22,6 +23,13 @@ public class PollController {
     public ResponseEntity<List<Poll>> getAllPolls() {
         List<Poll> polls = pollService.getAllPolls();
         return ResponseEntity.ok(polls);
+    }
+
+    @GetMapping("/search/{id}")
+    public ResponseEntity<Poll> getPollById(@PathVariable String id) {
+        Optional<Poll> poll = pollService.getPollById(id);
+        return poll.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/search/title")
