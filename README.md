@@ -11,6 +11,7 @@ JSON Format:
 	"name": "Max Mustermann"
 	"email": "max@example.com"
 }
+```json
 
 Alle User ausgeben:
 http://localhost:8080/api/users
@@ -34,6 +35,7 @@ JSON Format:
 	"title": "Example"
 	"description": "new poll"
 }
+```json
 
 Alle Polls ausgeben:
 http://localhost:8080/api/polls
