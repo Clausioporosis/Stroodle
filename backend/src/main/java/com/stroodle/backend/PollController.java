@@ -43,4 +43,17 @@ public class PollController {
         List<Poll> polls = pollService.getPollByDescription(description);
         return ResponseEntity.ok(polls);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Poll> updatePoll(@PathVariable String id, @RequestBody Poll poll) {
+        poll.setId(id);
+        Poll updatedPoll = pollService.updatePoll(poll);
+        return ResponseEntity.ok(updatedPoll);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePoll(@PathVariable String id) {
+        pollService.deletePoll(id);
+        return ResponseEntity.noContent().build();
+    }
 }

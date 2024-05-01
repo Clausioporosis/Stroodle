@@ -34,5 +34,18 @@ public class UserService {
         return userRepository.findByName(name);
     }
 
+    public User updateUser(User user) {
+        userRepository.findById(user.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + user.getId()));
+        return userRepository.save(user);
+    }
+
+    public void deleteUser(String id) {
+        if (!userRepository.existsById(id)) {
+            throw new ResourceNotFoundException("User not found with id " + id);
+        }
+        userRepository.deleteById(id);
+    }
+
     // Methoden zur Verwaltung von Benutzern
 }

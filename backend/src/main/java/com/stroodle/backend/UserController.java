@@ -43,4 +43,17 @@ public class UserController {
         List<User> users = userService.getUserByName(name);
         return ResponseEntity.ok(users);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable String id, @RequestBody User user) {
+        user.setId(id);
+        User updatedUser = userService.updateUser(user);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable String id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
 }
