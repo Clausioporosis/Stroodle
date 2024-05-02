@@ -4,14 +4,22 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 @Document(collection = "users")
 public class User {
     @Id
     private String id;
 
+    @NotBlank(message = "Name darf nicht leer sein.")
+    @Size(min = 2, max = 30, message = "Name muss zwischen 2 und 30 Zeichen lang sein.")
     @Field("name")
     private String name;
 
+    @NotBlank(message = "Email darf nicht leer sein.")
+    @Email(message = "Ungültige Email-Adresse.")
     @Field("email")
     private String email;
 

@@ -1,6 +1,7 @@
 package com.stroodle.backend;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,9 @@ public class UserService {
     }
 
     public User createUser(User user) {
+        if (user.getId() != null && userRepository.existsById(user.getId())) {
+            throw new DataIntegrityViolationException("User with ID " + user.getId() + " already exists.");
+        }
         return userRepository.save(user);
     }
 

@@ -4,14 +4,20 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 @Document(collection = "polls")
 public class Poll {
     @Id
     private String id;
 
+    @NotBlank(message = "Titel darf nicht leer sein.")
+    @Size(min = 2, max = 50, message = "Titel muss zwischen 2 und 50 Zeichen lang sein.")
     @Field("title")
     private String title;
 
+    @Size(max = 100, message = "Beschreibung darf nicht länger als 100 Zeichen sein.")
     @Field("description")
     private String description;
 

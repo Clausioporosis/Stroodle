@@ -3,6 +3,9 @@ package com.stroodle.backend;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import jakarta.validation.Valid;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -14,7 +17,7 @@ public class PollController {
     private PollService pollService;
 
     @PostMapping
-    public ResponseEntity<Poll> addPoll(@RequestBody Poll poll) {
+    public ResponseEntity<Poll> addPoll(@Valid @RequestBody Poll poll) {
         Poll savedPoll = pollService.createPoll(poll);
         return ResponseEntity.ok(savedPoll);
     }

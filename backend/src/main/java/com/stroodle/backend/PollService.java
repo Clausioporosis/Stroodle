@@ -1,6 +1,7 @@
 package com.stroodle.backend;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,9 @@ public class PollService {
     }
 
     public Poll createPoll(Poll poll) {
+        if (poll.getId() != null && pollRepository.existsById(poll.getId())) {
+            throw new DataIntegrityViolationException("Poll with ID " + poll.getId() + " already exists.");
+        }
         return pollRepository.save(poll);
     }
 
