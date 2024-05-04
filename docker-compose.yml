@@ -1,0 +1,12 @@
+version: '3'
+services:
+  stroodle-backend:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/StroodleDatabase
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"

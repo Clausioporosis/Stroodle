@@ -7,9 +7,9 @@ http://localhost:8080/api/users
 JSON Format:
 ```json
 {
-	"id": "123"
-	"name": "Max Mustermann"
-	"email": "max@example.com"
+    "id": "123",
+    "name": "Max Mustermann",
+    "email": "max@example.com"
 }
 ```
 
@@ -31,8 +31,8 @@ http://localhost:8080/api/polls
 JSON Format:
 ```json
 {
-	"id": "123"
-	"title": "Example"
+	"id": "123",
+	"title": "Example",
 	"description": "new poll"
 }
 ```
