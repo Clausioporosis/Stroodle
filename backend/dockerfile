@@ -1,5 +1,5 @@
-# Start with a base image containing Java runtime
-FROM openjdk:17-jdk-alpine
+# Start with a base image containing Java runtime and Maven
+FROM maven:3.8.3-openjdk-17-slim
 
 # Add Maintainer Info
 LABEL maintainer="example@example.com"
@@ -7,11 +7,26 @@ LABEL maintainer="example@example.com"
 # Make port 8080 available to the world outside this container
 EXPOSE 8080
 
-# The application's jar file
-ARG JAR_FILE=target/backend-0.0.1-SNAPSHOT.jar
+# Create app directory
+RUN mkdir /api-app
+WORKDIR /api-app
+
+# Install app dependencies
+COPY pom.xml ./
+RUN mvn dependency:go-offline
+
+# Bundle app source
+COPY . .
 
 # Add the application's jar to the container
+ARG JAR_FILE=target/backend-0.0.1-SNAPSHOT.jar
 ADD ${JAR_FILE} stroodle-backend.jar
 
-# Run the jar file 
-ENTRYPOINT ["java","-jar","/stroodle-backend.jar"]
+# Copy the entrypoint script into the image
+COPY docker-entrypoint.sh ./
+
+# Make the entrypoint script executable
+RUN chmod +x docker-entrypoint.sh
+
+# Run the app
+ENTRYPOINT ["sh", "./docker-entrypoint.sh"]

@@ -4,10 +4,12 @@ services:
     build: ./backend
     ports:
       - "8080:8080"
+      - "5005:5005"
     volumes:
-      - ./backend:/app
+      - ./backend:/api-app
     environment:
       - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/StroodleDatabase
+    command: [ "sh", "./docker-entrypoint.sh" ]
   stroodle-frontend:
     build: ./frontend
     ports:
