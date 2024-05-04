@@ -23,19 +23,34 @@ public class UserService {
     }
 
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        List<User> users = userRepository.findAll();
+        if (users.isEmpty()) {
+            throw new ResourceNotFoundException("No users found.");
+        }
+        return users;
     }
 
     public Optional<User> getUserById(String id) {
+        if (!userRepository.existsById(id)) {
+            throw new ResourceNotFoundException("User not found with id " + id);
+        }
         return userRepository.findById(id);
     }
 
     public List<User> getUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+        List<User> users = userRepository.findByEmail(email);
+        if (users.isEmpty()) {
+            throw new ResourceNotFoundException("No user found with the email " + email);
+        }
+        return users;
     }
 
     public List<User> getUserByName(String name) {
-        return userRepository.findByName(name);
+        List<User> users = userRepository.findByName(name);
+        if (users.isEmpty()) {
+            throw new ResourceNotFoundException("No user found with the name " + name);
+        }
+        return users;
     }
 
     public User updateUser(User user) {

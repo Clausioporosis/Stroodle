@@ -23,19 +23,34 @@ public class PollService {
     }
 
     public List<Poll> getAllPolls() {
-        return pollRepository.findAll();
+        List<Poll> polls = pollRepository.findAll();
+        if (polls.isEmpty()) {
+            throw new ResourceNotFoundException("No polls found.");
+        }
+        return polls;
     }
 
     public Optional<Poll> getPollById(String id) {
+        if (!pollRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Poll not found with id " + id);
+        }
         return pollRepository.findById(id);
     }
 
     public List<Poll> getPollByTitle(String title) {
-        return pollRepository.findByTitle(title);
+        List<Poll> polls = pollRepository.findByTitle(title);
+        if (polls.isEmpty()) {
+            throw new ResourceNotFoundException("No poll found with the title " + title);
+        }
+        return polls;
     }
 
     public List<Poll> getPollByDescription(String description) {
-        return pollRepository.findByDescription(description);
+        List<Poll> polls = pollRepository.findByDescription(description);
+        if (polls.isEmpty()) {
+            throw new ResourceNotFoundException("No poll found with the description " + description);
+        }
+        return polls;
     }
 
     public Poll updatePoll(Poll poll) {
