@@ -15,7 +15,7 @@ const Header: React.FC = () => {
                 <a href="/availability">Verfügbarkeit</a>
                 <a href="/profile">Profil</a>
                 <a href="/settings">Einstellungen</a>
-                <a href="/logout">Abmelden</a>
+                <a href="/login">Abmelden</a>
             </div>
             <header className="header-container">
                 <img src="./stroodle-logo-white.png" alt="Logo" className="logo" />
