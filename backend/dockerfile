@@ -18,17 +18,5 @@ RUN mvn dependency:go-offline
 # Bundle app source
 COPY . .
 
-# Build the application
-RUN mvn clean package -DskipTests
-
-# Add the application's jar to the container
-ADD ${JAR_FILE} stroodle-backend.jar
-
-# Copy the entrypoint script into the image
-COPY docker-entrypoint.sh ./
-
-# Make the entrypoint script executable
-RUN chmod +x docker-entrypoint.sh
-
-# Run the app
-ENTRYPOINT ["sh", "./docker-entrypoint.sh"]
+# Add a system property to enable spring devtools
+CMD ["mvn", "spring-boot:run", "-Dspring-boot.run.jvmArguments=-Dspring.devtools.restart.enabled=true"]
