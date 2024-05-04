@@ -1,7 +1,8 @@
 import { Poll } from '../models/Poll';
+import { mockPolls } from '../tests/MockData';
 
 class PollService {
-    private polls: Poll[] = [];
+    private polls: Poll[] = [...mockPolls];
 
     createPoll(poll: Poll): Poll {
         this.polls.push(poll);

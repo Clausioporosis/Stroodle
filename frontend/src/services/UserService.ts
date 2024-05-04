@@ -1,7 +1,8 @@
 import { User } from '../models/User';
+import { mockUsers } from '../tests/MockData';
 
 class UserService {
-    private users: User[] = [];
+    private users: User[] = [...mockUsers];
 
     updateUserName(id: string, newName: string): User | undefined {
         const user = this.users.find(u => u.id === id);
