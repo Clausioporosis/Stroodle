@@ -1,0 +1,8 @@
+apiVersion: skaffold/v2beta15
+kind: Config
+build:
+  artifacts:
+    - image: stroodle-backend
+      context: backend
+      docker:
+        dockerfile: dockerfile

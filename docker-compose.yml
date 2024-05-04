@@ -4,8 +4,17 @@ services:
     build: ./backend
     ports:
       - "8080:8080"
+    volumes:
+      - ./backend:/app
     environment:
       - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/StroodleDatabase
+  stroodle-frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - /app/node_modules
+      - ./frontend:/app
   mongo:
     image: mongo
     ports:
