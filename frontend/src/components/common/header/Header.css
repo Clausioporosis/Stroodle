@@ -1,0 +1,94 @@
+.header-container {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    padding-top: 20px;
+    background-color: #333;
+    color: #ddd;
+    border-bottom: 2px solid #777777;
+}
+
+.logo {
+    width: 150px;
+    height: auto;
+}
+
+.right-section {
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-button {
+    background: none;
+    border: none;
+    margin-left: 0px;
+}
+
+.dropdown-button svg {
+    fill: #ddd;
+    width: 30px;
+    height: auto;
+}
+
+.profile-icon {
+    background: none;
+    border: none;
+    margin-right: 10px;
+}
+
+.profile-icon svg {
+    fill: #ddd;
+    width: 40px;
+    height: auto;
+}
+
+.page-links a {
+    text-decoration: none;
+    color: #ddd;
+    margin-right: 35px;
+    font-size: 20px;
+    font-family: "Inter", Arial, Helvetica, sans-serif;
+}
+
+.dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: 75px;
+    width: 120px;
+    background-color: #333;
+    border: 1px solid #777777;
+}
+
+.dropdown-open {
+    opacity: 1;
+    transform: translateY(0px);
+    pointer-events: auto;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.dropdown-close {
+    opacity: 0;
+    transform: translateY(-20px);
+    pointer-events: none;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.dropdown-menu a {
+    display: block;
+    color: #ddd;
+    text-decoration: none;
+    padding: 10px;
+    border-bottom: 1px solid #777;
+}
+
+/*
+TODO (wasting more time with css)
+button highlighting on hover
+animations?
+decide for a color scheme (one context color, two darker tones)
+profile icon should show initals of user, or picture if available
+shadow on header and dropdown?
+names for magic numbers
+*/
