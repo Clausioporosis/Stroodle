@@ -11,10 +11,10 @@ const mockUsers = [
 // Poll Mock data
 const mockPolls = [
     new Poll(
-        '1',
+        '0',
         mockUsers[0].id,
         'Erstes Meeting',
-        'Beschreibung für das erste Meeting...',
+        'Beschreibung für das erste Meeting... + ToDo: formatierung vom Textfeld verbessern -> max 3 Zeilen, rest mit . . . + schöneres padding',
         30,
         [new Date(2024, 4, 8, 10), new Date(2024, 4, 8, 12), new Date(2024, 4, 9, 13, 30)],
         [mockUsers[1], mockUsers[2]]
@@ -29,7 +29,7 @@ const mockPolls = [
         [mockUsers[1]]
     ),
     new Poll(
-        '1',
+        '2',
         mockUsers[0].id,
         'Dritte Meeting',
         'Beschreibung für das dritte Meeting...',
