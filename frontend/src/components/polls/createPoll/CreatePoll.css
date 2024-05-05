@@ -1,6 +1,83 @@
 .create-poll-container {
-    background-color: #222222;
+    background-color: #171717;
     color: #ddd;
     min-height: 100vh;
     width: 100%;
+}
+
+.create-poll-content-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 80px);
+}
+
+.left-section-container {
+    width: 700px;
+    height: 600px;
+    border-radius: 10px;
+    border: 1px solid #444444;
+    background-color: #202020;
+
+    position: relative;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.left-section-container h1 {
+    position: relative;
+    color: #bbbbbb;
+    margin: auto;
+    width: 100%;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #444444;
+    margin-bottom: 6px;
+}
+
+.left-section-container h3 {
+    position: relative;
+    color: #bbbbbb;
+    margin: auto;
+    width: 100%;
+    padding-bottom: 4px;
+    margin-bottom: 6px;
+}
+
+.left-section-container .more-settings-container {
+    display: flex;
+    align-items: center;
+}
+
+.left-section-container .more-settings-header {
+    width: 30%;
+}
+
+.left-section-container .header-border {
+    width: 70%;
+    border-bottom: 1px solid #bbbbbb;
+}
+
+.left-section-container input {
+    font-size: 16px;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: none;
+    background-color: #333;
+    color: #ddd;
+    box-sizing: border-box;
+}
+
+.left-section-container textarea {
+    font-size: 16px;
+    margin-bottom: 6px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    background-color: #333;
+    color: #ddd;
+    box-sizing: border-box;
 }
