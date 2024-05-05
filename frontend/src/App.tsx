@@ -19,7 +19,7 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/login" element={<RedirectToDashboard />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/createPoll" element={<CreatePoll />} />
+        <Route path="/polls/create" element={<CreatePoll />} />
         <Route path="/" element={<RedirectToDashboard />} />
       </Routes>
     </Router>

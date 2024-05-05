@@ -19,9 +19,7 @@ const Dashboard: React.FC = () => {
     }, []);
 
     const handleCreateClick = () => {
-        if (window.confirm("Möchtest du eine neue Umfrage erstellen?")) {
-            navigate('/polls/create');
-        }
+        navigate('/polls/create');
     };
 
     const handleEditClick = (pollId: string) => {

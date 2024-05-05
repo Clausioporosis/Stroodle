@@ -1,5 +1,5 @@
 .dashboard-container {
-    background-color: #575757;
+    background-color: #171717;
     color: #ddd;
     min-height: 100vh;
     width: 100%;
@@ -14,15 +14,16 @@
 
 .created-polls-tab-header {
     position: relative;
-    color: #ddd;
+    color: #bbbbbb;
     margin: auto;
     margin-left: 10px;
     margin-right: 10px;
     padding-bottom: 10px;
-    border-bottom: 2px solid #838383;
+    border-bottom: 1px solid #444444;
 }
 
 .plus-icon {
+    color: #999999;
     font-size: 35px;
     position: absolute;
     margin-right: -10px;
@@ -34,8 +35,8 @@
 }
 
 .plus-icon:hover {
-    background-color: #6b6b6b;
-    box-shadow: 0 0 0 0.1px #6b6b6b;
+    background-color: #444444;
+    box-shadow: 0 0 0 0.1px #444444;
 }
 
 .created-polls-tab {
@@ -43,8 +44,8 @@
     height: max-content;
     padding: 10px;
     border-radius: 10px;
-    border: 1px solid #838383;
-    background-color: #333;
+    border: 1px solid #444444;
+    background-color: #202020;
 }
 
 .created-polls-list {

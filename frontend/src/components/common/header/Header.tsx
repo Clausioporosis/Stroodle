@@ -18,7 +18,7 @@ const Header: React.FC = () => {
                 <a href="/login">Abmelden</a>
             </div>
             <header className="header-container">
-                <img src="./stroodle-logo-white.png" alt="Logo" className="logo" />
+                <img src={process.env.PUBLIC_URL + '/stroodle-logo-white.png'} alt="Logo" className="logo" />
                 <div className="right-section">
                     <div className="page-links">
                         <a href="/dashboard">Dashboard</a>

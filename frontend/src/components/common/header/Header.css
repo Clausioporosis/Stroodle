@@ -5,9 +5,9 @@
     align-items: center;
     padding: 10px;
     padding-top: 20px;
-    background-color: #333;
-    color: #ddd;
-    border-bottom: 2px solid #777777;
+    background-color: #171717;
+    color: #999999;
+    border-bottom: 1.5px solid #373737;
 }
 
 .logo {
@@ -27,7 +27,7 @@
 }
 
 .dropdown-button svg {
-    fill: #ddd;
+    fill: #999999;
     width: 30px;
     height: auto;
 }
@@ -39,14 +39,14 @@
 }
 
 .profile-icon svg {
-    fill: #ddd;
+    fill: #999999;
     width: 40px;
     height: auto;
 }
 
 .page-links a {
     text-decoration: none;
-    color: #ddd;
+    color: #bbbbbb;
     margin-right: 35px;
     font-size: 20px;
     font-family: "Inter", Arial, Helvetica, sans-serif;
@@ -57,8 +57,8 @@
     right: 0;
     top: 75px;
     width: 120px;
-    background-color: #333;
-    border: 1px solid #777777;
+    background-color: #171717;
+    border: 1px solid #373737;
 }
 
 .dropdown-open {
@@ -77,8 +77,8 @@
 
 .dropdown-menu a {
     display: block;
-    color: #ddd;
+    color: #bbbbbb;
     text-decoration: none;
     padding: 10px;
-    border-bottom: 1px solid #777;
+    border-bottom: 1px solid #373737;
 }

@@ -3,9 +3,9 @@
     width: 350px;
     height: 160px;
 
-    background-color: #434343;
-    border: 1px solid #838383;
-    border-radius: 10px;
+    background-color: #303030;
+    border: 1px solid #373737;
+    border-radius: 5px;
     padding-top: 5px;
     padding-left: 10px;
 
@@ -13,7 +13,7 @@
 }
 
 .poll-card-title {
-    color: #ddd;
+    color: #bbbbbb;
     font-size: 24px;
 
     margin: 0;
@@ -24,7 +24,7 @@
 }
 
 .poll-card-description {
-    color: #ddd;
+    color: #bbbbbb;
     font-size: 16px;
 
     margin: 0;
@@ -46,7 +46,7 @@
 
 .poll-card-duration,
 .poll-card-expire {
-    color: #ddd;
+    color: #bbbbbb;
     font-size: 16px;
 
     margin: 10px;
@@ -69,14 +69,17 @@
     position: absolute;
     right: 0;
     top: 50%;
+    height: 93%;
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
-    align-items: center;
+    justify-content: space-between;
+    margin: 0;
     margin-right: 10px;
 }
 
 .poll-card-actions .icon {
+    color: #bbbbbb;
     margin: 0px;
     margin-right: -4px;
     padding: 6px;
@@ -102,6 +105,6 @@
     height: 1px;
     margin-right: -4px;
     border: none;
-    background-color: #ddd;
+    background-color: #bbbbbb;
     vertical-align: middle;
 }
