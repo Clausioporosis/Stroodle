@@ -33,11 +33,11 @@ const CreatedPollCard: React.FC<CreatedPollCardProps> = ({ id, title, descriptio
             <div className="poll-card-bottom-left">
                 <p className="poll-card-expire">
                     <Hourglass className="hourglass-icon" />
-                    expiring time
+                    Frist zum Abstimmen
                 </p>
                 <p className="poll-card-duration">
                     <ClockHistory className="clock-icon" />
-                    {duration} minutes
+                    {duration} Minuten
                 </p>
             </div>
             <div className="poll-card-actions">

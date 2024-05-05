@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Dashboard.css';
+
+import { useNavigate } from 'react-router-dom';
 import Header from "../common/header/Header"
 
 import { PlusSquare } from 'react-bootstrap-icons';
@@ -10,13 +12,16 @@ import CreatedPollCard from './createdPollCard/CreatedPollCard';
 
 const Dashboard: React.FC = () => {
     const [polls, setPolls] = useState<Poll[]>([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         setPolls(PollService.getAllPolls());
     }, []);
 
     const handleCreateClick = () => {
-        alert(`Create poll`);
+        if (window.confirm("Möchtest du eine neue Umfrage erstellen?")) {
+            navigate('/polls/create');
+        }
     };
 
     const handleEditClick = (pollId: string) => {

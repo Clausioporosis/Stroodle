@@ -22,7 +22,7 @@ const mockPolls = [
     new Poll(
         '1',
         mockUsers[0].id,
-        'Zweite Meeting',
+        'Zweites Meeting',
         'Beschreibung für das zweite Meeting...',
         45,
         [new Date(2024, 4, 8, 10), new Date(2024, 4, 8, 12), new Date(2024, 4, 9, 13, 30)],
@@ -31,7 +31,7 @@ const mockPolls = [
     new Poll(
         '2',
         mockUsers[0].id,
-        'Dritte Meeting',
+        'Drittes Meeting',
         'Beschreibung für das dritte Meeting...',
         15,
         [new Date(2024, 4, 8, 10), new Date(2024, 4, 8, 12), new Date(2024, 4, 9, 13, 30)],
@@ -40,7 +40,7 @@ const mockPolls = [
     new Poll(
         '3',
         mockUsers[0].id,
-        'Vierte Meeting',
+        'Viertes Meeting',
         'Beschreibung für das vierte Meeting...',
         15,
         [new Date(2024, 4, 8, 10), new Date(2024, 4, 8, 12), new Date(2024, 4, 9, 13, 30)],
@@ -49,7 +49,7 @@ const mockPolls = [
     new Poll(
         '4',
         mockUsers[0].id,
-        'Fünfte Meeting',
+        'Fünftes Meeting',
         'Beschreibung für das fünfte Meeting...',
         15,
         [new Date(2024, 4, 8, 10), new Date(2024, 4, 8, 12), new Date(2024, 4, 9, 13, 30)],
@@ -58,7 +58,7 @@ const mockPolls = [
     new Poll(
         '5',
         mockUsers[0].id,
-        'Sechste Meeting',
+        'Sechstes Meeting',
         'Beschreibung für das sechste Meeting...',
         15,
         [new Date(2024, 4, 8, 10), new Date(2024, 4, 8, 12), new Date(2024, 4, 9, 13, 30)],
@@ -67,7 +67,7 @@ const mockPolls = [
     new Poll(
         '6',
         mockUsers[0].id,
-        'Siebte Meeting',
+        'Siebtes Meeting',
         'Beschreibung für das siebte Meeting...',
         15,
         [new Date(2024, 4, 8, 10), new Date(2024, 4, 8, 12), new Date(2024, 4, 9, 13, 30)],
@@ -76,7 +76,7 @@ const mockPolls = [
     new Poll(
         '7',
         mockUsers[0].id,
-        'Achte Meeting',
+        'Achtes Meeting',
         'Beschreibung für das achte Meeting...',
         15,
         [new Date(2024, 4, 8, 10), new Date(2024, 4, 8, 12), new Date(2024, 4, 9, 13, 30)],
@@ -85,7 +85,7 @@ const mockPolls = [
     new Poll(
         '8',
         mockUsers[0].id,
-        'Neunte Meeting',
+        'Neuntes Meeting',
         'Beschreibung für das neunte Meeting...',
         15,
         [new Date(2024, 4, 8, 10), new Date(2024, 4, 8, 12), new Date(2024, 4, 9, 13, 30)],
