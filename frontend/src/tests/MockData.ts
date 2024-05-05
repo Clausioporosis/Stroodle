@@ -13,7 +13,7 @@ const mockPolls = [
     new Poll(
         '0',
         mockUsers[0].id,
-        'Erstes Meeting Erstes Meeting Erstes MeetingErstes Meeting Erstes Meeting',
+        'Ersteeeeeeees Meeeeeeeeeting',
         'Beschreibung für das erste Meeting...',
         30,
         [new Date(2024, 4, 8, 10), new Date(2024, 4, 8, 12), new Date(2024, 4, 9, 13, 30)],
@@ -33,6 +33,60 @@ const mockPolls = [
         mockUsers[0].id,
         'Dritte Meeting',
         'Beschreibung für das dritte Meeting...',
+        15,
+        [new Date(2024, 4, 8, 10), new Date(2024, 4, 8, 12), new Date(2024, 4, 9, 13, 30)],
+        [mockUsers[2]]
+    ),
+    new Poll(
+        '3',
+        mockUsers[0].id,
+        'Vierte Meeting',
+        'Beschreibung für das vierte Meeting...',
+        15,
+        [new Date(2024, 4, 8, 10), new Date(2024, 4, 8, 12), new Date(2024, 4, 9, 13, 30)],
+        [mockUsers[2]]
+    ),
+    new Poll(
+        '4',
+        mockUsers[0].id,
+        'Fünfte Meeting',
+        'Beschreibung für das fünfte Meeting...',
+        15,
+        [new Date(2024, 4, 8, 10), new Date(2024, 4, 8, 12), new Date(2024, 4, 9, 13, 30)],
+        [mockUsers[2]]
+    ),
+    new Poll(
+        '5',
+        mockUsers[0].id,
+        'Sechste Meeting',
+        'Beschreibung für das sechste Meeting...',
+        15,
+        [new Date(2024, 4, 8, 10), new Date(2024, 4, 8, 12), new Date(2024, 4, 9, 13, 30)],
+        [mockUsers[2]]
+    ),
+    new Poll(
+        '6',
+        mockUsers[0].id,
+        'Siebte Meeting',
+        'Beschreibung für das siebte Meeting...',
+        15,
+        [new Date(2024, 4, 8, 10), new Date(2024, 4, 8, 12), new Date(2024, 4, 9, 13, 30)],
+        [mockUsers[2]]
+    ),
+    new Poll(
+        '7',
+        mockUsers[0].id,
+        'Achte Meeting',
+        'Beschreibung für das achte Meeting...',
+        15,
+        [new Date(2024, 4, 8, 10), new Date(2024, 4, 8, 12), new Date(2024, 4, 9, 13, 30)],
+        [mockUsers[2]]
+    ),
+    new Poll(
+        '8',
+        mockUsers[0].id,
+        'Neunte Meeting',
+        'Beschreibung für das neunte Meeting...',
         15,
         [new Date(2024, 4, 8, 10), new Date(2024, 4, 8, 12), new Date(2024, 4, 9, 13, 30)],
         [mockUsers[2]]

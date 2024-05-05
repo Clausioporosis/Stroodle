@@ -8,6 +8,7 @@
     border-radius: 10px;
     padding-top: 5px;
     padding-left: 10px;
+
     margin: 10px;
 }
 
@@ -16,7 +17,7 @@
     font-size: 24px;
 
     margin: 0;
-    width: 90%;
+    width: 88%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

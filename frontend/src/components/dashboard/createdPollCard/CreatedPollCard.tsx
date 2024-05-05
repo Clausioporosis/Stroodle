@@ -21,7 +21,9 @@ const CreatedPollCard: React.FC<CreatedPollCardProps> = ({ id, title, descriptio
     };
 
     const handleDelete = () => {
-        onDeleteClick(id);
+        if (window.confirm("Bist du sicher, dass du diese Umfrage löschen möchtest?")) {
+            onDeleteClick(id);
+        }
     };
 
     return (
