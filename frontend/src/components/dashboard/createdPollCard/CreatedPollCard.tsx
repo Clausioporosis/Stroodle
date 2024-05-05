@@ -5,7 +5,25 @@ import './CreatedPollCard.css';
 import PollService from '../../../services/PollService';
 import { Poll } from '../../../models/Poll';
 
-const CreatedPollCard: React.FC<Poll> = ({ id, title, description, duration }) => {
+interface CreatedPollCardProps extends Poll {
+    onEditClick: (id: string) => void;
+    onShareClick: (id: string) => void;
+    onDeleteClick: (id: string) => void;
+}
+
+const CreatedPollCard: React.FC<CreatedPollCardProps> = ({ id, title, description, duration, onEditClick, onShareClick, onDeleteClick }) => {
+    const handleEdit = () => {
+        onEditClick(id);
+    };
+
+    const handleShare = () => {
+        onShareClick(id);
+    };
+
+    const handleDelete = () => {
+        onDeleteClick(id);
+    };
+
     return (
         <div className="poll-card">
             <h2 className="poll-card-title">{title}</h2>
@@ -21,11 +39,11 @@ const CreatedPollCard: React.FC<Poll> = ({ id, title, description, duration }) =
                 </p>
             </div>
             <div className="poll-card-actions">
-                <Pencil className="icon" />
+                <Pencil className="icon" onClick={handleEdit} />
                 <hr />
-                <Share className="icon" />
+                <Share className="icon" onClick={handleShare} />
                 <hr />
-                <Trash3 className="icon trash-icon" onClick={() => alert(id)} />
+                <Trash3 className="icon trash-icon" onClick={handleDelete} />
             </div>
         </div>
     );

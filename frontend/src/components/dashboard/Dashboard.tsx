@@ -13,6 +13,19 @@ const Dashboard: React.FC = () => {
         setPolls(PollService.getAllPolls());
     }, []);
 
+    const handleEditClick = (pollId: string) => {
+        alert(`Edit poll with id ${pollId}`);
+    };
+
+    const handleShareClick = (pollId: string) => {
+        alert(`Share poll with id ${pollId}`);
+    };
+
+    const handleDeleteClick = (pollId: string) => {
+        PollService.deletePollById(pollId);
+        setPolls([...PollService.getAllPolls()]);
+    };
+
     return (
         <div className="dashboard-container">
             <Header />
@@ -26,6 +39,9 @@ const Dashboard: React.FC = () => {
                     creatorId={poll.creatorId}
                     dates={poll.dates}
                     participants={poll.participants}
+                    onEditClick={handleEditClick}
+                    onShareClick={handleShareClick}
+                    onDeleteClick={handleDeleteClick}
                 />
             ))}
         </div>
