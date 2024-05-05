@@ -1,8 +1,6 @@
 package com.stroodle.backend;
 
 import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.HashMap;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -32,14 +30,16 @@ public class GlobalExceptionHandler {
 
     // Bad Request (Feld falsch ausgefüllt)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach(error -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ApiError> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        FieldError error = ex.getBindingResult().getFieldError();
+        String errorMessage = error != null ? error.getDefaultMessage() : "Validation error";
+
+        ApiError apiError = new ApiError(
+                HttpStatus.BAD_REQUEST,
+                errorMessage,
+                LocalDateTime.now());
+
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
     // Bad Request (ID schon vorhanden)

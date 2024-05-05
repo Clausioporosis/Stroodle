@@ -13,13 +13,13 @@ public class User {
     @Id
     private String id;
 
-    @NotBlank(message = "Name darf nicht leer sein.")
-    @Size(min = 2, max = 30, message = "Name muss zwischen 2 und 30 Zeichen lang sein.")
+    @NotBlank(message = "Name cannot be empty.")
+    @Size(min = 2, max = 30, message = "Name must be between 2 and 30 characters long.")
     @Field("name")
     private String name;
 
-    @NotBlank(message = "Email darf nicht leer sein.")
-    @Email(message = "Ungültige Email-Adresse.")
+    @NotBlank(message = "Email cannot be empty.")
+    @Email(message = "Invalid email address.")
     @Field("email")
     private String email;
 
