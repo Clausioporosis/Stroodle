@@ -6,6 +6,8 @@ import UserService from '../../../services/UserService';
 import { Poll } from '../../../models/Poll';
 import { User } from '../../../models/User';
 
+import SearchBar from './searchBar/SearchBar';
+
 const Dashboard: React.FC = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -16,31 +18,12 @@ const Dashboard: React.FC = () => {
     const [participantLimit, setParticipantLimit] = useState(false);
     const [reminder, setReminder] = useState(false);
 
-    const [searchQuery, setSearchQuery] = useState(''); // new state for search query
-    const [searchResults, setSearchResults] = useState<User[]>([]);
-
     useEffect(() => {
     }, []);
 
-    const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchQuery(e.target.value);
-        if (e.target.value !== '') {
-            const results = await UserService.getAllUsers();
-            const filteredResults = results.filter(user =>
-                user.firstname.toLowerCase().includes(e.target.value.toLowerCase()) ||
-                user.lastname.toLowerCase().includes(e.target.value.toLowerCase()) ||
-                user.email.toLowerCase().includes(e.target.value.toLowerCase())
-            );
-            setSearchResults(filteredResults);
-        } else {
-            setSearchResults([]);
-        }
+    const handleUserClick = (user: User) => {
+        setParticipants(prevParticipants => [...prevParticipants, user]);
     };
-
-    const handleAddParticipant = (user: User) => {
-        setParticipants([...participants, user]);
-    };
-
 
 
     return (
@@ -56,40 +39,20 @@ const Dashboard: React.FC = () => {
                         <textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Was muss man wissen?" />
                         <h3>Ort</h3>
                         <input type="text" value={location} onChange={e => setLocation(e.target.value)} placeholder="Wo wird es statt finden?" />
-                        <h3>Teilnehmer</h3>
-                        <input
-                            type="text"
-                            value={searchQuery}
-                            onChange={handleSearchChange}
-                            placeholder="Search participants..."
-                            list="user-list"
-                        />
-                        <datalist id="user-list">
-                            {searchResults.map(user => (
-                                <option key={user.id} value={user.firstname + ' ' + user.lastname + ' (' + user.email + ')'} />
-                            ))}
-                        </datalist>
 
+                        <div style={{ display: 'flex' }}>
+                            <h3>Teilnehmer</h3>
+                            <SearchBar onUserClick={handleUserClick} />
+                        </div>
+
+
+
+
+                        {/*
                         <div className="more-settings-container">
                             <h3 className="more-settings-header">Weitere Einstellungen</h3>
                             <div className="header-border"></div>
                         </div>
-                        {/*
-                        <input type="text" value={participants} onChange={e => setParticipants(e.target.value)} placeholder="Participants" />
-                        Additional participant search and add functionality
-                        <input type="text" value={duration} onChange={e => setDuration(e.target.value)} placeholder="Duration" />
-                        <label>
-                            <input type="checkbox" checked={timeLimit} onChange={e => setTimeLimit(e.target.checked)} />
-                            Time Limit
-                        </label>
-                        <label>
-                            <input type="checkbox" checked={participantLimit} onChange={e => setParticipantLimit(e.target.checked)} />
-                            Participant Limit
-                        </label>
-                        <label>
-                            <input type="checkbox" checked={reminder} onChange={e => setReminder(e.target.checked)} />
-                            Reminder
-                        </label>
                         */}
                     </form>
                 </div>

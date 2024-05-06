@@ -8,6 +8,14 @@ class UserService {
         return this.users;
     }
 
+    searchUsers(searchTerm: string): User[] {
+        return this.users.filter(user =>
+            user.firstname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.email.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    }
+
     getUserById(id: string): User | undefined {
         return this.users.find(user => user.id === id);
     }
