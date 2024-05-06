@@ -14,10 +14,7 @@ const Dashboard: React.FC = () => {
     const [description, setDescription] = useState('');
     const [location, setLocation] = useState('');
     const [participants, setParticipants] = useState<User[]>([]);
-    const [duration, setDuration] = useState('');
-    const [timeLimit, setTimeLimit] = useState(false);
-    const [participantLimit, setParticipantLimit] = useState(false);
-    const [reminder, setReminder] = useState(false);
+    const [duration, setDuration] = useState('15');
 
     useEffect(() => {
     }, []);
@@ -49,18 +46,28 @@ const Dashboard: React.FC = () => {
                         <h3>Ort</h3>
                         <input type="text" value={location} onChange={e => setLocation(e.target.value)} placeholder="Wo wird es statt finden?" />
 
-                        <div className='participants-section'>
-                            <h3>Teilnehmer</h3>
-                            <SearchBar onUserClick={addParticipant} />
-                            <AddedParticipants participants={participants} removeSelectedParticipant={removeParticipant} />
+                        <div className='lower-left-section'>
+
+                            <div className='participants-section'>
+                                <h3>Teilnehmer</h3>
+                                <SearchBar onUserClick={addParticipant} />
+                                <AddedParticipants participants={participants} removeSelectedParticipant={removeParticipant} />
+                            </div>
+
+                            <div className="more-settings-container">
+                                <h3>Weitere Einstellungen</h3>
+                                <div className="duration-container">
+                                    <span>Dauer des Meetings: </span>
+                                    <select value={duration} onChange={e => setDuration(e.target.value)}>
+                                        <option value="15">15 Minuten</option>
+                                        <option value="30">30 Minuten</option>
+                                        <option value="45">45 Minuten</option>
+                                        <option value="460">60 Minuten</option>
+                                    </select>
+                                </div>
+                            </div>
+
                         </div>
-
-
-                        <div className="more-settings-container">
-                            <h3 className="more-settings-header">Weitere Einstellungen</h3>
-                            <div className="more-settings-line"></div>
-                        </div>
-
                     </form>
                 </div>
                 <div className="right-section-container">

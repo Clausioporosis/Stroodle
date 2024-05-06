@@ -35,6 +35,9 @@
 .participant-initials {
     color: #171717;
     font-weight: bold;
+    width: 100%;
+    font-size: 18px;
+    margin-left: 6px;
 }
 
 .participant-info {
@@ -69,6 +72,10 @@
     align-items: center;
     justify-content: center;
     margin-top: 50px;
+}
+
+p {
+    margin: 0;
 }
 
 /*Scrollbar style*/

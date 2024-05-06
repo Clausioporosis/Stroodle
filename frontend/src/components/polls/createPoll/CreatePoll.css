@@ -5,9 +5,10 @@
     width: 100%;
 }
 
+
 .create-poll-content-container {
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
     min-height: calc(100vh - 80px);
 }
@@ -25,39 +26,37 @@
     flex-direction: column;
 }
 
-.left-section-container .search-bar-container {
+.right-section-container {
+    width: 700px;
+    height: 600px;
+    border-radius: 10px;
+    border: 1px solid #444444;
+    background-color: #202020;
+
+    position: relative;
+    padding: 10px;
     display: flex;
-    flex-direction: row;
-    align-items: center;
+    flex-direction: column;
 }
 
-.left-section-container .search-bar-header {
-    width: 20%;
-}
-
-.left-section-container .search-bar {
-    margin: 0px;
-    width: 100%;
-}
-
-.left-section-container .search-icon {}
-
-.left-section-container .more-settings-container {
+.lower-left-section {
     display: flex;
-    align-items: center;
+    height: 270px;
+
+
 }
 
-.left-section-container .more-settings-header {
-    width: 30%;
+.more-settings-container {
+    border-left: 1px solid #444444;
+    margin-left: 10px;
+    padding-left: 10px;
+    width: 50%;
+
+
 }
 
-.left-section-container .more-settings-line {
-    width: 70%;
-    border-bottom: 1px solid #bbbbbb;
-}
-
-/*CSS beautification*/
 .participants-section {
+
     width: 50%;
 }
 
@@ -74,14 +73,31 @@ input {
     height: 35px;
 }
 
-h3 {
-    position: relative;
-    color: #bbbbbb;
-    margin: auto;
+.duration-container {
+    display: flex;
     width: 100%;
-    font-size: medium;
-    padding-bottom: 6px;
-    font-weight: normal;
+    align-items: center;
+    margin-top: 5px;
+
+}
+
+span {
+    font-size: small;
+    width: 130px;
+    color: #bbbbbb;
+}
+
+select {
+    width: auto;
+    flex-grow: 0;
+    height: 25px;
+    background: #333333;
+    color: #bbbbbb;
+    border: none;
+    border-radius: 5px;
+    padding: 0 10px;
+    font-size: small;
+    outline: none;
 }
 
 h1 {
@@ -93,6 +109,15 @@ h1 {
     border-bottom: 1px solid #444444;
     margin-bottom: 6px;
     font-size: x-large;
+}
+
+h3 {
+    color: #bbbbbb;
+    margin: auto;
+    width: 100%;
+    font-size: medium;
+    padding-bottom: 6px;
+    font-weight: normal;
 }
 
 textarea {

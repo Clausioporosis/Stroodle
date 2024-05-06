@@ -48,8 +48,8 @@ const Participant: React.FC<ParticipantProps> = ({ participants, removeSelectedP
             ) : (
                 <div className='no-participants'>
                     <People size={32} />
-                    <span>Eingeladene Personen werden</span>
-                    <span>hier anngezeigt.</span>
+                    <p>Eingeladene Personen werden</p>
+                    <p>hier anngezeigt.</p>
                 </div>
             )}
         </div>
