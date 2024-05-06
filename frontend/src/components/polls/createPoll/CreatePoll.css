@@ -44,6 +44,23 @@
     margin-bottom: 6px;
 }
 
+.left-section-container .search-bar-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.left-section-container .search-bar-header {
+    width: 20%;
+}
+
+.left-section-container .search-bar {
+    margin: 0px;
+    width: 100%;
+}
+
+.left-section-container .search-icon {}
+
 .left-section-container .more-settings-container {
     display: flex;
     align-items: center;

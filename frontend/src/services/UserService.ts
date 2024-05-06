@@ -4,10 +4,19 @@ import { mockUsers } from '../tests/MockData';
 class UserService {
     private users: User[] = [...mockUsers];
 
-    updateUserName(id: string, newName: string): User | undefined {
+    getAllUsers(): User[] {
+        return this.users;
+    }
+
+    getUserById(id: string): User | undefined {
+        return this.users.find(user => user.id === id);
+    }
+
+    updateUserName(id: string, newFirstName: string, newLastName: string): User | undefined {
         const user = this.users.find(u => u.id === id);
         if (user) {
-            user.name = newName;
+            user.firstname = newFirstName;
+            user.lastname = newLastName;
         }
         return user;
     }
@@ -20,3 +29,5 @@ class UserService {
         return user;
     }
 }
+
+export default new UserService();

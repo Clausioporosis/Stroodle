@@ -3,9 +3,9 @@ import { Poll } from '../models/Poll';
 
 // User Mock data
 const mockUsers = [
-    new User('0', 'admin', 'admin@doubleslash.de'),
-    new User('1', 'user1', 'user1@doubleslash.de'),
-    new User('2', 'user2', 'user2@doubleslash.de')
+    new User('0', 'admin', '0', 'admin@doubleslash.de'),
+    new User('1', 'user', '1', 'user1@doubleslash.de'),
+    new User('2', 'user', '2', 'user2@doubleslash.de')
 ];
 
 // Poll Mock data
