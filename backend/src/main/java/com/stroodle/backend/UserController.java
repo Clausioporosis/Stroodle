@@ -59,4 +59,27 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{id}/availability")
+    public ResponseEntity<?> updateAvailability(@PathVariable String id, @RequestBody List<AvailabilityRule> rules) {
+        Optional<User> optionalUser = userService.getUserById(id);
+        if (!optionalUser.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        User user = optionalUser.get();
+        user.setAvailabilityRules(rules);
+        userService.updateUser(user);
+        return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/search/{id}/availability")
+    public ResponseEntity<List<AvailabilityRule>> getAvailability(@PathVariable String id) {
+        Optional<User> optionalUser = userService.getUserById(id);
+        if (!optionalUser.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        User user = optionalUser.get();
+        return ResponseEntity.ok(user.getAvailabilityRules());
+    }
+
 }
