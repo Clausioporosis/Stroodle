@@ -7,6 +7,7 @@ import { Poll } from '../../../models/Poll';
 import { User } from '../../../models/User';
 
 import SearchBar from './searchBar/SearchBar';
+import AddedParticipants from './addedParticipants/AddedParticipants';
 
 const Dashboard: React.FC = () => {
     const [title, setTitle] = useState('');
@@ -21,8 +22,16 @@ const Dashboard: React.FC = () => {
     useEffect(() => {
     }, []);
 
-    const handleUserClick = (user: User) => {
-        setParticipants(prevParticipants => [...prevParticipants, user]);
+    const addParticipant = (user: User) => {
+        if (!participants.some(participant => participant.id === user.id)) {
+            setParticipants(prevParticipants => [...prevParticipants, user]);
+        } else {
+            alert('Dieser Teilnehmer existiert bereits in der Liste.');
+        }
+    };
+
+    const removeParticipant = (user: User) => {
+        setParticipants(prevParticipants => prevParticipants.filter(participant => participant.id !== user.id));
     };
 
 
@@ -40,20 +49,18 @@ const Dashboard: React.FC = () => {
                         <h3>Ort</h3>
                         <input type="text" value={location} onChange={e => setLocation(e.target.value)} placeholder="Wo wird es statt finden?" />
 
-                        <div style={{ display: 'flex' }}>
+                        <div className='participants-section'>
                             <h3>Teilnehmer</h3>
-                            <SearchBar onUserClick={handleUserClick} />
+                            <SearchBar onUserClick={addParticipant} />
+                            <AddedParticipants participants={participants} removeSelectedParticipant={removeParticipant} />
                         </div>
 
 
-
-
-                        {/*
                         <div className="more-settings-container">
                             <h3 className="more-settings-header">Weitere Einstellungen</h3>
-                            <div className="header-border"></div>
+                            <div className="more-settings-line"></div>
                         </div>
-                        */}
+
                     </form>
                 </div>
                 <div className="right-section-container">

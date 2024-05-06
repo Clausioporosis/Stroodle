@@ -31,7 +31,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onUserClick }) => {
             <input
                 className='search-input'
                 type="search"
-                placeholder="Suche nach Benutzern..."
+                placeholder="Anhand von Namen oder Email suchen..."
                 value={searchTerm}
                 onChange={handleSearchChange}
             />
@@ -40,7 +40,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onUserClick }) => {
                     {searchResults.length > 0 ? (
                         searchResults.map(user => (
                             <li className='list-item' key={user.id} onClick={() => handleUserClick(user)}>
-                                {user.firstname} {user.lastname}
+                                {user.firstName} {user.lastName}
                             </li>
                         ))
                     ) : (

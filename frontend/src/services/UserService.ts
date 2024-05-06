@@ -10,8 +10,8 @@ class UserService {
 
     searchUsers(searchTerm: string): User[] {
         return this.users.filter(user =>
-            user.firstname.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.email.toLowerCase().includes(searchTerm.toLowerCase())
         );
     }
@@ -23,8 +23,8 @@ class UserService {
     updateUserName(id: string, newFirstName: string, newLastName: string): User | undefined {
         const user = this.users.find(u => u.id === id);
         if (user) {
-            user.firstname = newFirstName;
-            user.lastname = newLastName;
+            user.firstName = newFirstName;
+            user.lastName = newLastName;
         }
         return user;
     }

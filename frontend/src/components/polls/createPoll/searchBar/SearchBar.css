@@ -4,8 +4,6 @@
     flex-direction: column;
 }
 
-.body .search-input {}
-
 .body .list-container {
     position: absolute;
     z-index: 1;
@@ -14,7 +12,7 @@
     max-height: 155px;
     overflow-y: auto;
     width: 100%;
-    top: 50px;
+    top: 48px;
 }
 
 .body .list-container li {
