@@ -1,6 +1,12 @@
-import React, { useState, useEffect } from 'react';
 import './CreatePoll.css';
+import React, { useState, useEffect } from 'react';
 import Header from "../../common/header/Header"
+
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from "@fullcalendar/interaction";
+
 import PollService from '../../../services/PollService';
 import UserService from '../../../services/UserService';
 import { Poll } from '../../../models/Poll';
@@ -9,12 +15,18 @@ import { User } from '../../../models/User';
 import SearchBar from './searchBar/SearchBar';
 import AddedParticipants from './addedParticipants/AddedParticipants';
 
+type TimeSlot = {
+    start: Date;
+    end: Date;
+};
+
 const Dashboard: React.FC = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [location, setLocation] = useState('');
     const [participants, setParticipants] = useState<User[]>([]);
     const [duration, setDuration] = useState('15');
+    const [selectedTimeSlots, setSelectedTimeSlots] = useState<TimeSlot[]>([]);
 
     useEffect(() => {
     }, []);
@@ -31,11 +43,35 @@ const Dashboard: React.FC = () => {
         setParticipants(prevParticipants => prevParticipants.filter(participant => participant.id !== user.id));
     };
 
+    const handleDateClick = (selectDate: any) => {
+        const now = new Date();
+        const start = selectDate.date;
+        const end = new Date(start.getTime() + Number(duration) * 60 * 1000);
+
+        // Verhindern Sie die Auswahl von vergangenen Zeiten
+        if (start < now) {
+            alert('Past dates cannot be selected.');
+            return;
+        }
+
+        // Check if the new time slot overlaps with any existing time slot
+        for (let slot of selectedTimeSlots) {
+            if ((start >= slot.start && start < slot.end) || (end > slot.start && end <= slot.end)) {
+                alert('This time slot overlaps with an existing time slot.');
+                return;
+            }
+        }
+
+        setSelectedTimeSlots([...selectedTimeSlots, { start, end }]);
+        console.log(selectedTimeSlots);
+    };
 
     return (
         <div className="create-poll-container">
             <Header />
             <div className="create-poll-content-container">
+
+                {/*Left section*/}
                 <div className="left-section-container">
                     <form>
                         <h1>Umfrage erstellen</h1>
@@ -62,7 +98,7 @@ const Dashboard: React.FC = () => {
                                         <option value="15">15 Minuten</option>
                                         <option value="30">30 Minuten</option>
                                         <option value="45">45 Minuten</option>
-                                        <option value="460">60 Minuten</option>
+                                        <option value="60">60 Minuten</option>
                                     </select>
                                 </div>
                             </div>
@@ -70,12 +106,45 @@ const Dashboard: React.FC = () => {
                         </div>
                     </form>
                 </div>
+
+                {/*Right section*/}
                 <div className="right-section-container">
 
+                    <div className="right-upper-section-container">
+
+                        <div className="month-container">
+                        </div>
+
+                        <div className="date-list-container">
+                        </div>
+
+                    </div>
+
+                    <div className="week-container">
+                        <FullCalendar
+                            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                            initialView="timeGridWeek"
+                            firstDay={1}
+                            headerToolbar={{
+                                start: 'prev,next,today',
+                                center: 'title',
+                                end: ''
+                            }}
+                            dateClick={handleDateClick}
+                            events={selectedTimeSlots}
+                            slotMinTime="00:00"
+                            slotMaxTime="24:00"
+                            allDaySlot={false}
+                            slotLabelFormat={{ hour: '2-digit', minute: '2-digit', hour12: false }}
+                            nowIndicator={true}
+                            snapDuration="00:05:00"
+                            selectOverlap={false}
+                        />
+                    </div>
 
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 

@@ -26,19 +26,6 @@
     flex-direction: column;
 }
 
-.right-section-container {
-    width: 700px;
-    height: 600px;
-    border-radius: 10px;
-    border: 1px solid #444444;
-    background-color: #202020;
-
-    position: relative;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-}
-
 .lower-left-section {
     display: flex;
     height: 270px;
@@ -132,4 +119,73 @@ textarea {
     color: #ddd;
     box-sizing: border-box;
     resize: none;
+}
+
+.right-section-container {
+    width: 700px;
+    height: 600px;
+    border-radius: 10px;
+    border: 1px solid #444444;
+    background-color: #202020;
+
+
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.right-upper-section-container {
+    display: flex;
+    height: 50%;
+    width: 100%;
+}
+
+.date-list-container {
+    height: 100%;
+    width: 50%;
+    background-color: #656565;
+}
+
+.month-container {
+    height: 100%;
+    width: 50%;
+    background-color: #525252;
+}
+
+
+.week-container {
+    height: 50%;
+    width: 100%;
+}
+
+.week-container .fc {
+    height: 100%;
+    width: 100%;
+}
+
+.month-container .fc .fc-button,
+.week-container .fc .fc-button {
+    height: 20px;
+    width: 40px;
+    font-size: 10px;
+    padding: 0;
+}
+
+.fc .fc-today-button {
+    margin-left: 20px;
+}
+
+.fc-event {
+    background-color: #4C9EBC;
+}
+
+.fc-timegrid-event .fc-event-time {
+    font-size: var(--fc-small-font-size);
+    align-items: center;
+
+}
+
+.fc-v-event .fc-event-time {
+    overflow: visible;
+    margin: -3px 0 0 2px;
 }
