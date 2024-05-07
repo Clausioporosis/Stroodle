@@ -15,6 +15,7 @@
 .created-polls-tab-header {
     position: relative;
     color: #bbbbbb;
+    width: auto;
     margin: auto;
     margin-left: 10px;
     margin-right: 10px;
