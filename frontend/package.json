@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.96",
+    "cross-env": "^7.0.3",
     "react": "^18.2.0",
     "react-bootstrap-icons": "^1.11.4",
     "react-dom": "^18.2.0",
