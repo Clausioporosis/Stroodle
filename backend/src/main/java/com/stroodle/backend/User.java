@@ -14,24 +14,30 @@ public class User {
     @Id
     private String id;
 
-    @NotBlank(message = "Name cannot be empty.")
-    @Size(min = 2, max = 30, message = "Name must be between 2 and 30 characters long.")
-    @Field("name")
-    private String name;
+    @NotBlank(message = "First name cannot be empty.")
+    @Size(min = 2, max = 15, message = "First name must be between 2 and 15 characters long.")
+    @Field("firstName")
+    private String firstName;
+
+    @NotBlank(message = "Last name cannot be empty.")
+    @Size(min = 2, max = 15, message = "Last name must be between 2 and 15 characters long.")
+    @Field("lastName")
+    private String lastName;
 
     @NotBlank(message = "Email cannot be empty.")
     @Email(message = "Invalid email address.")
     @Field("email")
     private String email;
 
-    private List<AvailabilityRule> availabilityRules;
+    private List<AvailabilityRule> availabilityRules; // ToDo: Change availibilityRule model
 
     // Constructors
     public User() {
     }
 
-    public User(String name, String email) {
-        this.name = name;
+    public User(String firstName, String lastNameame, String email) {
+        this.firstName = firstName;
+        this.lastName = lastNameame;
         this.email = email;
     }
 
@@ -44,12 +50,20 @@ public class User {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
@@ -73,7 +87,8 @@ public class User {
     public String toString() {
         return "User{" +
                 "id='" + id + '\'' +
-                ", name='" + name + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 '}';
     }

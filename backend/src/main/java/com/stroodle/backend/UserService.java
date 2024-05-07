@@ -45,8 +45,16 @@ public class UserService {
         return users;
     }
 
-    public List<User> getUserByName(String name) {
-        List<User> users = userRepository.findByName(name);
+    public List<User> getUserByFirstName(String name) {
+        List<User> users = userRepository.findByFirstName(name);
+        if (users.isEmpty()) {
+            throw new ResourceNotFoundException("No user found with the name " + name);
+        }
+        return users;
+    }
+
+    public List<User> getUserByLastName(String name) {
+        List<User> users = userRepository.findByLastName(name);
         if (users.isEmpty()) {
             throw new ResourceNotFoundException("No user found with the name " + name);
         }

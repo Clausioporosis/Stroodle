@@ -1,5 +1,7 @@
 package com.stroodle.backend;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -21,13 +23,30 @@ public class Poll {
     @Field("description")
     private String description;
 
+    @Field("duration")
+    private String duration;
+
+    @Field("organizer")
+    private String organizer;
+
+    @Field("proposedDates")
+    private List<ProposedDate> proposedDates;
+
+    @Field("participants")
+    private List<String> participantIds;
+
     // Constructors
     public Poll() {
     }
 
-    public Poll(String title, String description) {
+    public Poll(String title, String description, String duration, String organizer, List<ProposedDate> proposedDates,
+            List<String> participantIds) {
         this.title = title;
         this.description = description;
+        this.duration = duration;
+        this.organizer = organizer;
+        this.proposedDates = proposedDates;
+        this.participantIds = participantIds;
     }
 
     // Getter and Setter methods
@@ -53,5 +72,21 @@ public class Poll {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<ProposedDate> getProposedDates() {
+        return proposedDates;
+    }
+
+    public void setProposedDates(List<ProposedDate> proposedDates) {
+        this.proposedDates = proposedDates;
+    }
+
+    public List<String> getParticipantIds() {
+        return participantIds;
+    }
+
+    public void setParticipantIds(List<String> participantIds) {
+        this.participantIds = participantIds;
     }
 }

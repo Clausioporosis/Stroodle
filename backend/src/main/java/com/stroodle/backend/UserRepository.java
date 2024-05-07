@@ -9,5 +9,7 @@ public interface UserRepository extends MongoRepository<User, String> {
     // Hier können benutzerdefinierte Datenbankabfragen definiert werden
     List<User> findByEmail(String email);
 
-    List<User> findByName(String name);
+    List<User> findByFirstName(String firstName);
+
+    List<User> findByLastName(String lastName);
 }
