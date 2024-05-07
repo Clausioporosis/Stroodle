@@ -185,7 +185,32 @@ textarea {
 
 }
 
+:root {
+    --fc-border-color: #525252;
+    --fc-button-bg-color: #333333;
+    --fc-button-border-color: #333333;
+    --fc-button-hover-bg-color: #333333;
+}
+
 .fc-v-event .fc-event-time {
     overflow: visible;
     margin: -3px 0 0 2px;
+}
+
+.header-button {
+    background-color: #333333;
+    color: #bbbbbb;
+    font-size: large;
+    position: absolute;
+    height: 35px;
+    width: 100px;
+    border: none;
+    border-radius: 5px;
+    top: 40%;
+    right: 0;
+    transform: translateY(-50%);
+}
+
+.header-button:hover {
+    background-color: #474747;
 }

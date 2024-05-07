@@ -4,17 +4,17 @@ import { User } from '../../../../models/User';
 import './SearchBar.css';
 
 interface SearchBarProps {
-    onUserClick: (user: User) => void;
+    onUserClick: (participantId: string) => void;
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({ onUserClick }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState<User[]>([]);
 
-    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleSearchChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
         if (event.target.value) {
-            const results = UserService.searchUsers(event.target.value);
+            const results = await UserService.searchUsers(event.target.value);
             setSearchResults(results);
         } else {
             setSearchResults([]);
@@ -22,7 +22,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onUserClick }) => {
     };
 
     const handleUserClick = (selectedUser: User) => {
-        onUserClick(selectedUser);
+        onUserClick(selectedUser.id);
         setSearchTerm('');
     };
 

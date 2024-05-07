@@ -1,5 +1,4 @@
 import { User } from '../models/User';
-import { mockUsers } from '../tests/MockData';
 
 import axios from 'axios';
 
@@ -9,19 +8,6 @@ const apiClient = axios.create({
 
 
 class UserService {
-
-    constructor() {
-
-        (async () => {
-            const allUsers = await this.getAllUsers()
-            console.log("All users: ", allUsers);
-        })();
-
-        (async () => {
-            const searchedUsers = await this.getUserById('663a308bd8fec05872a94352')
-            console.log("Searched users: ", searchedUsers);
-        })();
-    }
 
     async getAllUsers(): Promise<User[]> {
         try {
@@ -33,11 +19,11 @@ class UserService {
         }
     }
 
-    async searchUsers(searchTerm: string): Promise<User[]> {
+    async searchUsers(query: string): Promise<User[]> {
         try {
-            const response = await apiClient.get('/users/search', {
+            const response = await apiClient.get(`/users/search/query`, {
                 params: {
-                    searchTerm: searchTerm
+                    query: query
                 }
             });
             return response.data;
@@ -55,8 +41,6 @@ class UserService {
             console.error('Es gab einen Fehler!', error);
         }
     }
-
-
 }
 
 export default new UserService();

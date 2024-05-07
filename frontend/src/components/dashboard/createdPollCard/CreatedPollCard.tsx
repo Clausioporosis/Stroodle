@@ -13,16 +13,16 @@ interface CreatedPollCardProps extends Poll {
 
 const CreatedPollCard: React.FC<CreatedPollCardProps> = ({ id, title, description, duration, onEditClick, onShareClick, onDeleteClick }) => {
     const handleEdit = () => {
-        onEditClick(id);
+        onEditClick(id!);
     };
 
     const handleShare = () => {
-        onShareClick(id);
+        onShareClick(id!);
     };
 
     const handleDelete = () => {
         if (window.confirm("Bist du sicher, dass du diese Umfrage löschen möchtest?")) {
-            onDeleteClick(id);
+            onDeleteClick(id!);
         }
     };
 

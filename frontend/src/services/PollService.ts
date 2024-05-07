@@ -7,7 +7,12 @@ const apiClient = axios.create({
 });
 
 class PollService {
-    private polls: Poll[] = [];
+    constructor() {
+        (async () => {
+            //const searchedPoll = await this.getPollById('')
+            //console.log("Searched poll: ", searchedPoll);
+        })();
+    }
 
     async createPoll(poll: Poll): Promise<Poll> {
         try {
@@ -29,22 +34,12 @@ class PollService {
         }
     }
 
-    getPollById(id: string): Poll | undefined {
-        return this.polls.find(poll => poll.id === id);
-    }
-
-    updatePollById(id: string, updatedPoll: Partial<Poll>): Poll | undefined {
-        const poll = this.polls.find(p => p.id === id);
-        if (poll) {
-            Object.assign(poll, updatedPoll);
-        }
-        return poll;
-    }
-
-    deletePollByIdOld(id: string): void {
-        const index = this.polls.findIndex(p => p.id === id);
-        if (index !== -1) {
-            this.polls.splice(index, 1);
+    async getPollById(id: string): Promise<Poll | undefined> {
+        try {
+            const response = await apiClient.get(`/polls/search/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error('Es gab einen Fehler!', error);
         }
     }
 

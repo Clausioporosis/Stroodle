@@ -22,9 +22,12 @@ public class Poll {
     @Field("title")
     private String title;
 
-    @Size(max = 100, message = "Description cannot be longer than 100 characters.")
+    @Size(max = 1000, message = "Description cannot be longer than 100 characters.")
     @Field("description")
     private String description;
+
+    @Field("location")
+    private String location;
 
     @Field("duration")
     private String duration;
@@ -39,11 +42,13 @@ public class Poll {
     public Poll() {
     }
 
-    public Poll(String title, String description, String duration, String organizerId, List<ProposedDate> proposedDates,
+    public Poll(String title, String description, String location, String duration, String organizerId,
+            List<ProposedDate> proposedDates,
             List<String> participantIds) {
         this.organizerId = organizerId;
         this.title = title;
         this.description = description;
+        this.location = location;
         this.duration = duration;
         this.participantIds = participantIds;
         this.proposedDates = proposedDates;
@@ -80,6 +85,14 @@ public class Poll {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getDuration() {

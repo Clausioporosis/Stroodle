@@ -2,6 +2,8 @@ import './CreatePoll.css';
 import React, { useState, useEffect } from 'react';
 import Header from "../../common/header/Header"
 
+import { useNavigate } from 'react-router-dom';
+
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -24,49 +26,65 @@ const Dashboard: React.FC = () => {
     const [participantsIds, setParticipantsIds] = useState<string[]>([]);
     const [proposedDates, setProposedDates] = useState<ProposedDate[]>([]);
 
+    const navigate = useNavigate();
+
     useEffect(() => {
     }, []);
 
-    const addParticipant = (user: User) => {
-        /*
-        if (!participants.some(participant => participant.id === user.id)) {
-            setParticipants(prevParticipants => [...prevParticipants, user]);
+    const createPoll = () => {
+        const newPoll: Poll = {
+            organizerId: organizerId,
+            title: title,
+            description: description,
+            location: location,
+            duration: Number(duration),
+            participantsIds: participantsIds,
+            proposedDates: proposedDates
+        };
+
+        PollService.createPoll(newPoll)
+            .then(createdPoll => {
+                console.log('Erstellte Umfrage:', createdPoll);
+                navigate('/dashboard');
+            })
+            .catch(error => {
+                console.error('Es gab einen Fehler beim Erstellen der Umfrage:', error);
+            });
+    };
+
+    const addParticipant = (addedParticipantId: string) => {
+        if (!participantsIds.some(participantId => participantId === addedParticipantId)) {
+            setParticipantsIds(prevParticipantsIds => [...prevParticipantsIds, addedParticipantId]);
         } else {
             alert('Dieser Teilnehmer existiert bereits in der Liste.');
         }
-        */
     };
 
-    const removeParticipant = (user: User) => {
-        /*
-        setParticipants(prevParticipants => prevParticipants.filter(participant => participant.id !== user.id));
-        */
+    const removeParticipant = (removedParticipantId: string) => {
+        setParticipantsIds(prevParticipantsIds => prevParticipantsIds.filter(participantid => participantid !== removedParticipantId));
     };
 
-    const handleDateClick = (selectDate: any) => {
-        /*
-        const now = new Date();
-        const start = selectDate.date;
-        const end = new Date(start.getTime() + Number(duration) * 60 * 1000);
+    const handleDateClick = (selectedDate: any) => {
+        const currentDate = new Date();
+        const selectedDateObject = new Date(selectedDate.dateStr);
 
-        // Verhindern Sie die Auswahl von vergangenen Zeiten
-        if (start < now) {
-            alert('Past dates cannot be selected.');
-            return;
+        if (selectedDateObject >= currentDate) {
+            const newProposedDate = new ProposedDate(selectedDate.dateStr, '');
+            setProposedDates(prevProposedDates => [...prevProposedDates, newProposedDate]);
+        } else {
+            alert('Noch gibt es keine Zeitreisen. Bitte wähle ein Datum in der Zukunft.');
         }
-
-        // Check if the new time slot overlaps with any existing time slot
-        for (let slot of selectedTimeSlots) {
-            if ((start >= slot.start && start < slot.end) || (end > slot.start && end <= slot.end)) {
-                alert('This time slot overlaps with an existing time slot.');
-                return;
-            }
-        }
-
-        setSelectedTimeSlots([...selectedTimeSlots, { start, end }]);
-        console.log(selectedTimeSlots);
-        */
     };
+
+    const proposedDatesForCalendar = proposedDates.map(proposedDate => {
+        const endDate = new Date(proposedDate.date);
+        endDate.setMinutes(endDate.getMinutes() + Number(duration));
+        return {
+            start: proposedDate.date,
+            end: endDate,
+            title: '',
+        };
+    });
 
     return (
         <div className="create-poll-container">
@@ -75,8 +93,8 @@ const Dashboard: React.FC = () => {
 
                 {/*Left section*/}
                 <div className="left-section-container">
+                    <h1>Umfrage erstellen</h1>
                     <form>
-                        <h1>Umfrage erstellen</h1>
                         <h3>Titel </h3>
                         <input type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Was ist der Anlass?" />
                         <h3>Beschreibung</h3>
@@ -89,7 +107,7 @@ const Dashboard: React.FC = () => {
                             <div className='participants-section'>
                                 <h3>Teilnehmer</h3>
                                 <SearchBar onUserClick={addParticipant} />
-                                <AddedParticipants participants={participants} removeSelectedParticipant={removeParticipant} />
+                                <AddedParticipants participantsIds={participantsIds} removeSelectedParticipant={removeParticipant} />
                             </div>
 
                             <div className="more-settings-container">
@@ -111,6 +129,9 @@ const Dashboard: React.FC = () => {
 
                 {/*Right section*/}
                 <div className="right-section-container">
+                    <h1>Termine hinzufügen
+                        <button className="header-button" onClick={createPoll}>Erstellen</button>
+                    </h1>
 
                     <div className="right-upper-section-container">
 
@@ -133,7 +154,7 @@ const Dashboard: React.FC = () => {
                                 end: ''
                             }}
                             dateClick={handleDateClick}
-                            events={selectedTimeSlots}
+                            events={proposedDatesForCalendar}
                             slotMinTime="00:00"
                             slotMaxTime="24:00"
                             allDaySlot={false}
