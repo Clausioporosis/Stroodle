@@ -37,6 +37,14 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    public List<User> searchUsers(String query) {
+        List<User> users = userRepository.findByFirstNameOrLastNameOrEmail(query);
+        if (users.isEmpty()) {
+            throw new ResourceNotFoundException("No user found with the query " + query);
+        }
+        return users;
+    }
+
     public List<User> getUserByEmail(String email) {
         List<User> users = userRepository.findByEmail(email);
         if (users.isEmpty()) {

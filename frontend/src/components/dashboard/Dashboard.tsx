@@ -6,6 +6,7 @@ import Header from "../common/header/Header"
 
 import { PlusSquare } from 'react-bootstrap-icons';
 
+import UserService from '../../services/UserService';
 import PollService from '../../services/PollService';
 import { Poll } from '../../models/Poll';
 import CreatedPollCard from './createdPollCard/CreatedPollCard';

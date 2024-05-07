@@ -1,41 +1,62 @@
 import { User } from '../models/User';
 import { mockUsers } from '../tests/MockData';
 
+import axios from 'axios';
+
+const apiClient = axios.create({
+    baseURL: 'http://localhost:8080/api',
+});
+
+
 class UserService {
-    private users: User[] = [...mockUsers];
 
-    getAllUsers(): User[] {
-        return this.users;
+    constructor() {
+
+        (async () => {
+            const allUsers = await this.getAllUsers()
+            console.log("All users: ", allUsers);
+        })();
+
+        (async () => {
+            const searchedUsers = await this.getUserById('663a308bd8fec05872a94352')
+            console.log("Searched users: ", searchedUsers);
+        })();
     }
 
-    searchUsers(searchTerm: string): User[] {
-        return this.users.filter(user =>
-            user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.email.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-    }
-
-    getUserById(id: string): User | undefined {
-        return this.users.find(user => user.id === id);
-    }
-
-    updateUserName(id: string, newFirstName: string, newLastName: string): User | undefined {
-        const user = this.users.find(u => u.id === id);
-        if (user) {
-            user.firstName = newFirstName;
-            user.lastName = newLastName;
+    async getAllUsers(): Promise<User[]> {
+        try {
+            const response = await apiClient.get('/users');
+            return response.data;
+        } catch (error) {
+            console.error('Es gab einen Fehler!', error);
+            return [];
         }
-        return user;
     }
 
-    updateUserEmail(id: string, newEmail: string): User | undefined {
-        const user = this.users.find(u => u.id === id);
-        if (user) {
-            user.email = newEmail;
+    async searchUsers(searchTerm: string): Promise<User[]> {
+        try {
+            const response = await apiClient.get('/users/search', {
+                params: {
+                    searchTerm: searchTerm
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Es gab einen Fehler!', error);
+            return [];
         }
-        return user;
     }
+
+    async getUserById(id: string): Promise<User | undefined> {
+        try {
+            const response = await apiClient.get(`/users/search/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error('Es gab einen Fehler!', error);
+        }
+    }
+
+
 }
 
 export default new UserService();

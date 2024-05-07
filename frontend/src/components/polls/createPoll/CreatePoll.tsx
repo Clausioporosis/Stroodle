@@ -9,41 +9,42 @@ import interactionPlugin from "@fullcalendar/interaction";
 
 import PollService from '../../../services/PollService';
 import UserService from '../../../services/UserService';
-import { Poll } from '../../../models/Poll';
+import { Poll, ProposedDate } from '../../../models/Poll';
 import { User } from '../../../models/User';
 
 import SearchBar from './searchBar/SearchBar';
 import AddedParticipants from './addedParticipants/AddedParticipants';
 
-type TimeSlot = {
-    start: Date;
-    end: Date;
-};
-
 const Dashboard: React.FC = () => {
+    const [organizerId, setOrganizerId] = useState('');
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [location, setLocation] = useState('');
-    const [participants, setParticipants] = useState<User[]>([]);
     const [duration, setDuration] = useState('15');
-    const [selectedTimeSlots, setSelectedTimeSlots] = useState<TimeSlot[]>([]);
+    const [participantsIds, setParticipantsIds] = useState<string[]>([]);
+    const [proposedDates, setProposedDates] = useState<ProposedDate[]>([]);
 
     useEffect(() => {
     }, []);
 
     const addParticipant = (user: User) => {
+        /*
         if (!participants.some(participant => participant.id === user.id)) {
             setParticipants(prevParticipants => [...prevParticipants, user]);
         } else {
             alert('Dieser Teilnehmer existiert bereits in der Liste.');
         }
+        */
     };
 
     const removeParticipant = (user: User) => {
+        /*
         setParticipants(prevParticipants => prevParticipants.filter(participant => participant.id !== user.id));
+        */
     };
 
     const handleDateClick = (selectDate: any) => {
+        /*
         const now = new Date();
         const start = selectDate.date;
         const end = new Date(start.getTime() + Number(duration) * 60 * 1000);
@@ -64,6 +65,7 @@ const Dashboard: React.FC = () => {
 
         setSelectedTimeSlots([...selectedTimeSlots, { start, end }]);
         console.log(selectedTimeSlots);
+        */
     };
 
     return (

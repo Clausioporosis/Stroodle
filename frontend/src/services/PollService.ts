@@ -9,15 +9,19 @@ const apiClient = axios.create({
 class PollService {
     private polls: Poll[] = [];
 
-    createPoll(poll: Poll): Poll {
-        this.polls.push(poll);
-        return poll;
+    async createPoll(poll: Poll): Promise<Poll> {
+        try {
+            const response = await apiClient.post('/polls', poll);
+            return response.data;
+        } catch (error) {
+            console.error('Es gab einen Fehler!', error);
+            return poll;
+        }
     }
 
     async getAllPolls(): Promise<Poll[]> {
         try {
             const response = await apiClient.get('/polls');
-            console.log('Polls:', response.data);
             return response.data;
         } catch (error) {
             console.error('Es gab einen Fehler!', error);
