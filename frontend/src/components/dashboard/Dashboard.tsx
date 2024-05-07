@@ -15,7 +15,10 @@ const Dashboard: React.FC = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        setPolls(PollService.getAllPolls());
+        (async () => {
+            const allPolls = await PollService.getAllPolls();
+            setPolls(allPolls);
+        })();
     }, []);
 
     const handleCreateClick = () => {
@@ -31,8 +34,11 @@ const Dashboard: React.FC = () => {
     };
 
     const handleDeleteClick = (pollId: string) => {
-        PollService.deletePollById(pollId);
-        setPolls([...PollService.getAllPolls()]);
+        (async () => {
+            await PollService.deletePollById(pollId);
+            const allPolls = await PollService.getAllPolls();
+            setPolls(allPolls);
+        })();
     };
 
     return (
@@ -52,9 +58,9 @@ const Dashboard: React.FC = () => {
                                 title={poll.title}
                                 description={poll.description}
                                 duration={poll.duration}
-                                creatorId={poll.creatorId}
-                                dates={poll.dates}
-                                participants={poll.participants}
+                                organizerId={poll.organizerId}
+                                proposedDates={poll.proposedDates}
+                                participantsIds={poll.participantsIds}
                                 onEditClick={handleEditClick}
                                 onShareClick={handleShareClick}
                                 onDeleteClick={handleDeleteClick}

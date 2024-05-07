@@ -14,6 +14,9 @@ public class Poll {
     @Id
     private String id;
 
+    @Field("organizerId")
+    private String organizerId;
+
     @NotBlank(message = "Title cannot be empty.")
     @Size(min = 2, max = 50, message = "Title must be between 2 and 50 characters long.")
     @Field("title")
@@ -26,27 +29,24 @@ public class Poll {
     @Field("duration")
     private String duration;
 
-    @Field("organizer")
-    private String organizer;
+    @Field("participantsIds")
+    private List<String> participantIds;
 
     @Field("proposedDates")
     private List<ProposedDate> proposedDates;
-
-    @Field("participants")
-    private List<String> participantIds;
 
     // Constructors
     public Poll() {
     }
 
-    public Poll(String title, String description, String duration, String organizer, List<ProposedDate> proposedDates,
+    public Poll(String title, String description, String duration, String organizerId, List<ProposedDate> proposedDates,
             List<String> participantIds) {
+        this.organizerId = organizerId;
         this.title = title;
         this.description = description;
         this.duration = duration;
-        this.organizer = organizer;
-        this.proposedDates = proposedDates;
         this.participantIds = participantIds;
+        this.proposedDates = proposedDates;
     }
 
     // Getter and Setter methods
@@ -56,6 +56,14 @@ public class Poll {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getOrganizerId() {
+        return organizerId;
+    }
+
+    public void setOrganizerId(String organizerId) {
+        this.organizerId = organizerId;
     }
 
     public String getTitle() {
@@ -74,12 +82,12 @@ public class Poll {
         this.description = description;
     }
 
-    public List<ProposedDate> getProposedDates() {
-        return proposedDates;
+    public String getDuration() {
+        return duration;
     }
 
-    public void setProposedDates(List<ProposedDate> proposedDates) {
-        this.proposedDates = proposedDates;
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 
     public List<String> getParticipantIds() {
@@ -88,5 +96,13 @@ public class Poll {
 
     public void setParticipantIds(List<String> participantIds) {
         this.participantIds = participantIds;
+    }
+
+    public List<ProposedDate> getProposedDates() {
+        return proposedDates;
+    }
+
+    public void setProposedDates(List<ProposedDate> proposedDates) {
+        this.proposedDates = proposedDates;
     }
 }

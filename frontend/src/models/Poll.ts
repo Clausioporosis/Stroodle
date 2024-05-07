@@ -12,20 +12,20 @@ export class ProposedDate {
 
 export class Poll {
     id: string;
-    organizer: User;
+    organizerId: String;
     title: string;
     description: string;
     duration: number;
+    participantsIds: string[];
     proposedDates: ProposedDate[];
-    participants: User[];
 
-    constructor(id: string, organizer: User, title: string, description: string, duration: number, proposedDates: ProposedDate[], participants: User[]) {
+    constructor(id: string, organizerId: string, title: string, description: string, duration: number, participantsIds: string[], proposedDates: ProposedDate[]) {
         this.id = id;
-        this.organizer = organizer;
+        this.organizerId = organizerId;
         this.title = title;
         this.description = description;
         this.duration = duration;
         this.proposedDates = proposedDates;
-        this.participants = participants;
+        this.participantsIds = participantsIds;
     }
 }
