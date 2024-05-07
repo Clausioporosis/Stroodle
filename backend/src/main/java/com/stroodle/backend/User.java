@@ -3,6 +3,7 @@ package com.stroodle.backend;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import java.util.List;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -22,6 +23,8 @@ public class User {
     @Email(message = "Invalid email address.")
     @Field("email")
     private String email;
+
+    private List<AvailabilityRule> availabilityRules;
 
     // Constructors
     public User() {
@@ -55,6 +58,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<AvailabilityRule> getAvailabilityRules() {
+        return availabilityRules;
+    }
+
+    public void setAvailabilityRules(List<AvailabilityRule> availabilityRules) {
+        this.availabilityRules = availabilityRules;
     }
 
     // toString method for debugging purposes
