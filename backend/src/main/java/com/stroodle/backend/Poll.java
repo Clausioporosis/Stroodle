@@ -12,12 +12,12 @@ public class Poll {
     @Id
     private String id;
 
-    @NotBlank(message = "Titel darf nicht leer sein.")
-    @Size(min = 2, max = 50, message = "Titel muss zwischen 2 und 50 Zeichen lang sein.")
+    @NotBlank(message = "Title cannot be empty.")
+    @Size(min = 2, max = 50, message = "Title must be between 2 and 50 characters long.")
     @Field("title")
     private String title;
 
-    @Size(max = 100, message = "Beschreibung darf nicht länger als 100 Zeichen sein.")
+    @Size(max = 100, message = "Description cannot be longer than 100 characters.")
     @Field("description")
     private String description;
 
