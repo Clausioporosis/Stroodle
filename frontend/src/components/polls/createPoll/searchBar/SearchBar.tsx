@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import UserService from '../../../../services/UserService';
 import { User } from '../../../../models/User';
-import './SearchBar.css';
 
 interface SearchBarProps {
     onUserClick: (participantId: string) => void;

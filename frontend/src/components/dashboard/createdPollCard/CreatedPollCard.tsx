@@ -1,6 +1,5 @@
 import React from 'react';
 import { Alt, ClockHistory, Hourglass, Pencil, Share, Trash3 } from 'react-bootstrap-icons';
-import './CreatedPollCard.css';
 
 import PollService from '../../../services/PollService';
 import { Poll } from '../../../models/Poll';

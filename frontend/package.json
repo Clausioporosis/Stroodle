@@ -29,7 +29,8 @@
     "start": "cross-env WATCHPACK_POLLING=true react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "watch:less": "less-watch-compiler src/styles src/styles main.less"
   },
   "eslintConfig": {
     "extends": [

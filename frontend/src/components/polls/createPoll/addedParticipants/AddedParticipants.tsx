@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import './AddedParticipants.css';
 
 import UserService from '../../../../services/UserService';
 import { User } from '../../../../models/User';

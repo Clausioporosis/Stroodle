@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './WeekView.css';
 
 interface WeekViewProps {
     width: string;

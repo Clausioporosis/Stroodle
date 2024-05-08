@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './Header.css';
 import { List, PersonCircle } from 'react-bootstrap-icons';
 
 const Header: React.FC = () => {

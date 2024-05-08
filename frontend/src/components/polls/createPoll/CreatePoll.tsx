@@ -1,4 +1,3 @@
-import './CreatePoll.css';
 import React, { useState, useEffect } from 'react';
 import Header from "../../common/header/Header"
 

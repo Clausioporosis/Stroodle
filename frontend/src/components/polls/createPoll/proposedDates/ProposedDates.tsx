@@ -1,5 +1,4 @@
 import React from 'react';
-import './ProposedDates.css';
 
 import { ProposedDate } from '../../../../models/Poll';
 import { Trash3 } from 'react-bootstrap-icons';
