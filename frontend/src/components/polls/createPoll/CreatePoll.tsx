@@ -87,11 +87,11 @@ const Dashboard: React.FC = () => {
     });
 
     return (
-        <div className="create-poll-container">
+        <div className="create-poll-page">
             <Header />
-            <div className="create-poll-content-container">
+            <div className="create-poll-body">
 
-                {/*Left section*/}
+
                 <div className="left-section-container">
                     <h1>Umfrage erstellen</h1>
                     <form>
@@ -127,7 +127,6 @@ const Dashboard: React.FC = () => {
                     </form>
                 </div>
 
-                {/*Right section
                 <div className="right-section-container">
                     <h1>Termine hinzufügen
                         <button className="header-button" onClick={createPoll}>Erstellen</button>
@@ -168,9 +167,56 @@ const Dashboard: React.FC = () => {
                     </div>
 
                 </div>
+
+
+
+                {/*Tabs rewrite
+                <div className='left-section'>
+                    <h1>Umfrage erstellen</h1>
+                    <div className='upper-section'>
+                        <form>
+                            <h3>Titel</h3>
+                            <input type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Was ist der Anlass?" />
+                            <h3>Beschreibung</h3>
+                            <textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Was muss man wissen?" />
+                            <h3>Ort</h3>
+                            <input type="text" value={location} onChange={e => setLocation(e.target.value)} placeholder="Wo wird es statt finden?" />
+                        </form>
+                    </div>
+                    <div className='lower-section'>
+
+                        <div className='left-lower-section'>
+
+                        </div>
+                        <div className='right-lower-section'>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div className='right-section'>
+
+                    <div className='upper-section'>
+
+                        <div className='left-upper-section'>
+
+                        </div>
+                        <div className='right-upper-section'>
+
+                        </div>
+
+                    </div>
+                    <div className='lower-section'>
+
+                    </div>
+
+                </div>
                 */}
+
             </div>
-        </div >
+        </div>
     );
 };
 

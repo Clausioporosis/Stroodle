@@ -1,4 +1,4 @@
-.create-poll-container {
+.create-poll-page {
     background-color: #171717;
     color: #ddd;
     min-height: 100vh;
@@ -6,7 +6,7 @@
 }
 
 
-.create-poll-content-container {
+.create-poll-body {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
@@ -88,7 +88,6 @@ select {
 }
 
 h1 {
-    flex-grow: 0;
     position: relative;
     color: #bbbbbb;
     margin: auto;
@@ -137,13 +136,13 @@ textarea {
 
 .right-upper-section-container {
     display: flex;
-    flex-grow: 1;
+    height: 50%;
+    width: 100%;
 }
 
 .date-list-container {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+    height: 100%;
+    width: 50%;
     background-color: #656565;
 }
 
@@ -155,11 +154,13 @@ textarea {
 
 
 .week-container {
-    flex-grow: 1;
+    height: 50%;
+    width: 100%;
 }
 
 .week-container .fc {
-    flex-grow: 1;
+    height: 100%;
+    width: 100%;
 }
 
 .month-container .fc .fc-button,
@@ -182,13 +183,6 @@ textarea {
     font-size: var(--fc-small-font-size);
     align-items: center;
 
-}
-
-:root {
-    --fc-border-color: #525252;
-    --fc-button-bg-color: #333333;
-    --fc-button-border-color: #333333;
-    --fc-button-hover-bg-color: #333333;
 }
 
 .fc-v-event .fc-event-time {
@@ -214,23 +208,105 @@ textarea {
     background-color: #474747;
 }
 
-/*Right section css*/
-.create-poll-container {
+/*beautification with LESS*/
+.create-poll-page {
+    display: flex;
+    flex-direction: column;
+    background-color: #171717;
+    color: #ddd;
+    width: 100%;
+    min-height: 100vh;
 
-    .right-section {
-        width: 700px;
-        height: 600px;
-        border-radius: 10px;
-        border: 1px solid #444444;
-        background-color: #202020;
-
-
-        padding: 10px;
+    .create-poll-body {
+        min-height: 100%;
+        margin: auto 0 auto 0;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-items: center;
+        flex-wrap: wrap;
+
+        /*Left section css*/
+        .left-section {
+            width: 700px;
+            height: 600px;
+            border-radius: 10px;
+            border: 1px solid #444444;
+            background-color: #202020;
+            padding: 10px;
+
+            display: flex;
+            flex-direction: column;
+
+            .upper-section {
+                background-color: #be7272;
+
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1;
+            }
+
+            .lower-section {
+                display: flex;
+                width: 100%;
+                flex-direction: row;
+                flex-grow: 1;
+
+                .left-lower-section {
+                    background-color: #333;
+
+                    height: 100%;
+                    flex-grow: 1;
+                }
+
+                .right-lower-section {
+                    background-color: #444;
+
+                    height: 100%;
+                    flex-grow: 1;
+                }
+            }
+        }
+
+        /*Right section css*/
+        .right-section {
+            width: 700px;
+            height: 600px;
+            border-radius: 10px;
+            border: 1px solid #444444;
+            background-color: #202020;
+            padding: 10px;
+
+            display: flex;
+            flex-direction: column;
+
+            .upper-section {
+                display: flex;
+                width: 100%;
+                flex-direction: row;
+                flex-grow: 1;
+
+                .left-upper-section {
+                    background-color: #333;
+
+                    height: 100%;
+                    flex-grow: 1;
+                }
+
+                .right-upper-section {
+                    background-color: #444;
+
+                    height: 100%;
+                    flex-grow: 1;
+                }
+            }
+
+            .lower-section {
+                background-color: #555;
+
+                width: 100%;
+                flex-grow: 1;
+            }
+        }
     }
-
-    .right-upper-section {}
-
-    .right-lower-section {}
 }
