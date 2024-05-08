@@ -88,6 +88,7 @@ select {
 }
 
 h1 {
+    flex-grow: 0;
     position: relative;
     color: #bbbbbb;
     margin: auto;
@@ -136,13 +137,13 @@ textarea {
 
 .right-upper-section-container {
     display: flex;
-    height: 50%;
-    width: 100%;
+    flex-grow: 1;
 }
 
 .date-list-container {
-    height: 100%;
-    width: 50%;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
     background-color: #656565;
 }
 
@@ -154,13 +155,11 @@ textarea {
 
 
 .week-container {
-    height: 50%;
-    width: 100%;
+    flex-grow: 1;
 }
 
 .week-container .fc {
-    height: 100%;
-    width: 100%;
+    flex-grow: 1;
 }
 
 .month-container .fc .fc-button,
@@ -213,4 +212,25 @@ textarea {
 
 .header-button:hover {
     background-color: #474747;
+}
+
+/*Right section css*/
+.create-poll-container {
+
+    .right-section {
+        width: 700px;
+        height: 600px;
+        border-radius: 10px;
+        border: 1px solid #444444;
+        background-color: #202020;
+
+
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .right-upper-section {}
+
+    .right-lower-section {}
 }

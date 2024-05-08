@@ -16,6 +16,7 @@ import { User } from '../../../models/User';
 
 import SearchBar from './searchBar/SearchBar';
 import AddedParticipants from './addedParticipants/AddedParticipants';
+import ProposedDates from './proposedDates/ProposedDates';
 
 const Dashboard: React.FC = () => {
     const [organizerId, setOrganizerId] = useState('');
@@ -127,7 +128,7 @@ const Dashboard: React.FC = () => {
                     </form>
                 </div>
 
-                {/*Right section*/}
+                {/*Right section
                 <div className="right-section-container">
                     <h1>Termine hinzufügen
                         <button className="header-button" onClick={createPoll}>Erstellen</button>
@@ -139,6 +140,8 @@ const Dashboard: React.FC = () => {
                         </div>
 
                         <div className="date-list-container">
+                            <h3>Ausgewählte Termine</h3>
+                            <ProposedDates proposedDates={proposedDates} />
                         </div>
 
                     </div>
@@ -166,6 +169,7 @@ const Dashboard: React.FC = () => {
                     </div>
 
                 </div>
+                */}
             </div>
         </div >
     );
