@@ -1,4 +1,4 @@
-package com.stroodle.backend;
+package com.stroodle.backend.exception;
 
 import java.time.LocalDateTime;
 
@@ -9,6 +9,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import com.stroodle.backend.model.ApiError;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {

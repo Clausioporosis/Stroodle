@@ -1,4 +1,4 @@
-package com.stroodle.backend;
+package com.stroodle.backend.model;
 
 import org.springframework.http.HttpStatus;
 import java.time.LocalDateTime;

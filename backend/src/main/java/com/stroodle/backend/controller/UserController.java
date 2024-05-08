@@ -1,8 +1,12 @@
-package com.stroodle.backend;
+package com.stroodle.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.stroodle.backend.model.AvailabilityRule;
+import com.stroodle.backend.model.User;
+import com.stroodle.backend.service.UserService;
 
 import jakarta.validation.Valid;
 
