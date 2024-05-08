@@ -1,23 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import Header from "../../common/header/Header"
-
 import { useNavigate } from 'react-router-dom';
+import PollService from '../../../services/PollService';
+import { Poll, ProposedDate } from '../../../models/Poll';
 
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from "@fullcalendar/interaction";
-
-import PollService from '../../../services/PollService';
-import UserService from '../../../services/UserService';
-import { Poll, ProposedDate } from '../../../models/Poll';
-import { User } from '../../../models/User';
+import interactionPlugin from '@fullcalendar/interaction';
 
 import SearchBar from './searchBar/SearchBar';
 import AddedParticipants from './addedParticipants/AddedParticipants';
-import ProposedDates from './proposedDates/ProposedDates';
 
 const Dashboard: React.FC = () => {
+    const navigate = useNavigate();
     const [organizerId, setOrganizerId] = useState('');
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -25,12 +21,14 @@ const Dashboard: React.FC = () => {
     const [duration, setDuration] = useState('15');
     const [participantsIds, setParticipantsIds] = useState<string[]>([]);
     const [proposedDates, setProposedDates] = useState<ProposedDate[]>([]);
+    const [passedTimeSlots, setPassedTimeSlots] = useState({
+        start: new Date(0, 0, 0),
+        end: new Date(),
+        display: 'background',
+        color: '#ddd'
+    });
 
-    const navigate = useNavigate();
-
-    useEffect(() => {
-    }, []);
-
+    //create a poll with the given data and navigate to the dashboard afterwards
     const createPoll = () => {
         const newPoll: Poll = {
             organizerId: organizerId,
@@ -52,6 +50,7 @@ const Dashboard: React.FC = () => {
             });
     };
 
+    // add a participant to the list
     const addParticipant = (addedParticipantId: string) => {
         if (!participantsIds.some(participantId => participantId === addedParticipantId)) {
             setParticipantsIds(prevParticipantsIds => [...prevParticipantsIds, addedParticipantId]);
@@ -60,10 +59,12 @@ const Dashboard: React.FC = () => {
         }
     };
 
+    // remove a participant from the list
     const removeParticipant = (removedParticipantId: string) => {
         setParticipantsIds(prevParticipantsIds => prevParticipantsIds.filter(participantid => participantid !== removedParticipantId));
     };
 
+    // methods for the calendar week view
     const handleDateClick = (selectedDate: any) => {
         const currentDate = new Date();
         const selectedDateObject = new Date(selectedDate.dateStr);
@@ -76,15 +77,29 @@ const Dashboard: React.FC = () => {
         }
     };
 
+    // refresh the passedTimeSlots every minute
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            setPassedTimeSlots({
+                start: new Date(0, 0, 0),
+                end: new Date(),
+                display: 'background',
+                color: '#ddd'
+            });
+        }, 60000); // every 60 seconds
+
+        return () => clearInterval(intervalId);
+    }, []);
+
+    // format the proposed dates for the calendar and add passedTimeSlots
     const proposedDatesForCalendar = proposedDates.map(proposedDate => {
         const endDate = new Date(proposedDate.date);
         endDate.setMinutes(endDate.getMinutes() + Number(duration));
         return {
             start: proposedDate.date,
             end: endDate,
-            title: '',
         };
-    });
+    }).concat([passedTimeSlots]);
 
     return (
         <div className="create-poll-page">
@@ -92,7 +107,7 @@ const Dashboard: React.FC = () => {
             <div className="create-poll-body">
 
 
-                <div className="left-section-container">
+                {/* <div className="left-section-container">
                     <h1>Umfrage erstellen</h1>
                     <form>
                         <h3>Titel </h3>
@@ -164,13 +179,12 @@ const Dashboard: React.FC = () => {
                             snapDuration="00:05:00"
                             selectOverlap={false}
                         />
-                    </div>
-
-                </div>
-
+                    </div> 
+                </div> */}
 
 
-                {/*Tabs rewrite
+
+                {/*Tabs rewrite*/}
                 <div className='left-section'>
                     <h1>Umfrage erstellen</h1>
                     <div className='upper-section'>
@@ -184,19 +198,31 @@ const Dashboard: React.FC = () => {
                         </form>
                     </div>
                     <div className='lower-section'>
-
                         <div className='left-lower-section'>
-
+                            <h3>Teilnehmer</h3>
+                            <SearchBar onUserClick={addParticipant} />
+                            <AddedParticipants participantsIds={participantsIds} removeSelectedParticipant={removeParticipant} />
                         </div>
                         <div className='right-lower-section'>
-
+                            <h3>Weitere Einstellungen</h3>
+                            <div className="duration-container">
+                                <span>Dauer des Meetings: </span>
+                                <select value={duration} onChange={e => setDuration(e.target.value)}>
+                                    <option value="15">15 Minuten</option>
+                                    <option value="30">30 Minuten</option>
+                                    <option value="45">45 Minuten</option>
+                                    <option value="60">60 Minuten</option>
+                                </select>
+                            </div>
                         </div>
-
                     </div>
 
                 </div>
 
                 <div className='right-section'>
+                    <h1>Termine hinzufügen
+                        <button className="header-button" onClick={createPoll}>Erstellen</button>
+                    </h1>
 
                     <div className='upper-section'>
 
@@ -209,11 +235,25 @@ const Dashboard: React.FC = () => {
 
                     </div>
                     <div className='lower-section'>
+                        <FullCalendar
+                            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                            initialView="timeGridWeek"
+                            height={'100%'}
+                            firstDay={1}
+                            allDaySlot={false}
+                            nowIndicator={true}
 
+                            snapDuration="00:05:00"
+                            slotMinTime="00:00"
+                            slotMaxTime="24:00"
+                            slotLabelFormat={{ hour: '2-digit', minute: '2-digit', hour12: false }}
+
+                            dateClick={handleDateClick}
+                            events={proposedDatesForCalendar}
+                        />
                     </div>
-
                 </div>
-                */}
+
 
             </div>
         </div>

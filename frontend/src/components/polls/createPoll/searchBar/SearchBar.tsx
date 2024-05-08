@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import UserService from '../../../../services/UserService';
+import { Search } from 'react-bootstrap-icons';
 import { User } from '../../../../models/User';
 
 interface SearchBarProps {
@@ -26,7 +27,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ onUserClick }) => {
     };
 
     return (
-        <div className='body'>
+        <div className='search-bar-component'>
+            <Search className='search-icon' />
             <input
                 className='search-input'
                 type="search"
@@ -35,7 +37,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onUserClick }) => {
                 onChange={handleSearchChange}
             />
             {searchTerm && (
-                <div className='list-container'>
+                <div className='result-list'>
                     {searchResults.length > 0 ? (
                         searchResults.map(user => (
                             <li className='list-item' key={user.id} onClick={() => handleUserClick(user)}>
