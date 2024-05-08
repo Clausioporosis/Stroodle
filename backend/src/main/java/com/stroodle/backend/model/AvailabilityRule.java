@@ -1,4 +1,4 @@
-package com.stroodle.backend;
+package com.stroodle.backend.model;
 
 public class AvailabilityRule {
     private String dayOfWeek; // z.B. "Monday", "Tuesday", etc.
