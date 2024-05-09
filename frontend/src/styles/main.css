@@ -466,7 +466,89 @@ textarea {
   padding: 10px;
   display: flex;
   flex-direction: column;
+}
+.create-poll-page .create-poll-body .right-section .calender-container {
+  width: 100%;
+  flex-grow: 1;
   --fc-today-bg-color: transparent;
+  /*DayGridView css*/
+}
+.create-poll-page .create-poll-body .right-section .calender-container .fc-toolbar {
+  justify-content: flex-start;
+  margin: 10px 0 15px 0;
+}
+.create-poll-page .create-poll-body .right-section .calender-container .fc-header-toolbar > div:nth-child(2) {
+  margin: auto;
+}
+.create-poll-page .create-poll-body .right-section .calender-container .fc-header-toolbar > div:nth-child(3) {
+  margin-left: auto;
+}
+.create-poll-page .create-poll-body .right-section .calender-container .fc-button-primary {
+  background-color: #333;
+  color: #bbb;
+  border: none;
+  display: flex;
+  border-radius: 5px;
+  padding: 5px;
+  height: 35px;
+  margin-right: 10px;
+}
+.create-poll-page .create-poll-body .right-section .calender-container .fc-button-primary:disabled {
+  pointer-events: none;
+}
+.create-poll-page .create-poll-body .right-section .calender-container .fc-button-primary:focus {
+  box-shadow: none;
+}
+.create-poll-page .create-poll-body .right-section .calender-container .fc-button-primary:hover {
+  background-color: #444;
+}
+.create-poll-page .create-poll-body .right-section .calender-container .fc-button-primary:active {
+  background-color: #555;
+  animation: buttonPress 0.2s ease;
+}
+.create-poll-page .create-poll-body .right-section .calender-container .fc-duration-button {
+  position: relative;
+  background-color: #333;
+  height: 100%;
+  width: 120px;
+}
+.create-poll-page .create-poll-body .right-section .calender-container .fc-duration-button:hover,
+.create-poll-page .create-poll-body .right-section .calender-container .fc-duration-button:active,
+.create-poll-page .create-poll-body .right-section .calender-container .fc-duration-button:focus {
+  background-color: #333;
+  box-shadow: none;
+  animation: none;
+}
+.create-poll-page .create-poll-body .right-section .calender-container .fc-duration-button .duration-select {
+  position: absolute;
+  height: 100%;
+  margin: -5px 0 0 -5px;
+  padding-top: 2px;
+  padding-right: 5px;
+  background-color: #333;
+  font-size: 1em;
+}
+.create-poll-page .create-poll-body .right-section .calender-container .fc-duration-button .duration-select option:disabled {
+  display: none;
+}
+@keyframes buttonPress {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.create-poll-page .create-poll-body .right-section .calender-container .fc-toolbar-title {
+  margin-left: 10px;
+  font-size: large;
+}
+.create-poll-page .create-poll-body .right-section .calender-container .fc-dayGridMonth-view {
+  height: auto;
+  width: 50%;
 }
 .create-poll-page .create-poll-body .right-section .upper-section {
   display: flex;
@@ -488,7 +570,6 @@ textarea {
   background-color: #555;
   width: 100%;
   height: 50%;
-  --fc-today-bg-color: transparent;
 }
 /*component css*/
 input {

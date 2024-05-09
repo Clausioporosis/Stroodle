@@ -58,7 +58,6 @@ const Dashboard: React.FC = () => {
                                 title={poll.title}
                                 description={poll.description}
                                 location={poll.location}
-                                duration={poll.duration}
                                 organizerId={poll.organizerId}
                                 proposedDates={poll.proposedDates}
                                 participantsIds={poll.participantsIds}

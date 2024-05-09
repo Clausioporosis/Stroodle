@@ -10,7 +10,7 @@ interface CreatedPollCardProps extends Poll {
     onDeleteClick: (id: string) => void;
 }
 
-const CreatedPollCard: React.FC<CreatedPollCardProps> = ({ id, title, description, duration, onEditClick, onShareClick, onDeleteClick }) => {
+const CreatedPollCard: React.FC<CreatedPollCardProps> = ({ id, title, description, onEditClick, onShareClick, onDeleteClick }) => {
     const handleEdit = () => {
         onEditClick(id!);
     };
@@ -36,7 +36,7 @@ const CreatedPollCard: React.FC<CreatedPollCardProps> = ({ id, title, descriptio
                 </p>
                 <p className="poll-card-duration">
                     <ClockHistory className="clock-icon" />
-                    {duration} Minuten
+                    {/*duration*/} Minuten
                 </p>
             </div>
             <div className="poll-card-actions">

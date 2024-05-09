@@ -35,7 +35,6 @@ const Dashboard: React.FC = () => {
             title: title,
             description: description,
             location: location,
-            duration: Number(duration),
             participantsIds: participantsIds,
             proposedDates: proposedDates
         };
@@ -70,7 +69,7 @@ const Dashboard: React.FC = () => {
         const selectedDateObject = new Date(selectedDate.dateStr);
 
         if (selectedDateObject >= currentDate) {
-            const newProposedDate = new ProposedDate(selectedDate.dateStr, '');
+            const newProposedDate = new ProposedDate(selectedDate.dateStr, duration, false, '');
             setProposedDates(prevProposedDates => [...prevProposedDates, newProposedDate]);
         } else {
             alert('Noch gibt es keine Zeitreisen. Bitte wähle ein Datum in der Zukunft.');
@@ -94,97 +93,97 @@ const Dashboard: React.FC = () => {
     // format the proposed dates for the calendar and add passedTimeSlots
     const proposedDatesForCalendar = proposedDates.map(proposedDate => {
         const endDate = new Date(proposedDate.date);
-        endDate.setMinutes(endDate.getMinutes() + Number(duration));
+        endDate.setMinutes(endDate.getMinutes() + Number(proposedDate.duration));
         return {
             start: proposedDate.date,
             end: endDate,
         };
     }).concat([passedTimeSlots]);
 
+    // duration selection logic
+    type OptionInfo = {
+        value: string;
+        text: string;
+        disabled?: boolean;
+        selected?: boolean;
+    };
+
+    const renderDurationDropdown = (element: Element): void => {
+        const durationSelect = document.createElement('select');
+        durationSelect.title = 'Termin Dauer';
+        durationSelect.className = 'duration-select';
+
+        const options: OptionInfo[] = [
+            { value: '', text: '15 Minuten', disabled: true, selected: true },
+            { value: '15', text: '15 Minuten' },
+            { value: '30', text: '30 Minuten' },
+            { value: '45', text: '45 Minuten' },
+            { value: 'allDay', text: 'Ganztägig' },
+            { value: 'custom', text: 'Individuell' }
+        ];
+
+        options.forEach(({ value, text, disabled, selected }) => {
+            const option = document.createElement('option');
+            option.value = value;
+            option.textContent = text;
+            if (disabled) option.disabled = true;
+            if (selected) option.selected = true;
+            durationSelect.appendChild(option);
+        });
+
+        durationSelect.addEventListener('change', event => handleDurationChange(event.target as HTMLSelectElement));
+
+        element.appendChild(durationSelect);
+    };
+
+    function handleDurationChange(durationSelect: HTMLSelectElement): void {
+        const selectedValue = durationSelect.value;
+        if (selectedValue === 'custom') {
+            promptCustomDuration(durationSelect);
+        } else if (selectedValue === 'allDay') {
+            updateDurationOption(durationSelect, 'Ganztägig');  // Spezielle Behandlung für ganztägige Ereignisse
+        } else {
+            updateDurationOption(durationSelect, selectedValue + ' Minuten');
+            setDuration(selectedValue);
+        }
+    }
+
+    //fehlerbehandlung einfügen + modal
+    function promptCustomDuration(durationSelect: HTMLSelectElement): void {
+        let userInput = prompt("Bitte geben Sie etwas ein:");
+        if (userInput === null) {
+            resetDurationSelection(durationSelect);
+        } else {
+            const duration = userInput || 'custom';
+            updateDurationOption(durationSelect, duration + ' Minuten');
+            setDuration(duration);
+        }
+    }
+
+    function updateDurationOption(durationSelect: HTMLSelectElement, duration: string): void {
+        const displayedOption = durationSelect.options[0];
+        displayedOption.text = duration;
+        durationSelect.selectedIndex = 0;
+    }
+
+    function resetDurationSelection(durationSelect: HTMLSelectElement): void {
+        durationSelect.selectedIndex = 0;
+    }
+
+    useEffect(() => {
+        const toolbarElement = document.querySelector('.fc-duration-button');
+        if (toolbarElement) {
+            renderDurationDropdown(toolbarElement);
+        }
+    }, []);
+
+
+
     return (
         <div className="create-poll-page">
             <Header />
             <div className="create-poll-body">
 
-
-                {/* <div className="left-section-container">
-                    <h1>Umfrage erstellen</h1>
-                    <form>
-                        <h3>Titel </h3>
-                        <input type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Was ist der Anlass?" />
-                        <h3>Beschreibung</h3>
-                        <textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Was muss man wissen?" />
-                        <h3>Ort</h3>
-                        <input type="text" value={location} onChange={e => setLocation(e.target.value)} placeholder="Wo wird es statt finden?" />
-
-                        <div className='lower-left-section'>
-
-                            <div className='participants-section'>
-                                <h3>Teilnehmer</h3>
-                                <SearchBar onUserClick={addParticipant} />
-                                <AddedParticipants participantsIds={participantsIds} removeSelectedParticipant={removeParticipant} />
-                            </div>
-
-                            <div className="more-settings-container">
-                                <h3>Weitere Einstellungen</h3>
-                                <div className="duration-container">
-                                    <span>Dauer des Meetings: </span>
-                                    <select value={duration} onChange={e => setDuration(e.target.value)}>
-                                        <option value="15">15 Minuten</option>
-                                        <option value="30">30 Minuten</option>
-                                        <option value="45">45 Minuten</option>
-                                        <option value="60">60 Minuten</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                        </div>
-                    </form>
-                </div>
-
-                <div className="right-section-container">
-                    <h1>Termine hinzufügen
-                        <button className="header-button" onClick={createPoll}>Erstellen</button>
-                    </h1>
-
-                    <div className="right-upper-section-container">
-
-                        <div className="month-container">
-                        </div>
-
-                        <div className="date-list-container">
-                            <h3>Ausgewählte Termine</h3>
-                            <ProposedDates proposedDates={proposedDates} />
-                        </div>
-
-                    </div>
-
-                    <div className="week-container">
-                        <FullCalendar
-                            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-                            initialView="timeGridWeek"
-                            firstDay={1}
-                            headerToolbar={{
-                                start: 'prev,next,today',
-                                center: 'title',
-                                end: ''
-                            }}
-                            dateClick={handleDateClick}
-                            events={proposedDatesForCalendar}
-                            slotMinTime="00:00"
-                            slotMaxTime="24:00"
-                            allDaySlot={false}
-                            slotLabelFormat={{ hour: '2-digit', minute: '2-digit', hour12: false }}
-                            nowIndicator={true}
-                            snapDuration="00:05:00"
-                            selectOverlap={false}
-                        />
-                    </div> 
-                </div> */}
-
-
-
-                {/*Tabs rewrite*/}
                 <div className='left-section'>
                     <h1>Umfrage erstellen</h1>
                     <div className='upper-section'>
@@ -205,15 +204,6 @@ const Dashboard: React.FC = () => {
                         </div>
                         <div className='right-lower-section'>
                             <h3>Weitere Einstellungen</h3>
-                            <div className="duration-container">
-                                <span>Dauer des Meetings: </span>
-                                <select value={duration} onChange={e => setDuration(e.target.value)}>
-                                    <option value="15">15 Minuten</option>
-                                    <option value="30">30 Minuten</option>
-                                    <option value="45">45 Minuten</option>
-                                    <option value="60">60 Minuten</option>
-                                </select>
-                            </div>
                         </div>
                     </div>
 
@@ -223,35 +213,43 @@ const Dashboard: React.FC = () => {
                     <h1>Termine hinzufügen
                         <button className="header-button" onClick={createPoll}>Erstellen</button>
                     </h1>
+                    <div className='calender-container'>
+                        <FullCalendar
+                            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                            initialView="timeGridWeek"
+                            height={'100%'}
+                            firstDay={1}
+                            allDaySlot={true}
+                            nowIndicator={true}
+                            locale={'de'}
+                            headerToolbar={{
+                                left: 'prev,next,today,duration',
+                                center: 'title',
+                                right: 'dayGridMonth,timeGridWeek'
+                            }}
 
-                    <div className='upper-section'>
+                            customButtons={{
+                                duration: {
+                                    text: 'Dauer',
+                                }
+                            }}
 
+                            snapDuration="00:05:00"
+
+                            dateClick={handleDateClick}
+                            events={proposedDatesForCalendar}
+                        />
+                    </div>
+                    {/* <div className='upper-section'>
                         <div className='left-upper-section'>
 
                         </div>
                         <div className='right-upper-section'>
 
                         </div>
-
                     </div>
                     <div className='lower-section'>
-                        <FullCalendar
-                            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-                            initialView="timeGridWeek"
-                            height={'100%'}
-                            firstDay={1}
-                            allDaySlot={false}
-                            nowIndicator={true}
-
-                            snapDuration="00:05:00"
-                            slotMinTime="00:00"
-                            slotMaxTime="24:00"
-                            slotLabelFormat={{ hour: '2-digit', minute: '2-digit', hour12: false }}
-
-                            dateClick={handleDateClick}
-                            events={proposedDatesForCalendar}
-                        />
-                    </div>
+                    </div> */}
                 </div>
 
 
