@@ -4,9 +4,9 @@ export class ProposedDate {
     date: Date;
     duration: string;
     booked: boolean;
-    votersId: string;
+    votersId: string[];
 
-    constructor(date: Date, duration: string, booked: boolean, votersId: string) {
+    constructor(date: Date, duration: string, booked: boolean, votersId: string[]) {
         this.date = date;
         this.duration = duration;
         this.booked = booked;

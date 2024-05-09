@@ -43,7 +43,7 @@ const WeekView: React.FC<ProposedDateProps> = ({ proposedDates, duration }) => {
         const selectedDateObject = new Date(selectedDate.dateStr);
 
         if (selectedDateObject >= currentDate) {
-            const newProposedDate = new ProposedDate(selectedDate.dateStr, duration, false, '');
+            const newProposedDate = new ProposedDate(selectedDate.dateStr, duration, false, []);
             //setProposedDates(prevProposedDates => [...prevProposedDates, newProposedDate]);
         } else {
             alert('Noch gibt es keine Zeitreisen. Bitte wähle ein Datum in der Zukunft.');

@@ -471,17 +471,10 @@ textarea {
   width: 100%;
   flex-grow: 1;
   --fc-today-bg-color: transparent;
-  /*DayGridView css*/
 }
 .create-poll-page .create-poll-body .right-section .calender-container .fc-toolbar {
   justify-content: flex-start;
   margin: 10px 0 15px 0;
-}
-.create-poll-page .create-poll-body .right-section .calender-container .fc-header-toolbar > div:nth-child(2) {
-  margin: auto;
-}
-.create-poll-page .create-poll-body .right-section .calender-container .fc-header-toolbar > div:nth-child(3) {
-  margin-left: auto;
 }
 .create-poll-page .create-poll-body .right-section .calender-container .fc-button-primary {
   background-color: #333;
@@ -545,10 +538,6 @@ textarea {
 .create-poll-page .create-poll-body .right-section .calender-container .fc-toolbar-title {
   margin-left: 10px;
   font-size: large;
-}
-.create-poll-page .create-poll-body .right-section .calender-container .fc-dayGridMonth-view {
-  height: auto;
-  width: 50%;
 }
 .create-poll-page .create-poll-body .right-section .upper-section {
   display: flex;

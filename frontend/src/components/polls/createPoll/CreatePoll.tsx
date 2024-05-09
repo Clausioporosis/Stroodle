@@ -12,6 +12,16 @@ import interactionPlugin from '@fullcalendar/interaction';
 import SearchBar from './searchBar/SearchBar';
 import AddedParticipants from './addedParticipants/AddedParticipants';
 
+type FullCalendarEvent = {
+    start: Date;
+    end?: Date;
+    title?: string;
+    allDay?: boolean;
+    display?: string;
+    color?: string;
+};
+
+
 const Dashboard: React.FC = () => {
     const navigate = useNavigate();
     const [organizerId, setOrganizerId] = useState('');
@@ -21,12 +31,7 @@ const Dashboard: React.FC = () => {
     const [duration, setDuration] = useState('15');
     const [participantsIds, setParticipantsIds] = useState<string[]>([]);
     const [proposedDates, setProposedDates] = useState<ProposedDate[]>([]);
-    const [passedTimeSlots, setPassedTimeSlots] = useState({
-        start: new Date(0, 0, 0),
-        end: new Date(),
-        display: 'background',
-        color: '#ddd'
-    });
+    const [calenderEvents, setCalenderEvents] = useState<FullCalendarEvent[]>([]);
 
     //create a poll with the given data and navigate to the dashboard afterwards
     const createPoll = () => {
@@ -63,42 +68,74 @@ const Dashboard: React.FC = () => {
         setParticipantsIds(prevParticipantsIds => prevParticipantsIds.filter(participantid => participantid !== removedParticipantId));
     };
 
-    // methods for the calendar week view
+    // handle the click on a date in the calender
+
     const handleDateClick = (selectedDate: any) => {
         const currentDate = new Date();
         const selectedDateObject = new Date(selectedDate.dateStr);
 
         if (selectedDateObject >= currentDate) {
-            const newProposedDate = new ProposedDate(selectedDate.dateStr, duration, false, '');
+            const newProposedDate = new ProposedDate(selectedDate.dateStr, duration, false, []);
             setProposedDates(prevProposedDates => [...prevProposedDates, newProposedDate]);
+            addProposedDateToCalenderEvents(newProposedDate);
         } else {
             alert('Noch gibt es keine Zeitreisen. Bitte wähle ein Datum in der Zukunft.');
         }
     };
 
-    // refresh the passedTimeSlots every minute
-    useEffect(() => {
-        const intervalId = setInterval(() => {
-            setPassedTimeSlots({
-                start: new Date(0, 0, 0),
-                end: new Date(),
-                display: 'background',
-                color: '#ddd'
-            });
-        }, 10000); // every 10 seconds
+    // add the proposed dates to the calender events
+    const addProposedDateToCalenderEvents = (newProposedDate: ProposedDate) => {
+        let start = new Date(newProposedDate.date);
+        let end = new Date(newProposedDate.date);
+        let title = '';
+        let allDayEvent;
 
+        if (duration === "allDay") {
+            allDayEvent = true;
+            title = 'Ganztägig';
+            start.setHours(0, 0, 0, 0);
+            end.setHours(24, 0, 0, 0);
+        } else {
+            allDayEvent = false;
+            end.setMinutes(start.getMinutes() + Number(newProposedDate.duration));
+        }
+
+        const newCalendarEvent: FullCalendarEvent = {
+            start: start,
+            end: end,
+            title: title,
+            allDay: allDayEvent
+        };
+
+        setCalenderEvents(prevEvents => [...prevEvents, newCalendarEvent]);
+    };
+
+    // refresh the passed time background every 10 seconds
+    const refreshPassedTimeBackground = () => {
+        const updatedPassedTimeBackground = {
+            start: new Date(0),
+            end: new Date(),
+            display: 'background',
+            color: '#ddd'
+        };
+
+        setCalenderEvents(prevEvents => {
+            const filteredEvents = prevEvents.filter(event => event.display !== 'background');
+            return [...filteredEvents, updatedPassedTimeBackground];
+        });
+    };
+
+    // refresh the passed time background every 10 seconds
+    useEffect(() => {
+        // initial refresh
+        refreshPassedTimeBackground();
+        // refresh the passedTimeBackground every 10 seconds
+        const intervalId = setInterval(() => {
+            refreshPassedTimeBackground();
+        }, 10000);
         return () => clearInterval(intervalId);
     }, []);
 
-    // format the proposed dates for the calendar and add passedTimeSlots
-    const proposedDatesForCalendar = proposedDates.map(proposedDate => {
-        const endDate = new Date(proposedDate.date);
-        endDate.setMinutes(endDate.getMinutes() + Number(proposedDate.duration));
-        return {
-            start: proposedDate.date,
-            end: endDate,
-        };
-    }).concat([passedTimeSlots]);
 
     // duration selection logic
     type OptionInfo = {
@@ -141,7 +178,8 @@ const Dashboard: React.FC = () => {
         if (selectedValue === 'custom') {
             promptCustomDuration(durationSelect);
         } else if (selectedValue === 'allDay') {
-            updateDurationOption(durationSelect, 'Ganztägig');  // Spezielle Behandlung für ganztägige Ereignisse
+            updateDurationOption(durationSelect, 'Ganztägig');
+            setDuration(selectedValue);
         } else {
             updateDurationOption(durationSelect, selectedValue + ' Minuten');
             setDuration(selectedValue);
@@ -225,21 +263,24 @@ const Dashboard: React.FC = () => {
                             headerToolbar={{
                                 left: 'prev,next,today,duration',
                                 center: 'title',
-                                right: 'dayGridMonth,timeGridWeek'
+                                right: ''
                             }}
-
                             customButtons={{
                                 duration: {
                                     text: 'Dauer',
                                 }
                             }}
-
+                            eventTimeFormat={{
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: false
+                            }}
                             snapDuration="00:05:00"
-
                             dateClick={handleDateClick}
-                            events={proposedDatesForCalendar}
+                            events={calenderEvents}
                         />
                     </div>
+
                     {/* <div className='upper-section'>
                         <div className='left-upper-section'>
 
