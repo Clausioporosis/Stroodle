@@ -5,10 +5,12 @@ import java.util.List;
 
 public class ProposedDate {
     private Date date;
+    private String duration;
     private List<String> voterIds;
 
-    public ProposedDate(Date date, List<String> voterIds) {
+    public ProposedDate(Date date, String duration, List<String> voterIds) {
         this.date = date;
+        this.duration = duration;
         this.voterIds = voterIds;
     }
 
@@ -18,6 +20,14 @@ public class ProposedDate {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 
     public List<String> getVoterIds() {

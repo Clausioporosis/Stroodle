@@ -47,7 +47,7 @@ const Dashboard: React.FC = () => {
         PollService.createPoll(newPoll)
             .then(createdPoll => {
                 console.log('Erstellte Umfrage:', createdPoll);
-                navigate('/dashboard');
+                //navigate('/dashboard');
             })
             .catch(error => {
                 console.error('Es gab einen Fehler beim Erstellen der Umfrage:', error);
@@ -63,19 +63,19 @@ const Dashboard: React.FC = () => {
         }
     };
 
+
     // remove a participant from the list
     const removeParticipant = (removedParticipantId: string) => {
         setParticipantsIds(prevParticipantsIds => prevParticipantsIds.filter(participantid => participantid !== removedParticipantId));
     };
 
     // handle the click on a date in the calender
-
     const handleDateClick = (selectedDate: any) => {
         const currentDate = new Date();
         const selectedDateObject = new Date(selectedDate.dateStr);
 
         if (selectedDateObject >= currentDate) {
-            const newProposedDate = new ProposedDate(selectedDate.dateStr, duration, false, []);
+            const newProposedDate = new ProposedDate(selectedDate.dateStr, duration, []);
             setProposedDates(prevProposedDates => [...prevProposedDates, newProposedDate]);
             addProposedDateToCalenderEvents(newProposedDate);
         } else {
@@ -132,7 +132,9 @@ const Dashboard: React.FC = () => {
         // refresh the passedTimeBackground every 10 seconds
         const intervalId = setInterval(() => {
             refreshPassedTimeBackground();
-        }, 10000);
+
+            console.log('Teilnehmer hinzugefügt:', participantsIds);
+        }, 10000);//10000
         return () => clearInterval(intervalId);
     }, []);
 

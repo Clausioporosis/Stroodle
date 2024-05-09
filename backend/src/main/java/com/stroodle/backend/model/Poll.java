@@ -38,13 +38,15 @@ public class Poll {
     @Field("proposedDates")
     private List<ProposedDate> proposedDates;
 
+    @Field("bookedDayIndex")
+    private Number bookedDayIndex;
+
     // Constructors
     public Poll() {
     }
 
     public Poll(String title, String description, String location, String duration, String organizerId,
-            List<ProposedDate> proposedDates,
-            List<String> participantIds) {
+            List<ProposedDate> proposedDates, List<String> participantIds, Number bookedDayIndex) {
         this.organizerId = organizerId;
         this.title = title;
         this.description = description;
@@ -52,6 +54,7 @@ public class Poll {
         this.duration = duration;
         this.participantIds = participantIds;
         this.proposedDates = proposedDates;
+        this.bookedDayIndex = bookedDayIndex;
     }
 
     // Getter and Setter methods
@@ -117,5 +120,13 @@ public class Poll {
 
     public void setProposedDates(List<ProposedDate> proposedDates) {
         this.proposedDates = proposedDates;
+    }
+
+    public Number getBookedDayIndex() {
+        return bookedDayIndex;
+    }
+
+    public void setBookedDayIndex(Number bookedDayIndex) {
+        this.bookedDayIndex = bookedDayIndex;
     }
 }
