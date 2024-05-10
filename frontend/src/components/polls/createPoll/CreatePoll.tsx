@@ -28,10 +28,10 @@ const Dashboard: React.FC = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [location, setLocation] = useState('');
-    const [duration, setDuration] = useState('15');
+    const [selectedDuration, setSelectedDuration] = useState('15');
     const [participantsIds, setParticipantsIds] = useState<string[]>([]);
     const [proposedDates, setProposedDates] = useState<ProposedDate[]>([]);
-    const [calenderEvents, setCalenderEvents] = useState<FullCalendarEvent[]>([]);
+    const [calendarEvents, setCalendarEvents] = useState<FullCalendarEvent[]>([]);
 
     //create a poll with the given data and navigate to the dashboard afterwards
     const createPoll = () => {
@@ -69,18 +69,29 @@ const Dashboard: React.FC = () => {
         setParticipantsIds(prevParticipantsIds => prevParticipantsIds.filter(participantid => participantid !== removedParticipantId));
     };
 
-    // handle the click on a date in the calender
-    const handleDateClick = (selectedDate: any) => {
-        const currentDate = new Date();
-        const selectedDateObject = new Date(selectedDate.dateStr);
+    // calendar logic --------------------------------------------------------------------------------------------
 
-        if (selectedDateObject >= currentDate) {
-            const newProposedDate = new ProposedDate(selectedDate.dateStr, duration, []);
+    // handle the click on a date in the calender
+    const handleDateClick = (selectedCalenderDate: any) => {
+        const currentDate = new Date();
+        const selectedDate = new Date(selectedCalenderDate.dateStr);
+
+        if (selectedDate < currentDate || doesAllDayEventAlreadyExist(selectedDate)) {
+            return;
+        } else {
+            const newProposedDate = new ProposedDate(selectedCalenderDate.dateStr, selectedDuration, []);
             setProposedDates(prevProposedDates => [...prevProposedDates, newProposedDate]);
             addProposedDateToCalenderEvents(newProposedDate);
-        } else {
-            alert('Noch gibt es keine Zeitreisen. Bitte wähle ein Datum in der Zukunft.');
         }
+    };
+
+    // check if an all day event already exists for the selected date
+    const doesAllDayEventAlreadyExist = (selectedDate: Date): boolean => {
+        return calendarEvents.some(calendarEvent => {
+            const calendarEventObject = new Date(calendarEvent.start);
+            return calendarEventObject.toDateString() === selectedDate.toDateString() && calendarEvent.allDay && selectedDuration === 'allDay';
+        });
+
     };
 
     // add the proposed dates to the calender events
@@ -90,7 +101,7 @@ const Dashboard: React.FC = () => {
         let title = '';
         let allDayEvent;
 
-        if (duration === "allDay") {
+        if (selectedDuration === "allDay") {
             allDayEvent = true;
             title = 'Ganztägig';
             start.setHours(0, 0, 0, 0);
@@ -107,37 +118,37 @@ const Dashboard: React.FC = () => {
             allDay: allDayEvent
         };
 
-        setCalenderEvents(prevEvents => [...prevEvents, newCalendarEvent]);
+        setCalendarEvents(prevEvents => [...prevEvents, newCalendarEvent]);
     };
 
     // refresh the passed time background every 10 seconds
-    const refreshPassedTimeBackground = () => {
-        const updatedPassedTimeBackground = {
+    const addExpiredTimeHighlightToCalenderEvents = () => {
+        const expiredTimeHighlight = {
             start: new Date(0),
             end: new Date(),
             display: 'background',
             color: '#ddd'
         };
-
-        setCalenderEvents(prevEvents => {
+        // remove the old passed time background and add the updated one to the calender events
+        setCalendarEvents(prevEvents => {
             const filteredEvents = prevEvents.filter(event => event.display !== 'background');
-            return [...filteredEvents, updatedPassedTimeBackground];
+            return [...filteredEvents, expiredTimeHighlight];
         });
     };
 
     // refresh the passed time background every 10 seconds
     useEffect(() => {
-        // initial refresh
-        refreshPassedTimeBackground();
-        // refresh the passedTimeBackground every 10 seconds
+        // initial call
+        addExpiredTimeHighlightToCalenderEvents();
         const intervalId = setInterval(() => {
-            refreshPassedTimeBackground();
-        }, 10000);
+            // call every 30 seconds
+            addExpiredTimeHighlightToCalenderEvents();
+        }, 30000);
         return () => clearInterval(intervalId);
     }, []);
 
 
-    // duration selection logic
+    // duration selection logic ---------------------------------------------------------------------------------
     type OptionInfo = {
         value: string;
         text: string;
@@ -179,10 +190,10 @@ const Dashboard: React.FC = () => {
             promptCustomDuration(durationSelect);
         } else if (selectedValue === 'allDay') {
             updateDurationOption(durationSelect, 'Ganztägig');
-            setDuration(selectedValue);
+            setSelectedDuration(selectedValue);
         } else {
             updateDurationOption(durationSelect, selectedValue + ' Minuten');
-            setDuration(selectedValue);
+            setSelectedDuration(selectedValue);
         }
     }
 
@@ -194,7 +205,7 @@ const Dashboard: React.FC = () => {
         } else {
             const duration = userInput || 'custom';
             updateDurationOption(durationSelect, duration + ' Minuten');
-            setDuration(duration);
+            setSelectedDuration(duration);
         }
     }
 
@@ -277,7 +288,7 @@ const Dashboard: React.FC = () => {
                             }}
                             snapDuration="00:05:00"
                             dateClick={handleDateClick}
-                            events={calenderEvents}
+                            events={calendarEvents}
                         />
                     </div>
 

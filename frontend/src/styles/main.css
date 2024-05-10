@@ -471,10 +471,18 @@ textarea {
   width: 100%;
   flex-grow: 1;
   --fc-today-bg-color: transparent;
+  --fc-border-color: #bbbbbb;
 }
 .create-poll-page .create-poll-body .right-section .calender-container .fc-toolbar {
   justify-content: flex-start;
   margin: 10px 0 15px 0;
+}
+.create-poll-page .create-poll-body .right-section .calender-container .fc .fc-widget-content {
+  border-color: #00a2ff;
+  /* Change #00a2ff to whatever color you want */
+}
+.create-poll-page .create-poll-body .right-section .calender-container .fc-view {
+  color: #bbbbbb;
 }
 .create-poll-page .create-poll-body .right-section .calender-container .fc-button-primary {
   background-color: #333;
@@ -503,7 +511,7 @@ textarea {
   position: relative;
   background-color: #333;
   height: 100%;
-  width: 120px;
+  width: 115px;
 }
 .create-poll-page .create-poll-body .right-section .calender-container .fc-duration-button:hover,
 .create-poll-page .create-poll-body .right-section .calender-container .fc-duration-button:active,
@@ -538,6 +546,7 @@ textarea {
 .create-poll-page .create-poll-body .right-section .calender-container .fc-toolbar-title {
   margin-left: 10px;
   font-size: large;
+  color: #bbbbbb;
 }
 .create-poll-page .create-poll-body .right-section .upper-section {
   display: flex;
