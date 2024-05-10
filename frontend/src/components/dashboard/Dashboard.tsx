@@ -60,7 +60,7 @@ const Dashboard: React.FC = () => {
                                 location={poll.location}
                                 organizerId={poll.organizerId}
                                 proposedDates={poll.proposedDates}
-                                participantsIds={poll.participantsIds}
+                                participantIds={poll.participantIds}
                                 onEditClick={handleEditClick}
                                 onShareClick={handleShareClick}
                                 onDeleteClick={handleDeleteClick}

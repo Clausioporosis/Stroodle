@@ -32,7 +32,7 @@ public class Poll {
     @Field("duration")
     private String duration;
 
-    @Field("participantsIds")
+    @Field("participantIds")
     private List<String> participantIds;
 
     @Field("proposedDates")

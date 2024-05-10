@@ -16,7 +16,7 @@ export class Poll {
     title: string;
     description: string;
     location: string;
-    participantsIds: string[];
+    participantIds: string[];
     proposedDates: ProposedDate[];
     bookedDateIndex?: number;
 
@@ -27,7 +27,7 @@ export class Poll {
         this.description = description;
         this.location = location;
         this.proposedDates = proposedDates;
-        this.participantsIds = participantsIds;
+        this.participantIds = participantsIds;
         this.bookedDateIndex = bookedDateIndex;
     }
 }

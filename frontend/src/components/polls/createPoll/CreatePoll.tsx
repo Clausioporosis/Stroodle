@@ -40,7 +40,7 @@ const Dashboard: React.FC = () => {
             title: title,
             description: description,
             location: location,
-            participantsIds: participantsIds,
+            participantIds: participantsIds,
             proposedDates: proposedDates
         };
 
@@ -56,13 +56,13 @@ const Dashboard: React.FC = () => {
 
     // add a participant to the list
     const addParticipant = (addedParticipantId: string) => {
+
         if (!participantsIds.some(participantId => participantId === addedParticipantId)) {
             setParticipantsIds(prevParticipantsIds => [...prevParticipantsIds, addedParticipantId]);
         } else {
             alert('Dieser Teilnehmer existiert bereits in der Liste.');
         }
     };
-
 
     // remove a participant from the list
     const removeParticipant = (removedParticipantId: string) => {
@@ -132,9 +132,7 @@ const Dashboard: React.FC = () => {
         // refresh the passedTimeBackground every 10 seconds
         const intervalId = setInterval(() => {
             refreshPassedTimeBackground();
-
-            console.log('Teilnehmer hinzugefügt:', participantsIds);
-        }, 10000);//10000
+        }, 10000);
         return () => clearInterval(intervalId);
     }, []);
 
