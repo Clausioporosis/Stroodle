@@ -1,23 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import Header from "../common/header/Header"
-import { useNavigate } from 'react-router-dom';
-import PollService from '../../services/PollService';
-import { Poll, ProposedDate } from '../../models/Poll';
-
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
+import React from 'react';
+import HeaderComponent from '../common/header/Header';
+import WeekView from '../shared/weekView/WeekView';
 
 
 const Availability: React.FC = () => {
 
 
     return (
-        <div className="availability-page">
-            <Header />
-            <div className="availability-body">
-
+        <div className='app'>
+            <HeaderComponent />
+            <div className='app-body'>
+                <div className='content-tab'>
+                    <div className='tab-item'>
+                        <h3>Verfügbarkeit</h3>
+                        <WeekView useCase={'availability'} />
+                    </div>
+                </div>
             </div>
         </div>
     );

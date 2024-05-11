@@ -2,31 +2,38 @@ import React, { useState } from 'react';
 import { List, PersonCircle } from 'react-bootstrap-icons';
 
 const Header: React.FC = () => {
-    const [dropdownOpen, setDropdownOpen] = useState(false);
-
-    const toggleDropdown = () => {
-        setDropdownOpen(!dropdownOpen);
-    };
+    const [isOpen, setIsOpen] = useState(false);
+    const toggleDropdown = () => setIsOpen(!isOpen);
 
     return (
-        <div>
-            <div className={`dropdown-menu ${dropdownOpen ? 'dropdown-open' : 'dropdown-close'}`}>
-                <a href="/availability">Verfügbarkeit</a>
-                <a href="/profile">Profil</a>
-                <a href="/settings">Einstellungen</a>
-                <a href="/login">Abmelden</a>
+        <header className='app-header'>
+
+            <div className='start'>
+                <img src={process.env.PUBLIC_URL + '/stroodle-logo-white.png'} alt='Logo' className='stroodle-logo' />
             </div>
-            <header className="header-container">
-                <img src={process.env.PUBLIC_URL + '/stroodle-logo-white.png'} alt="Logo" className="logo" />
-                <div className="right-section">
-                    <div className="page-links">
-                        <a href="/dashboard">Dashboard</a>
-                    </div>
-                    <div className="profile-icon"><PersonCircle /></div>
-                    <button className="dropdown-button" onClick={toggleDropdown}><List /></button>
+
+            <div className='end'>
+                <div className='button-container'>
+                    <button className='profile-button'>
+                        <PersonCircle className='icon profile-icon' />
+                    </button>
+                    <button className='list-button' onClick={toggleDropdown}>
+                        <List className='icon list-icon' />
+                    </button>
                 </div>
-            </header>
-        </div>
+                {isOpen && (
+                    <div className='dropdown-container'>
+                        <a href='/dashboard'>Dashboard</a>
+                        <a href='/availability'>Verfügbarkeit</a>
+                        <a href='/profile'>Profil</a>
+                        <a href='/login'>Abmelden</a>
+                    </div>
+                )}
+
+            </div>
+
+
+        </header>
     );
 };
 

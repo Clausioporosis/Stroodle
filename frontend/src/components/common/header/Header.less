@@ -1,3 +1,100 @@
+.app-header {
+    border-bottom: var(--border-color) 1.5px solid;
+
+    display: flex;
+    flex-direction: row;
+    height: 80px;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+.start {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+
+    .stroodle-logo {
+        margin: 10px;
+        width: 150px;
+        height: auto;
+    }
+}
+
+.end {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.button-container {
+    user-select: none;
+    align-items: center;
+    margin: 0 20px 0 0;
+
+    display: flex;
+    gap: 20px;
+
+    button {
+        margin: 0;
+        padding: 0;
+        height: 35px;
+        width: 35px;
+        background-color: var(--base-color);
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+
+        &:hover {
+            background-color: var(--hover-color);
+        }
+
+        .icon {
+            fill: var(--icon-color);
+            width: 35px;
+            height: auto;
+        }
+    }
+
+    .profile-button {
+        border-radius: 17.5px;
+    }
+}
+
+.dropdown-container {
+    width: 140px;
+    background-color: var(--base-color);
+    border-left: var(--border-color) 1px solid;
+    position: absolute;
+    z-index: 1;
+    display: grid;
+    top: 80px;
+
+    a {
+        padding: 10px;
+        border-bottom: var(--border-color) 1px solid;
+        color: var(--icon-color);
+        text-decoration: none;
+        font-size: 16px;
+
+        font-family: "Inter", Arial, Helvetica, sans-serif;
+
+        &:hover {
+            background-color: var(--hover-accent-color);
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
 .header-container {
     position: relative;
     display: flex;
