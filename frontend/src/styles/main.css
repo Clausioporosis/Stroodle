@@ -26,7 +26,6 @@ code {
 }
 /* Website Layout CSS */
 .app {
-  background-color: var(--base-color);
   display: grid;
   grid-template-rows: auto 1fr;
   height: 100vh;
@@ -95,13 +94,13 @@ h3 {
 
 */
 .app-header {
+  background-color: var(--base-color);
   border-bottom: var(--border-color) 1.5px solid;
   display: flex;
   flex-direction: row;
   height: 80px;
   width: 100%;
-  position: relative;
-  z-index: 2;
+  z-index: 1000;
 }
 .start {
   position: relative;
@@ -136,9 +135,6 @@ h3 {
   cursor: pointer;
   font-size: 16px;
 }
-.button-container button:hover {
-  background-color: var(--hover-color);
-}
 .button-container button .icon {
   fill: var(--icon-color);
   width: 35px;
@@ -152,9 +148,16 @@ h3 {
   background-color: var(--base-color);
   border-left: var(--border-color) 1px solid;
   position: absolute;
-  z-index: 1;
   display: grid;
+  right: 0;
   top: 80px;
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.dropdown-container.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 .dropdown-container a {
   padding: 10px;
@@ -163,9 +166,6 @@ h3 {
   text-decoration: none;
   font-size: 16px;
   font-family: "Inter", Arial, Helvetica, sans-serif;
-}
-.dropdown-container a:hover {
-  background-color: var(--hover-accent-color);
 }
 .header-container {
   position: relative;
@@ -189,7 +189,7 @@ h3 {
 .dropdown-button {
   background: none;
   border: none;
-  margin-left: 0px;
+  margin-left: 0;
 }
 .dropdown-button svg {
   fill: #999999;
