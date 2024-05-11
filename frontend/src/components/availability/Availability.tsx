@@ -1,6 +1,7 @@
 import React from 'react';
 import HeaderComponent from '../common/header/Header';
 import WeekView from '../shared/weekView/WeekView';
+import { notEqual } from 'assert';
 
 
 const Availability: React.FC = () => {
@@ -12,10 +13,18 @@ const Availability: React.FC = () => {
             <div className='app-body'>
                 <div className='content-tab'>
                     <div className='tab-item'>
-                        <h3>Verfügbarkeit</h3>
+                        <h1>Termine hinzufügen
+                            <button className="header-button">Speichern</button>
+                        </h1>
                         <WeekView useCase={'availability'} />
                     </div>
                 </div>
+
+                {/* <div className='content-tab'>
+                    <div className='tab-item'>
+                    </div>
+                </div> */}
+
             </div>
         </div>
     );

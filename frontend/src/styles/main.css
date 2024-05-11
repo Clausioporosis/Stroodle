@@ -18,6 +18,7 @@ code {
   --container-color: #161616;
   --content-color: #333;
   --hover-color: #333;
+  --active-color: #484848;
   --text-color: #bbb;
   --icon-color: #bbbbbb;
   --border-color: #666;
@@ -56,33 +57,59 @@ code {
   align-items: center;
 }
 .tab-item {
-  border: 1px solid red;
   display: flex;
   flex-direction: column;
   height: 100%;
   width: 100%;
 }
-/*
 h1 {
-    color: var(--text-color);
-    margin: auto;
-    width: 100%;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--border-color);
-    margin-bottom: 6px;
-    font-size: x-large;
+  display: flex;
+  color: var(--text-color);
+  margin: auto;
+  width: 100%;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 20px;
+  font-size: x-large;
 }
-
-
 h3 {
-    color: var(--icon-color);
-    margin: auto;
-    width: 100%;
-    font-size: medium;
-    padding-bottom: 6px;
-    font-weight: normal;
+  color: var(--icon-color);
+  margin: auto;
+  width: 100%;
+  font-size: medium;
+  padding-bottom: 6px;
+  font-weight: normal;
 }
-*/
+.header-button {
+  background-color: var(--content-color);
+  color: var(--text-color);
+  font-size: large;
+  margin-left: auto;
+  height: 35px;
+  width: auto;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  user-select: none;
+}
+.header-button:hover {
+  background-color: var(--hover-accent-color);
+}
+.header-button:active {
+  background-color: var(--accent-color);
+  animation: buttonPress 0.2s ease;
+}
+@keyframes buttonPress {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 /*
 @import "../components/dashboard/Dashboard.less";
 @import "../components/dashboard/createdPollCard/CreatedPollCard.less";
@@ -135,6 +162,13 @@ h3 {
   cursor: pointer;
   font-size: 16px;
 }
+.button-container button:hover {
+  background-color: var(--hover-color);
+}
+.button-container button:active {
+  background-color: var(--active-color);
+  animation: buttonPress 0.2s ease;
+}
 .button-container button .icon {
   fill: var(--icon-color);
   width: 35px;
@@ -151,6 +185,7 @@ h3 {
   display: grid;
   right: 0;
   top: 80px;
+  pointer-events: none;
   opacity: 0;
   transform: translateY(-20px);
   transition: opacity 0.3s ease, transform 0.3s ease;
@@ -158,6 +193,7 @@ h3 {
 .dropdown-container.visible {
   opacity: 1;
   transform: translateY(0);
+  pointer-events: auto;
 }
 .dropdown-container a {
   padding: 10px;
@@ -166,6 +202,12 @@ h3 {
   text-decoration: none;
   font-size: 16px;
   font-family: "Inter", Arial, Helvetica, sans-serif;
+}
+.dropdown-container a:hover {
+  background-color: var(--hover-accent-color);
+}
+.dropdown-container a:active {
+  background-color: var(--accent-color);
 }
 .header-container {
   position: relative;
@@ -239,4 +281,84 @@ h3 {
   text-decoration: none;
   padding: 10px;
   border-bottom: 1px solid #373737;
+}
+.fc {
+  --fc-today-bg-color: transparent;
+  --fc-border-color: var(--text-color);
+  width: 100%;
+}
+.fc-toolbar {
+  justify-content: flex-start;
+  margin: 10px 0 15px 0;
+}
+.fc .fc-widget-content {
+  border-color: #00a2ff;
+  /* Change #00a2ff to whatever color you want */
+}
+.fc-view {
+  color: #bbbbbb;
+}
+.fc-button-primary {
+  background-color: #333;
+  color: #bbb;
+  border: none;
+  display: flex;
+  border-radius: 5px;
+  padding: 5px;
+  height: 35px;
+  margin-right: 10px;
+}
+.fc-button-primary:disabled {
+  pointer-events: none;
+}
+.fc-button-primary:focus {
+  box-shadow: none;
+}
+.fc-button-primary:hover {
+  background-color: #444;
+}
+.fc-button-primary:active {
+  background-color: #555;
+  animation: buttonPress 0.2s ease;
+}
+.fc-duration-button {
+  position: relative;
+  background-color: #333;
+  height: 100%;
+  width: 115px;
+}
+.fc-duration-button:hover,
+.fc-duration-button:active,
+.fc-duration-button:focus {
+  background-color: #333;
+  box-shadow: none;
+  animation: none;
+}
+.fc-duration-button .duration-select {
+  position: absolute;
+  height: 100%;
+  margin: -5px 0 0 -5px;
+  padding-top: 2px;
+  padding-right: 5px;
+  background-color: #333;
+  font-size: 1em;
+}
+.fc-duration-button .duration-select option:disabled {
+  display: none;
+}
+@keyframes buttonPress {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.fc-toolbar-title {
+  margin-left: 10px;
+  font-size: large;
+  color: #bbbbbb;
 }

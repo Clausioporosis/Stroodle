@@ -1,0 +1,97 @@
+.fc {
+    --fc-today-bg-color: transparent;
+    --fc-border-color: var(--text-color);
+    width: 100%;
+}
+
+.fc-toolbar {
+    justify-content: flex-start;
+    margin: 10px 0 15px 0;
+}
+
+.fc .fc-widget-content {
+    border-color: #00a2ff;
+    /* Change #00a2ff to whatever color you want */
+}
+
+.fc-view {
+    color: #bbbbbb;
+}
+
+.fc-button-primary {
+    background-color: #333;
+    color: #bbb;
+    border: none;
+    display: flex;
+    border-radius: 5px;
+    padding: 5px;
+    height: 35px;
+    margin-right: 10px;
+
+    &:disabled {
+        pointer-events: none;
+    }
+
+    &:focus {
+        box-shadow: none;
+    }
+
+    &:hover {
+        background-color: #444;
+    }
+
+    &:active {
+        background-color: #555;
+        animation: buttonPress 0.2s ease;
+    }
+}
+
+.fc-duration-button {
+    position: relative;
+    background-color: #333;
+    height: 100%;
+    width: 115px;
+
+    &:hover,
+    &:active,
+    &:focus {
+        background-color: #333; // Setzt die Hintergrundfarbe auf die gleiche Farbe wie der nicht deaktivierte Button
+        box-shadow: none; // Entfernt den Schatten, wenn der Button fokussiert ist
+        animation: none; // Entfernt die Animation, wenn der Button aktiv ist
+    }
+
+    .duration-select {
+        position: absolute;
+        height: 100%;
+        margin: -5px 0 0 -5px;
+        padding-top: 2px;
+        padding-right: 5px;
+        background-color: #333;
+        font-size: 1em;
+
+        option:disabled {
+            display: none;
+        }
+    }
+
+}
+
+@keyframes buttonPress {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(0.95);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.fc-toolbar-title {
+    margin-left: 10px;
+    font-size: large;
+    color: #bbbbbb;
+}

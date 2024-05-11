@@ -46,6 +46,15 @@
         cursor: pointer;
         font-size: 16px;
 
+        &:hover {
+            background-color: var(--hover-color);
+        }
+
+        &:active {
+            background-color: var(--active-color);
+            animation: buttonPress 0.2s ease;
+        }
+
         .icon {
             fill: var(--icon-color);
             width: 35px;
@@ -67,16 +76,17 @@
     display: grid;
     right: 0;
     top: 80px;
+    pointer-events: none;
 
 
     opacity: 0;
     transform: translateY(-20px);
     transition: opacity 0.3s ease, transform 0.3s ease;
-    // Rest des Codes...
 
     &.visible {
         opacity: 1;
         transform: translateY(0);
+        pointer-events: auto;
     }
 
     a {
@@ -86,6 +96,14 @@
         text-decoration: none;
         font-size: 16px;
         font-family: "Inter", Arial, Helvetica, sans-serif;
+
+        &:hover {
+            background-color: var(--hover-accent-color);
+        }
+
+        &:active {
+            background-color: var(--accent-color);
+        }
     }
 }
 
