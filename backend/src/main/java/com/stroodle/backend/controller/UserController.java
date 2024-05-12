@@ -5,14 +5,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.stroodle.backend.model.Availability;
+import com.stroodle.backend.model.TimePeriod;
 import com.stroodle.backend.model.User;
 import com.stroodle.backend.service.UserService;
 
 import jakarta.validation.Valid;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+
+import java.time.DayOfWeek;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -78,26 +81,26 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}/availability")
-    public ResponseEntity<?> updateAvailability(@PathVariable String id, @RequestBody Availability availability) {
+    // @juhoit00: Put-Mapping for availability looks a little ugly, but it works
+    @GetMapping("/{id}/availability")
+    public ResponseEntity<Map<DayOfWeek, List<TimePeriod>>> getAvailability(@PathVariable String id) {
         Optional<User> optionalUser = userService.getUserById(id);
-        if (!optionalUser.isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        User user = optionalUser.get();
-        user.setAvailability(availability);
-        userService.updateUser(user);
-        return ResponseEntity.ok(user);
+        return optionalUser.map(user -> new ResponseEntity<>(user.getAvailability(), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/search/{id}/availability")
-    public ResponseEntity<Availability> getAvailability(@PathVariable String id) {
+    @PutMapping("/{id}/availability")
+    public ResponseEntity<Void> updateAvailability(@PathVariable String id,
+            @RequestBody Map<DayOfWeek, List<TimePeriod>> availability) {
         Optional<User> optionalUser = userService.getUserById(id);
-        if (!optionalUser.isPresent()) {
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setAvailability(availability);
+            userService.saveUser(user);
+            return ResponseEntity.noContent().build();
+        } else {
             return ResponseEntity.notFound().build();
         }
-        User user = optionalUser.get();
-        return ResponseEntity.ok(user.getAvailability());
     }
 
 }
