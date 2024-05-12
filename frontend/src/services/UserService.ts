@@ -1,7 +1,8 @@
+import { get } from 'http';
 import { User } from '../models/User';
 import axios from 'axios';
 
-let loggedInUserMock = new User('', '', '', '', {});
+let loggedInUserMock: User | undefined;
 
 const apiClient = axios.create({
     baseURL: 'http://localhost:8080/api',
@@ -41,8 +42,18 @@ class UserService {
         }
     }
 
-    setLoggedInUser = (user: User) => {
-        loggedInUserMock = user;
+    // temp logged in user solution until we have a proper login
+    async setLoggedInUser(userId: string) {
+        try {
+            loggedInUserMock = await this.getUserById(userId);
+        } catch (error) {
+            console.error('Es gab einen Fehler!', error);
+        }
+        console.log('User changed to:', loggedInUserMock);
+    }
+
+    getLoggedInUser(): User | undefined {
+        return loggedInUserMock;
     }
 }
 

@@ -11,6 +11,7 @@ const Header: React.FC = () => {
 
     // temp logged in user solution until we have a proper login
     const [users, setUsers] = useState<User[]>([]);
+    const [currentUser, setCurrentUser] = useState<User>();
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -21,8 +22,9 @@ const Header: React.FC = () => {
         fetchUsers();
     }, []);
 
-    const handleUserChange = (user: User) => {
-        UserService.setLoggedInUser(user);
+    const handleUserChange = async (userId: string) => {
+        await UserService.setLoggedInUser(userId);
+        setCurrentUser(UserService.getLoggedInUser());
     };
 
     return (
@@ -43,7 +45,8 @@ const Header: React.FC = () => {
                 <div className='end'>
                     <div className='button-container'>
 
-                        <select>
+                        <select value={currentUser ? currentUser.id : ""} onChange={e => handleUserChange(e.target.value)}>
+                            <option value="" disabled>Als User "anmelden"...</option>
                             {users.map(user => (
                                 <option key={user.id} value={user.id}>{user.firstName} {user.lastName}</option>
                             ))}
