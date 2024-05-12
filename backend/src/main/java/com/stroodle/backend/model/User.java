@@ -5,10 +5,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
+import java.util.Map;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+
+import java.time.DayOfWeek;
 
 @Document(collection = "users")
 public class User {
@@ -30,16 +33,18 @@ public class User {
     @Field("email")
     private String email;
 
-    private List<AvailabilityRule> availabilityRules; // ToDo: Change availibilityRule model
+    @Field("availability")
+    private Map<DayOfWeek, List<TimePeriod>> availability;
 
     // Constructors
     public User() {
     }
 
-    public User(String firstName, String lastNameame, String email) {
+    public User(String firstName, String lastNameame, String email, Map<DayOfWeek, List<TimePeriod>> availability) {
         this.firstName = firstName;
         this.lastName = lastNameame;
         this.email = email;
+        this.availability = availability;
     }
 
     // Getter and Setter methods
@@ -75,12 +80,12 @@ public class User {
         this.email = email;
     }
 
-    public List<AvailabilityRule> getAvailabilityRules() {
-        return availabilityRules;
+    public Map<DayOfWeek, List<TimePeriod>> getAvailability() {
+        return availability;
     }
 
-    public void setAvailabilityRules(List<AvailabilityRule> availabilityRules) {
-        this.availabilityRules = availabilityRules;
+    public void setAvailability(Map<DayOfWeek, List<TimePeriod>> availability) {
+        this.availability = availability;
     }
 
     // toString method for debugging purposes
@@ -91,6 +96,7 @@ public class User {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
+                ", availability='" + availability + '\'' +
                 '}';
     }
 }

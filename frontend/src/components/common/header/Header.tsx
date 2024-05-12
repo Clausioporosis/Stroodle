@@ -1,9 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { List, PersonCircle } from 'react-bootstrap-icons';
+
+import { User } from '../../../models/User';
+import UserService from '../../../services/UserService';
 
 const Header: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const toggleDropdown = () => setIsOpen(!isOpen);
+
+
+    // temp logged in user solution until we have a proper login
+    const [users, setUsers] = useState<User[]>([]);
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            const users = await UserService.getAllUsers();
+            setUsers(users);
+        };
+
+        fetchUsers();
+    }, []);
+
+    const handleUserChange = (user: User) => {
+        UserService.setLoggedInUser(user);
+    };
 
     return (
         <div className='app-header'>
@@ -22,6 +42,13 @@ const Header: React.FC = () => {
 
                 <div className='end'>
                     <div className='button-container'>
+
+                        <select>
+                            {users.map(user => (
+                                <option key={user.id} value={user.id}>{user.firstName} {user.lastName}</option>
+                            ))}
+                        </select>
+
                         <button className='profile-button'>
                             <PersonCircle className='icon profile-icon' />
                         </button>

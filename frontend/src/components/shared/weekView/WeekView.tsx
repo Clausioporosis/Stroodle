@@ -14,6 +14,10 @@ const WeekView: React.FC<WeekViewProps> = ({ useCase }) => {
     const [selectable, setSelectable] = useState<boolean>();
     const [headerToolbar, setHeaderToolbar] = useState<any>();
 
+    useEffect(() => {
+        calenderSettings(useCase);
+    }, []);
+
     const calenderSettings = (useCase: string) => {
         if (useCase === 'availability') {
             setAllDaySlot(false);
@@ -29,13 +33,22 @@ const WeekView: React.FC<WeekViewProps> = ({ useCase }) => {
         }
     };
 
-    useEffect(() => {
-        calenderSettings(useCase);
-    }, []);
+    const handleCalenderSelect = (info: any) => {
+        if (selectable) {
+            const start = info.start;
+            const end = info.end;
 
-    const selectDate = (info: { startStr: string, endStr: string }) => {
-        console.log('Start date: ' + info.startStr);
-        console.log('End date: ' + info.endStr);
+            console.log('Start date: ' + start);
+            console.log('End date: ' + end);
+        }
+    };
+
+    const handleCalenderClick = (info: any) => {
+        if (!selectable) {
+            const start = info.start;
+
+            console.log('Clicked date: ' + start);
+        }
     };
 
     return (
@@ -52,7 +65,7 @@ const WeekView: React.FC<WeekViewProps> = ({ useCase }) => {
 
 
             dayHeaderFormat={{
-                weekday: 'short'
+                weekday: 'long'
             }}
 
             eventTimeFormat={{
@@ -63,7 +76,8 @@ const WeekView: React.FC<WeekViewProps> = ({ useCase }) => {
 
             snapDuration="00:05:00"
             selectable={selectable}
-            select={selectDate}
+            dateClick={handleCalenderClick}
+            select={handleCalenderSelect}
         />
     );
 };

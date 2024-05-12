@@ -1,14 +1,13 @@
 import { User } from '../models/User';
-
 import axios from 'axios';
+
+let loggedInUserMock = new User('', '', '', '', {});
 
 const apiClient = axios.create({
     baseURL: 'http://localhost:8080/api',
 });
 
-
 class UserService {
-
     async getAllUsers(): Promise<User[]> {
         try {
             const response = await apiClient.get('/users');
@@ -40,6 +39,10 @@ class UserService {
         } catch (error) {
             console.error('Es gab einen Fehler!', error);
         }
+    }
+
+    setLoggedInUser = (user: User) => {
+        loggedInUserMock = user;
     }
 }
 

@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.stroodle.backend.model.AvailabilityRule;
+import com.stroodle.backend.model.Availability;
 import com.stroodle.backend.model.User;
 import com.stroodle.backend.service.UserService;
 
@@ -79,25 +79,25 @@ public class UserController {
     }
 
     @PutMapping("/{id}/availability")
-    public ResponseEntity<?> updateAvailability(@PathVariable String id, @RequestBody List<AvailabilityRule> rules) {
+    public ResponseEntity<?> updateAvailability(@PathVariable String id, @RequestBody Availability availability) {
         Optional<User> optionalUser = userService.getUserById(id);
         if (!optionalUser.isPresent()) {
             return ResponseEntity.notFound().build();
         }
         User user = optionalUser.get();
-        user.setAvailabilityRules(rules);
+        user.setAvailability(availability);
         userService.updateUser(user);
         return ResponseEntity.ok(user);
     }
 
     @GetMapping("/search/{id}/availability")
-    public ResponseEntity<List<AvailabilityRule>> getAvailability(@PathVariable String id) {
+    public ResponseEntity<Availability> getAvailability(@PathVariable String id) {
         Optional<User> optionalUser = userService.getUserById(id);
         if (!optionalUser.isPresent()) {
             return ResponseEntity.notFound().build();
         }
         User user = optionalUser.get();
-        return ResponseEntity.ok(user.getAvailabilityRules());
+        return ResponseEntity.ok(user.getAvailability());
     }
 
 }
