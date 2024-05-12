@@ -1,8 +1,26 @@
-import { get } from 'http';
 import { User, Availability } from '../models/User';
 import axios from 'axios';
 
-let loggedInUserMock: User | undefined;
+let loggedInUserMock: User | undefined = {
+    id: "6640f9901941ca65dc1399b0",
+    firstName: "Max",
+    lastName: "Mustermann",
+    email: "max.mustermann@example.com",
+    availability: {
+        MONDAY: [
+            {
+                start: "08:00:00",
+                end: "16:00:00"
+            }
+        ],
+        TUESDAY: [
+            {
+                start: "09:00:00",
+                end: "17:00:00"
+            }
+        ]
+    }
+};
 
 const apiClient = axios.create({
     baseURL: 'http://localhost:8080/api',
@@ -42,34 +60,33 @@ class UserService {
         }
     }
 
-    async getAvailabilityOfUser(id: string): Promise<Availability> {
+    async getAvailabilityOfUser(id: string): Promise<Availability | undefined> {
         try {
-            const response = await apiClient.get(`/users//${id}/availability`);
+            const response = await apiClient.get(`/users/${id}/availability`);
             return response.data;
         } catch (error) {
             console.error('Es gab einen Fehler!', error);
-            throw error; // Fehler weiterwerfen
         }
     }
 
-    async putAvailabilityById(id: string): Promise<Availability> {
+    async putAvailabilitByUser(id: string): Promise<Availability | undefined> {
         try {
-            const response = await apiClient.put(`/users//${id}/availability`);
+            const response = await apiClient.put(`/users/${id}/availability`);
+            console.log(response.data);
             return response.data;
         } catch (error) {
             console.error('Es gab einen Fehler!', error);
-            throw error; // Fehler weiterwerfen
         }
     }
 
     // temp logged in user solution until we have a proper login
     async setLoggedInUser(userId: string) {
         try {
-            loggedInUserMock = await this.getUserById(userId);
+            const selectedUser = await this.getUserById(userId);
+            loggedInUserMock = selectedUser;
         } catch (error) {
             console.error('Es gab einen Fehler!', error);
         }
-        console.log('User changed to:', loggedInUserMock);
     }
 
     getLoggedInUser(): User | undefined {

@@ -3,21 +3,35 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import React, { useEffect, useState } from 'react';
+import { Calendar } from '@fullcalendar/core';
+
 import UserService from '../../../services/UserService';
+import { User, Availability } from '../../../models/User';
 
 interface WeekViewProps {
     useCase: string;
+    availability?: Availability;
 }
 
-const WeekView: React.FC<WeekViewProps> = ({ useCase }) => {
+const WeekView: React.FC<WeekViewProps> = ({ useCase, availability }) => {
     const [allDaySlot, setAllDaySlot] = useState<boolean>();
     const [nowIndicator, setNowIndicator] = useState<boolean>();
     const [selectable, setSelectable] = useState<boolean>();
     const [headerToolbar, setHeaderToolbar] = useState<any>();
 
+    const [calenderEvents, setCalenderEvents] = useState<any[]>([]);
+
     useEffect(() => {
         calenderSettings(useCase);
+        availabilityToEvents();
     }, []);
+
+    function availabilityToEvents() {
+
+        for (const day in availability) {
+            console.log(day);
+        }
+    };
 
     const calenderSettings = (useCase: string) => {
         if (useCase === 'availability') {
@@ -34,14 +48,9 @@ const WeekView: React.FC<WeekViewProps> = ({ useCase }) => {
         }
     };
 
-    useEffect(() => {
-        getUserAvailability();
-    }, []);
+    const setAvailabilityHighlight = (calendar: Calendar) => {
 
-    const getUserAvailability = async () =>{
-        const availability = await UserService.getAvailabilityOfUser('1');
-        console.log(availability);
-    };
+    }
 
     const handleCalenderSelect = (info: any) => {
         if (selectable) {

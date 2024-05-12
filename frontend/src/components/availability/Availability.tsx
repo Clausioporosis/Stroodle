@@ -1,11 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import HeaderComponent from '../common/header/Header';
 import WeekView from '../shared/weekView/WeekView';
 import { notEqual } from 'assert';
+import UserService from '../../services/UserService';
+import { User, Availability } from '../../models/User';
 
 
-const Availability: React.FC = () => {
+const AvailabilitySettings: React.FC = () => {
+    const [userAvailability, setUserAvailability] = useState<Availability>();
 
+    useEffect(() => {
+        (async () => {
+            const currentUer = UserService.getLoggedInUser();
+            const availability = await UserService.getAvailabilityOfUser(currentUer.id);
+            setUserAvailability(availability);
+        })();
+        console.log('  mdnkjfna');
+    }, []);
 
     return (
         <div className='app'>
@@ -14,9 +25,9 @@ const Availability: React.FC = () => {
                 <div className='content-tab'>
                     <div className='tab-item'>
                         <h1>Termine hinzufügen
-                            <button className="header-button">Speichern</button>
+                            <button className="header-button" >Speichern</button>
                         </h1>
-                        <WeekView useCase={'availability'} />
+                        <WeekView useCase={'availability'} availability={userAvailability} />
                     </div>
                 </div>
 
@@ -30,4 +41,4 @@ const Availability: React.FC = () => {
     );
 };
 
-export default Availability;
+export default AvailabilitySettings;

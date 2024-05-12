@@ -16,7 +16,9 @@ const Header: React.FC = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             const users = await UserService.getAllUsers();
+            const loggedInUser =  UserService.getLoggedInUser();
             setUsers(users);
+            setCurrentUser(loggedInUser);
         };
 
         fetchUsers();
@@ -45,8 +47,8 @@ const Header: React.FC = () => {
                 <div className='end'>
                     <div className='button-container'>
 
-                        <select value={currentUser ? currentUser.id : ""} onChange={e => handleUserChange(e.target.value)}>
-                            <option value="" disabled>Als User "anmelden"...</option>
+                        <select value={''} onChange={e => handleUserChange(e.target.value)}>
+                            <option value="">{currentUser?.firstName} {currentUser?.lastName}</option>
                             {users.map(user => (
                                 <option key={user.id} value={user.id}>{user.firstName} {user.lastName}</option>
                             ))}
