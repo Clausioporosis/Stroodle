@@ -3,6 +3,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import React, { useEffect, useState } from 'react';
+import UserService from '../../../services/UserService';
 
 interface WeekViewProps {
     useCase: string;
@@ -31,6 +32,15 @@ const WeekView: React.FC<WeekViewProps> = ({ useCase }) => {
                 right: ''
             });
         }
+    };
+
+    useEffect(() => {
+        getUserAvailability();
+    }, []);
+
+    const getUserAvailability = async () =>{
+        const availability = await UserService.getAvailabilityOfUser('1');
+        console.log(availability);
     };
 
     const handleCalenderSelect = (info: any) => {

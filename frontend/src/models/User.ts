@@ -13,7 +13,7 @@ type TimePeriod = {
     end: string;
 };
 
-type Availability = {
+export type Availability = {
     [key in Weekday]?: TimePeriod[];
 };
 

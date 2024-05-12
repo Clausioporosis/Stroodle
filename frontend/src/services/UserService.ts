@@ -1,5 +1,5 @@
 import { get } from 'http';
-import { User } from '../models/User';
+import { User, Availability } from '../models/User';
 import axios from 'axios';
 
 let loggedInUserMock: User | undefined;
@@ -39,6 +39,26 @@ class UserService {
             return response.data;
         } catch (error) {
             console.error('Es gab einen Fehler!', error);
+        }
+    }
+
+    async getAvailabilityOfUser(id: string): Promise<Availability> {
+        try {
+            const response = await apiClient.get(`/users//${id}/availability`);
+            return response.data;
+        } catch (error) {
+            console.error('Es gab einen Fehler!', error);
+            throw error; // Fehler weiterwerfen
+        }
+    }
+
+    async putAvailabilityById(id: string): Promise<Availability> {
+        try {
+            const response = await apiClient.put(`/users//${id}/availability`);
+            return response.data;
+        } catch (error) {
+            console.error('Es gab einen Fehler!', error);
+            throw error; // Fehler weiterwerfen
         }
     }
 
