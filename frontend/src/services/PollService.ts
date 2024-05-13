@@ -1,34 +1,53 @@
 import { Poll } from '../models/Poll';
-import { mockPolls } from '../tests/MockData';
+
+import axios from 'axios';
+
+const apiClient = axios.create({
+    baseURL: 'http://localhost:8080/api',
+});
 
 class PollService {
-    private polls: Poll[] = [...mockPolls];
-
-    createPoll(poll: Poll): Poll {
-        this.polls.push(poll);
-        return poll;
+    constructor() {
+        (async () => {
+            //const searchedPoll = await this.getPollById('')
+            //console.log("Searched poll: ", searchedPoll);
+        })();
     }
 
-    getAllPolls(): Poll[] {
-        return this.polls;
-    }
-
-    getPollById(id: string): Poll | undefined {
-        return this.polls.find(poll => poll.id === id);
-    }
-
-    updatePollById(id: string, updatedPoll: Partial<Poll>): Poll | undefined {
-        const poll = this.polls.find(p => p.id === id);
-        if (poll) {
-            Object.assign(poll, updatedPoll);
+    async createPoll(poll: Poll): Promise<Poll> {
+        try {
+            const response = await apiClient.post('/polls', poll);
+            return response.data;
+        } catch (error) {
+            console.error('Es gab einen Fehler!', error);
+            return poll;
         }
-        return poll;
     }
 
-    deletePollById(id: string): void {
-        const index = this.polls.findIndex(p => p.id === id);
-        if (index !== -1) {
-            this.polls.splice(index, 1);
+    async getAllPolls(): Promise<Poll[]> {
+        try {
+            const response = await apiClient.get('/polls');
+            return response.data;
+        } catch (error) {
+            console.error('Es gab einen Fehler!', error);
+            return [];
+        }
+    }
+
+    async getPollById(id: string): Promise<Poll | undefined> {
+        try {
+            const response = await apiClient.get(`/polls/search/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error('Es gab einen Fehler!', error);
+        }
+    }
+
+    async deletePollById(id: string): Promise<void> {
+        try {
+            await apiClient.delete(`/polls/${id}`);
+        } catch (error) {
+            console.error('Es gab einen Fehler beim Löschen des Polls!', error);
         }
     }
 }

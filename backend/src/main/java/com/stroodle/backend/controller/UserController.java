@@ -1,14 +1,23 @@
-package com.stroodle.backend;
+package com.stroodle.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.stroodle.backend.model.TimePeriod;
+import com.stroodle.backend.model.User;
+import com.stroodle.backend.service.UserService;
 
 import jakarta.validation.Valid;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import java.time.DayOfWeek;
+
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -35,15 +44,27 @@ public class UserController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/search/query")
+    public ResponseEntity<List<User>> searchUsers(@RequestParam String query) {
+        List<User> users = userService.searchUsers(query);
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
     @GetMapping("/search/email")
     public ResponseEntity<List<User>> findByEmail(@RequestParam String email) {
         List<User> users = userService.getUserByEmail(email);
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/search/name")
-    public ResponseEntity<List<User>> findByName(@RequestParam String name) {
-        List<User> users = userService.getUserByName(name);
+    @GetMapping("/search/firstName")
+    public ResponseEntity<List<User>> findByFirstName(@RequestParam String name) {
+        List<User> users = userService.getUserByFirstName(name);
+        return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/search/lastName")
+    public ResponseEntity<List<User>> findByLastName(@RequestParam String name) {
+        List<User> users = userService.getUserByLastName(name);
         return ResponseEntity.ok(users);
     }
 
@@ -60,26 +81,26 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}/availability")
-    public ResponseEntity<?> updateAvailability(@PathVariable String id, @RequestBody List<AvailabilityRule> rules) {
+    // @juhoit00: Put-Mapping for availability looks a little ugly, but it works
+    @GetMapping("/{id}/availability")
+    public ResponseEntity<Map<DayOfWeek, List<TimePeriod>>> getAvailability(@PathVariable String id) {
         Optional<User> optionalUser = userService.getUserById(id);
-        if (!optionalUser.isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        User user = optionalUser.get();
-        user.setAvailabilityRules(rules);
-        userService.updateUser(user);
-        return ResponseEntity.ok(user);
+        return optionalUser.map(user -> new ResponseEntity<>(user.getAvailability(), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/search/{id}/availability")
-    public ResponseEntity<List<AvailabilityRule>> getAvailability(@PathVariable String id) {
+    @PutMapping("/{id}/availability")
+    public ResponseEntity<Void> updateAvailability(@PathVariable String id,
+            @RequestBody Map<DayOfWeek, List<TimePeriod>> availability) {
         Optional<User> optionalUser = userService.getUserById(id);
-        if (!optionalUser.isPresent()) {
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setAvailability(availability);
+            userService.saveUser(user);
+            return ResponseEntity.noContent().build();
+        } else {
             return ResponseEntity.notFound().build();
         }
-        User user = optionalUser.get();
-        return ResponseEntity.ok(user.getAvailabilityRules());
     }
 
 }

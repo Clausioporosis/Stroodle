@@ -59,13 +59,18 @@
     		<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 
-		<!-- Keycloack Version noch eintragen -->
-		<!--<dependency>
-			<groupId>org.keycloack</groupId>
-			<artifactId>keycloack-spring-boot-starter</artifactId>
+		<dependency>
+			<groupId>org.keycloak</groupId>
+			<artifactId>keycloak-spring-boot-starter</artifactId>
 			<version>24.0.3</version>
-		</dependency> -->
-		
+		</dependency>
+
+		<!-- Swagger -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.2.0</version>
+        </dependency>		
     </dependencies>
 
 	<build>

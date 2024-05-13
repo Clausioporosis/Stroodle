@@ -1,18 +1,30 @@
-import React from 'react';
-import './AddedParticipants.css';
+import React, { useEffect, useState } from 'react';
 
+import UserService from '../../../../services/UserService';
 import { User } from '../../../../models/User';
 
 import { X, People } from 'react-bootstrap-icons';
 
 interface ParticipantProps {
-    participants: User[];
-    removeSelectedParticipant: (user: User) => void;
+    participantsIds: string[];
+    removeSelectedParticipant: (participantId: string) => void;
 }
 
-const Participant: React.FC<ParticipantProps> = ({ participants, removeSelectedParticipant }) => {
-    const removeParticipant = (participant: User) => {
-        removeSelectedParticipant(participant);
+const Participant: React.FC<ParticipantProps> = ({ participantsIds, removeSelectedParticipant }) => {
+    const [participants, setParticipants] = useState<User[]>([]);
+
+    useEffect(() => {
+        const fetchParticipants = async () => {
+            const usersPromises = participantsIds.map(id => UserService.getUserById(id));
+            const users = (await Promise.all(usersPromises)).filter((user): user is User => user !== undefined);
+            setParticipants(users);
+        };
+
+        fetchParticipants();
+    }, [participantsIds]);
+
+    const removeParticipant = (participantId: string) => {
+        removeSelectedParticipant(participantId);
     };
 
     return (
@@ -40,7 +52,7 @@ const Participant: React.FC<ParticipantProps> = ({ participants, removeSelectedP
                                 </span>
                             </div>
 
-                            <X className='x-icon' onClick={() => removeParticipant(participant)} />
+                            <X className='x-icon' onClick={() => removeParticipant(participant.id)} />
 
                         </div>
                     );
@@ -52,6 +64,7 @@ const Participant: React.FC<ParticipantProps> = ({ participants, removeSelectedP
                     <p>hier anngezeigt.</p>
                 </div>
             )}
+
         </div>
     );
 }

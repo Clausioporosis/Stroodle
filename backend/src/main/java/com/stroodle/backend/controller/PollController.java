@@ -1,14 +1,21 @@
-package com.stroodle.backend;
+package com.stroodle.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.stroodle.backend.model.Poll;
+import com.stroodle.backend.service.PollService;
 
 import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RestController;
+
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/polls")
 public class PollController {

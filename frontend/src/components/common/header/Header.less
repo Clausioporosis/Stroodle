@@ -1,0 +1,202 @@
+.app-header {
+    background-color: var(--base-color);
+    border-bottom: var(--border-color) 1.5px solid;
+
+    display: flex;
+    flex-direction: row;
+    height: 80px;
+    width: 100%;
+    z-index: 1000;
+}
+
+.start {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+
+    .stroodle-logo {
+        margin: 10px;
+        width: 150px;
+        height: auto;
+    }
+}
+
+.end {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.button-container {
+    user-select: none;
+    align-items: center;
+    margin: 0 20px 0 0;
+
+    display: flex;
+    gap: 20px;
+
+    button {
+        margin: 0;
+        padding: 0;
+        height: 35px;
+        width: 35px;
+        background-color: var(--base-color);
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+
+        &:hover {
+            background-color: var(--hover-color);
+        }
+
+        &:active {
+            background-color: var(--active-color);
+            animation: buttonPress 0.2s ease;
+        }
+
+        .icon {
+            fill: var(--icon-color);
+            width: 35px;
+            height: auto;
+
+        }
+    }
+
+    .profile-button {
+        border-radius: 17.5px;
+    }
+}
+
+.dropdown-container {
+    width: 140px;
+    background-color: var(--base-color);
+    border-left: var(--border-color) 1px solid;
+    position: absolute;
+    display: grid;
+    right: 0;
+    top: 80px;
+    pointer-events: none;
+
+
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+
+    &.visible {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+
+    a {
+        padding: 10px;
+        border-bottom: var(--border-color) 1px solid;
+        color: var(--icon-color);
+        text-decoration: none;
+        font-size: 16px;
+        font-family: "Inter", Arial, Helvetica, sans-serif;
+
+        &:hover {
+            background-color: var(--hover-accent-color);
+        }
+
+        &:active {
+            background-color: var(--accent-color);
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+.header-container {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    padding-top: 20px;
+    background-color: #171717;
+    color: #999999;
+    border-bottom: 1.5px solid #373737;
+}
+
+.logo {
+    width: 150px;
+    height: auto;
+}
+
+.right-section {
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-button {
+    background: none;
+    border: none;
+    margin-left: 0;
+}
+
+.dropdown-button svg {
+    fill: #999999;
+    width: 30px;
+    height: auto;
+}
+
+.profile-icon {
+    background: none;
+    border: none;
+    margin-right: 10px;
+}
+
+.profile-icon svg {
+    fill: #999999;
+    width: 40px;
+    height: auto;
+}
+
+.page-links a {
+    text-decoration: none;
+    color: #bbbbbb;
+    margin-right: 35px;
+    font-size: 20px;
+    font-family: "Inter", Arial, Helvetica, sans-serif;
+}
+
+.dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: 75px;
+    width: 120px;
+    background-color: #171717;
+    border: 1px solid #373737;
+}
+
+.dropdown-open {
+    opacity: 1;
+    transform: translateY(0px);
+    pointer-events: auto;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.dropdown-close {
+    opacity: 0;
+    transform: translateY(-20px);
+    pointer-events: none;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.dropdown-menu a {
+    display: block;
+    color: #bbbbbb;
+    text-decoration: none;
+    padding: 10px;
+    border-bottom: 1px solid #373737;
+}

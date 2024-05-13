@@ -1,90 +1,142 @@
-import React, { useState } from 'react';
-import './WeekView.css';
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import React, { useEffect, useState } from 'react';
+import { Calendar } from '@fullcalendar/core';
+
+import UserService from '../../../services/UserService';
+import { User, Availability, Weekday, TimePeriod } from '../../../models/User';
 
 interface WeekViewProps {
-    width: string;
-    visibleRows: number;
+    useCase: string;
+    availability?: Availability;
 }
 
-const WeekView: React.FC<WeekViewProps> = ({ width, visibleRows }) => {
-    /* Weekday and hour arrays */
-    const days = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
-    const hours = Array.from({ length: 24 }, (_, i) => i);
+interface CalenderEvent {
+    display: string;
+    color: string;
+    title?: string;
+    start?: Date;
+    startTime?: string;
+    end?: Date;
+    endTime?: string;
+    daysOfWeek?: number[];
+    allDay?: boolean;
+}
 
-    /* height for scroll container in additon with weekHeaderHeight, or visibleRows prop wont work as intended */
-    const cellHeight = 30;
-    const weekHeaderHeight = 26;
-    const scrollContainerHeight = `${(visibleRows * cellHeight) + weekHeaderHeight}px`;
+const WeekView: React.FC<WeekViewProps> = ({ useCase, availability }) => {
+    const [allDaySlot, setAllDaySlot] = useState<boolean>();
+    const [nowIndicator, setNowIndicator] = useState<boolean>();
+    const [selectable, setSelectable] = useState<boolean>();
+    const [headerToolbar, setHeaderToolbar] = useState<any>();
 
-    /* useStates for the selection of multiple cells */
-    const [selectionStartDay, setSelectionDay] = useState<string | null>(null);
-    const [selectionStart, setSelectionStart] = useState<number | null>(null);
-    const [selectionEnd, setSelectionEnd] = useState<number | null>(null);
+    const [calenderEvents, setCalenderEvents] = useState<CalenderEvent[]>([]);
 
-    const formatMinutesIntoTime = (minutes: number) => {
-        const hours = Math.floor(minutes / 60);
-        const mins = minutes % 60;
-        return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
-    };
+    useEffect(() => {
+        calenderSettings(useCase);
+    }, []);
 
-    const handleMouseDown = (day: string, hour: number, quarter: number) => {
-        const start = hour * 60 + quarter * 15;
-        setSelectionDay(day);
-        setSelectionStart(start);
-    };
-
-    const handleMouseUp = (day: string, hour: number, quarter: number) => {
-        if (day !== selectionStartDay) {
-            alert("Selection must end on the same day it started.");
-            return;
+    const calenderSettings = (useCase: string) => {
+        if (useCase === 'availability') {
+            setAllDaySlot(false);
+            setNowIndicator(false);
+            setSelectable(true);
+            setHeaderToolbar(false);
+        } else if (useCase === 'poll') {
+            setHeaderToolbar({
+                left: 'prev,next,today,duration',
+                center: 'title',
+                right: ''
+            });
         }
+    };
 
-        const end = hour * 60 + quarter * 15;
-        setSelectionEnd(end);
+    useEffect(() => {
+        if (availability) {
+            availabilityToEvents();
+        }
+    }, [availability]);
 
-        if (selectionStart === end) {
-            alert(`Clicked on ${day} at ${formatMinutesIntoTime(selectionStart as number)}`);
-        } else {
-            alert(`Selection from ${selectionStartDay} ${formatMinutesIntoTime(selectionStart as number)} to ${day} ${formatMinutesIntoTime(selectionEnd as number)}`);
+    function availabilityToEvents() {
+        setCalenderEvents([]);
+        for (let day in availability) {
+            let timeslots = availability[day as Weekday];
+
+            timeslots?.forEach((time: TimePeriod) => {
+                const values = Object.values(Weekday);
+                const weekDayIndex = values.indexOf(day as Weekday);
+
+                let availabilityOfWeekday: CalenderEvent = {
+                    display: 'background',
+                    color: 'red',
+                    startTime: time.start,
+                    endTime: time.end,
+                    daysOfWeek: [weekDayIndex],
+                    allDay: false
+                }
+                addEventToCalender(availabilityOfWeekday);
+            });
+        }
+    };
+
+    function addEventToCalender(newEvent: CalenderEvent) {
+        setCalenderEvents(prevEvents => {
+            if (!prevEvents.some(event => event.startTime === newEvent.startTime && event.endTime === newEvent.endTime)) {
+                return [...prevEvents, newEvent];
+            } else {
+                return prevEvents;
+            }
+        });
+    }
+
+    const handleCalenderSelect = (info: any) => {
+        const start = info.start;
+        const end = info.end;
+
+        console.log('Start date: ' + start);
+        console.log('End date: ' + end);
+
+    };
+
+    const handleCalenderClick = (info: any) => {
+        if (!selectable) {
+            const start = info.start;
+
+            console.log('Clicked date: ' + start);
         }
     };
 
     return (
-        <div className="scroll-container" style={{ width, height: scrollContainerHeight }}>
-            <table className="week-view-table">
+        <FullCalendar
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+            initialView="timeGridWeek"
+            height={'100%'}
+            firstDay={1}
+            allDaySlot={allDaySlot}
+            nowIndicator={nowIndicator}
+            locale={'de'}
 
-                <thead>
-                    <tr>
-                        <th></th> {/* Extra cell for the hours */}
-                        {days.map((day, index) => (
-                            <th key={index}>{day}</th>
-                        ))}
-                    </tr>
-                </thead>
+            headerToolbar={headerToolbar}
 
-                <tbody>
-                    {hours.map((hour) => (
-                        <tr key={hour}>
-                            <th>{hour < 10 ? `0${hour}:00` : `${hour}:00`}</th> {/* Display the hour */}
-                            {days.map((day, index) => (
-                                <td
-                                    key={`${index}-${hour}`}>
-                                    {Array(4).fill(0).map((_, quarter) => (
-                                        <div
-                                            className="quarterCell"
-                                            key={quarter}
-                                            onMouseDown={() => handleMouseDown(day, hour, quarter)}
-                                            onMouseUp={() => handleMouseUp(day, hour, quarter)}
-                                        />
-                                    ))}
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
-                </tbody>
 
-            </table>
-        </div>
+            dayHeaderFormat={{
+                weekday: 'long'
+            }}
+
+            eventTimeFormat={{
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            }}
+
+            snapDuration="00:05:00"
+            selectable={selectable}
+            dateClick={handleCalenderClick}
+            select={handleCalenderSelect}
+
+            events={calenderEvents}
+        />
     );
 };
 

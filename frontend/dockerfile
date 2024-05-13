@@ -10,6 +10,10 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
+# Install less and less-watch-compiler globally
+RUN npm install -g less
+RUN npm install -g less-watch-compiler
+
 # Copy the rest of the application code to the working directory
 COPY . .
 
@@ -17,4 +21,4 @@ COPY . .
 EXPOSE 3000
 
 # Define the command to run your application
-CMD [ "npm", "start" ]
+CMD npm start & less-watch-compiler src/styles src/styles main.less

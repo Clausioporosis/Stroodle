@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import './Dashboard.css';
 
 import { useNavigate } from 'react-router-dom';
 import Header from "../common/header/Header"
 
 import { PlusSquare } from 'react-bootstrap-icons';
 
+import UserService from '../../services/UserService';
 import PollService from '../../services/PollService';
 import { Poll } from '../../models/Poll';
 import CreatedPollCard from './createdPollCard/CreatedPollCard';
@@ -15,7 +15,10 @@ const Dashboard: React.FC = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        setPolls(PollService.getAllPolls());
+        (async () => {
+            const allPolls = await PollService.getAllPolls();
+            setPolls(allPolls);
+        })();
     }, []);
 
     const handleCreateClick = () => {
@@ -31,8 +34,11 @@ const Dashboard: React.FC = () => {
     };
 
     const handleDeleteClick = (pollId: string) => {
-        PollService.deletePollById(pollId);
-        setPolls([...PollService.getAllPolls()]);
+        (async () => {
+            await PollService.deletePollById(pollId);
+            const allPolls = await PollService.getAllPolls();
+            setPolls(allPolls);
+        })();
     };
 
     return (
@@ -51,10 +57,10 @@ const Dashboard: React.FC = () => {
                                 id={poll.id}
                                 title={poll.title}
                                 description={poll.description}
-                                duration={poll.duration}
-                                creatorId={poll.creatorId}
-                                dates={poll.dates}
-                                participants={poll.participants}
+                                location={poll.location}
+                                organizerId={poll.organizerId}
+                                proposedDates={poll.proposedDates}
+                                participantIds={poll.participantIds}
                                 onEditClick={handleEditClick}
                                 onShareClick={handleShareClick}
                                 onDeleteClick={handleDeleteClick}

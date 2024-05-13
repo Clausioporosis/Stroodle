@@ -1,8 +1,13 @@
-package com.stroodle.backend;
+package com.stroodle.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+
+import com.stroodle.backend.exception.ResourceNotFoundException;
+import com.stroodle.backend.model.Poll;
+import com.stroodle.backend.repository.PollRepository;
+
 import java.util.List;
 import java.util.Optional;
 

@@ -1,21 +1,33 @@
-import { User } from './User';
+export class ProposedDate {
+    date: Date;
+    duration: string;
+    votersId: string[];
+
+    constructor(date: Date, duration: string, votersId: string[]) {
+        this.date = date;
+        this.duration = duration;
+        this.votersId = votersId;
+    }
+}
 
 export class Poll {
-    id: string;
-    creatorId: string;
+    id?: string;
+    organizerId: String;
     title: string;
     description: string;
-    duration: number;
-    dates: Date[];
-    participants: User[];
+    location: string;
+    participantIds: string[];
+    proposedDates: ProposedDate[];
+    bookedDateIndex?: number;
 
-    constructor(id: string, creatorId: string, title: string, description: string, duration: number, dates: Date[], participants: User[]) {
+    constructor(id: string, organizerId: string, title: string, description: string, location: string, participantsIds: string[], proposedDates: ProposedDate[], bookedDateIndex: number) {
         this.id = id;
-        this.creatorId = creatorId;
+        this.organizerId = organizerId;
         this.title = title;
         this.description = description;
-        this.duration = duration;
-        this.dates = dates;
-        this.participants = participants;
+        this.location = location;
+        this.proposedDates = proposedDates;
+        this.participantIds = participantsIds;
+        this.bookedDateIndex = bookedDateIndex;
     }
 }

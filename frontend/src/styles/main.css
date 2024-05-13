@@ -1,0 +1,365 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  position: relative;
+  margin: 0;
+  background-color: var(--base-color);
+  color: var(--text-color);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+:root {
+  --base-color: #070707;
+  --container-color: #161616;
+  --content-color: #333;
+  --hover-color: #333;
+  --active-color: #484848;
+  --text-color: #bbb;
+  --icon-color: #bbbbbb;
+  --border-color: #666;
+  --accent-color: #4C9EBC;
+  --hover-accent-color: #3a7a92;
+}
+/* Website Layout CSS */
+.app {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100vh;
+}
+.app-body {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  /* It just works. Only for two items tho. Without, column items don't have any width for 100%. */
+  padding: 10px;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+}
+@media (max-width: 1400px) {
+  .app-body {
+    grid-template-columns: 1fr;
+  }
+}
+.content-tab {
+  background-color: var(--container-color);
+  max-width: 1000px;
+  width: 100%;
+  height: 600px;
+  margin: auto;
+  border-radius: 5px;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.tab-item {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+h1 {
+  display: flex;
+  color: var(--text-color);
+  margin: auto;
+  width: 100%;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 20px;
+  font-size: x-large;
+}
+h3 {
+  color: var(--icon-color);
+  margin: auto;
+  width: 100%;
+  font-size: medium;
+  padding-bottom: 6px;
+  font-weight: normal;
+}
+.header-button {
+  background-color: var(--content-color);
+  color: var(--text-color);
+  font-size: large;
+  margin-left: auto;
+  height: 35px;
+  width: auto;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  user-select: none;
+}
+.header-button:hover {
+  background-color: var(--hover-accent-color);
+}
+.header-button:active {
+  background-color: var(--accent-color);
+  animation: buttonPress 0.2s ease;
+}
+@keyframes buttonPress {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+/*
+@import "../components/dashboard/Dashboard.less";
+@import "../components/dashboard/createdPollCard/CreatedPollCard.less";
+@import "../components/polls/createPoll/CreatePoll.less";
+@import "../components/polls/createPoll/addedParticipants/AddedParticipants.less";
+@import "../components/polls/createPoll/proposedDates/ProposedDates.less";
+@import "../components/polls/createPoll/searchBar/SearchBar.less";
+@import "../components/polls/createPoll/weekView/WeekView.less";
+
+*/
+.app-header {
+  background-color: var(--base-color);
+  border-bottom: var(--border-color) 1.5px solid;
+  display: flex;
+  flex-direction: row;
+  height: 80px;
+  width: 100%;
+  z-index: 1000;
+}
+.start {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+}
+.start .stroodle-logo {
+  margin: 10px;
+  width: 150px;
+  height: auto;
+}
+.end {
+  display: flex;
+  justify-content: flex-end;
+}
+.button-container {
+  user-select: none;
+  align-items: center;
+  margin: 0 20px 0 0;
+  display: flex;
+  gap: 20px;
+}
+.button-container button {
+  margin: 0;
+  padding: 0;
+  height: 35px;
+  width: 35px;
+  background-color: var(--base-color);
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+.button-container button:hover {
+  background-color: var(--hover-color);
+}
+.button-container button:active {
+  background-color: var(--active-color);
+  animation: buttonPress 0.2s ease;
+}
+.button-container button .icon {
+  fill: var(--icon-color);
+  width: 35px;
+  height: auto;
+}
+.button-container .profile-button {
+  border-radius: 17.5px;
+}
+.dropdown-container {
+  width: 140px;
+  background-color: var(--base-color);
+  border-left: var(--border-color) 1px solid;
+  position: absolute;
+  display: grid;
+  right: 0;
+  top: 80px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.dropdown-container.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.dropdown-container a {
+  padding: 10px;
+  border-bottom: var(--border-color) 1px solid;
+  color: var(--icon-color);
+  text-decoration: none;
+  font-size: 16px;
+  font-family: "Inter", Arial, Helvetica, sans-serif;
+}
+.dropdown-container a:hover {
+  background-color: var(--hover-accent-color);
+}
+.dropdown-container a:active {
+  background-color: var(--accent-color);
+}
+.header-container {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  padding-top: 20px;
+  background-color: #171717;
+  color: #999999;
+  border-bottom: 1.5px solid #373737;
+}
+.logo {
+  width: 150px;
+  height: auto;
+}
+.right-section {
+  display: flex;
+  align-items: center;
+}
+.dropdown-button {
+  background: none;
+  border: none;
+  margin-left: 0;
+}
+.dropdown-button svg {
+  fill: #999999;
+  width: 30px;
+  height: auto;
+}
+.profile-icon {
+  background: none;
+  border: none;
+  margin-right: 10px;
+}
+.profile-icon svg {
+  fill: #999999;
+  width: 40px;
+  height: auto;
+}
+.page-links a {
+  text-decoration: none;
+  color: #bbbbbb;
+  margin-right: 35px;
+  font-size: 20px;
+  font-family: "Inter", Arial, Helvetica, sans-serif;
+}
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 75px;
+  width: 120px;
+  background-color: #171717;
+  border: 1px solid #373737;
+}
+.dropdown-open {
+  opacity: 1;
+  transform: translateY(0px);
+  pointer-events: auto;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.dropdown-close {
+  opacity: 0;
+  transform: translateY(-20px);
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.dropdown-menu a {
+  display: block;
+  color: #bbbbbb;
+  text-decoration: none;
+  padding: 10px;
+  border-bottom: 1px solid #373737;
+}
+.fc {
+  --fc-today-bg-color: transparent;
+  --fc-border-color: var(--text-color);
+  width: 100%;
+}
+.fc-toolbar {
+  justify-content: flex-start;
+  margin: 10px 0 15px 0;
+}
+.fc .fc-widget-content {
+  border-color: #00a2ff;
+  /* Change #00a2ff to whatever color you want */
+}
+.fc-view {
+  color: #bbbbbb;
+}
+.fc-button-primary {
+  background-color: #333;
+  color: #bbb;
+  border: none;
+  display: flex;
+  border-radius: 5px;
+  padding: 5px;
+  height: 35px;
+  margin-right: 10px;
+}
+.fc-button-primary:disabled {
+  pointer-events: none;
+}
+.fc-button-primary:focus {
+  box-shadow: none;
+}
+.fc-button-primary:hover {
+  background-color: #444;
+}
+.fc-button-primary:active {
+  background-color: #555;
+  animation: buttonPress 0.2s ease;
+}
+.fc-duration-button {
+  position: relative;
+  background-color: #333;
+  height: 100%;
+  width: 115px;
+}
+.fc-duration-button:hover,
+.fc-duration-button:active,
+.fc-duration-button:focus {
+  background-color: #333;
+  box-shadow: none;
+  animation: none;
+}
+.fc-duration-button .duration-select {
+  position: absolute;
+  height: 100%;
+  margin: -5px 0 0 -5px;
+  padding-top: 2px;
+  padding-right: 5px;
+  background-color: #333;
+  font-size: 1em;
+}
+.fc-duration-button .duration-select option:disabled {
+  display: none;
+}
+@keyframes buttonPress {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.fc-toolbar-title {
+  margin-left: 10px;
+  font-size: large;
+  color: #bbbbbb;
+}

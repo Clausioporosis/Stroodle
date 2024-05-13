@@ -1,3 +1,4 @@
+package com.stroodle.backend.config;
 /*
  * package com.stroodle.backend;
  * 

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Alt, ClockHistory, Hourglass, Pencil, Share, Trash3 } from 'react-bootstrap-icons';
-import './CreatedPollCard.css';
 
 import PollService from '../../../services/PollService';
 import { Poll } from '../../../models/Poll';
@@ -11,18 +10,18 @@ interface CreatedPollCardProps extends Poll {
     onDeleteClick: (id: string) => void;
 }
 
-const CreatedPollCard: React.FC<CreatedPollCardProps> = ({ id, title, description, duration, onEditClick, onShareClick, onDeleteClick }) => {
+const CreatedPollCard: React.FC<CreatedPollCardProps> = ({ id, title, description, onEditClick, onShareClick, onDeleteClick }) => {
     const handleEdit = () => {
-        onEditClick(id);
+        onEditClick(id!);
     };
 
     const handleShare = () => {
-        onShareClick(id);
+        onShareClick(id!);
     };
 
     const handleDelete = () => {
         if (window.confirm("Bist du sicher, dass du diese Umfrage löschen möchtest?")) {
-            onDeleteClick(id);
+            onDeleteClick(id!);
         }
     };
 
@@ -37,7 +36,7 @@ const CreatedPollCard: React.FC<CreatedPollCardProps> = ({ id, title, descriptio
                 </p>
                 <p className="poll-card-duration">
                     <ClockHistory className="clock-icon" />
-                    {duration} Minuten
+                    {/*duration*/} Minuten
                 </p>
             </div>
             <div className="poll-card-actions">

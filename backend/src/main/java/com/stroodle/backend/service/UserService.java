@@ -1,8 +1,13 @@
-package com.stroodle.backend;
+package com.stroodle.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+
+import com.stroodle.backend.exception.ResourceNotFoundException;
+import com.stroodle.backend.model.User;
+import com.stroodle.backend.repository.UserRepository;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +42,14 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    public List<User> searchUsers(String query) {
+        List<User> users = userRepository.findByFirstNameOrLastNameOrEmail(query);
+        if (users.isEmpty()) {
+            throw new ResourceNotFoundException("No user found with the query " + query);
+        }
+        return users;
+    }
+
     public List<User> getUserByEmail(String email) {
         List<User> users = userRepository.findByEmail(email);
         if (users.isEmpty()) {
@@ -45,8 +58,16 @@ public class UserService {
         return users;
     }
 
-    public List<User> getUserByName(String name) {
-        List<User> users = userRepository.findByName(name);
+    public List<User> getUserByFirstName(String name) {
+        List<User> users = userRepository.findByFirstName(name);
+        if (users.isEmpty()) {
+            throw new ResourceNotFoundException("No user found with the name " + name);
+        }
+        return users;
+    }
+
+    public List<User> getUserByLastName(String name) {
+        List<User> users = userRepository.findByLastName(name);
         if (users.isEmpty()) {
             throw new ResourceNotFoundException("No user found with the name " + name);
         }
