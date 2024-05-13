@@ -79,13 +79,13 @@ class UserService {
         }
     }
 
-    async putAvailabilitByUser(id: string, availability: Availability): Promise<Availability> {
+    async putAvailabilitByUser(availability: Availability): Promise<Availability> {
         try {
-            const response = await apiClient.put<Availability>(`/users/${id}/availability`, availability);
+            const response = await apiClient.put<Availability>(`/users/${loggedInUserMock.id}/availability`, availability);
             return response.data;
         } catch (error) {
-            console.error('Error fetchputtinging availability of User', error);
-            throw new Error(`Error putting availability of User with ID: ${id}`);
+            console.error('Error putting availability of current User', error);
+            throw new Error(`Error putting availability of current User`);
         }
     }
 

@@ -3,36 +3,56 @@ import HeaderComponent from '../common/header/Header';
 import WeekView from '../shared/weekView/WeekView';
 import { notEqual } from 'assert';
 import UserService, { loggedInUserMock } from '../../services/UserService';
-import { User, Availability, Weekday } from '../../models/User';
+import { User, Availability, Weekday, TimePeriod } from '../../models/User';
 
 
 const AvailabilitySettings: React.FC = () => {
     const [userAvailability, setUserAvailability] = useState<Availability>({});
+    const [pendingAvailabilityEntries, setPendingAvailabilityEntries] = useState<Availability>({});
 
     useEffect(() => {
-        (async () => {
-            const currentUser = UserService.getLoggedInUser();
-            const availability = await UserService.getAvailabilityOfUser(currentUser.id);
-            setUserAvailability(availability);
-        })();
+        getCurrentAvailability();
     }, []);
 
-    async function addUserAvailability(day: Weekday, start: string, end: string) {
-        //console.log(day, start, end);
-        console.log(userAvailability);
-
-        if (!userAvailability[day]) {
-            userAvailability[day] = [];
-        }
-
-        userAvailability[day]?.push({
-            start,
-            end
+    // addidng new entry userAvailability
+    function addPendingAvailabilityEntry(day: Weekday, start: string, end: string) {
+        setPendingAvailabilityEntries(prevAvailability => {
+            const newAvailability = { ...prevAvailability };
+            const newTimePeriod: TimePeriod = { start, end };
+            // add time to existing day or create new day
+            if (newAvailability[day]) {
+                newAvailability[day]!.push(newTimePeriod);
+            } else {
+                newAvailability[day] = [newTimePeriod];
+            }
+            return newAvailability;
         });
-        console.log(userAvailability);
-
-        //await UserService.putAvailabilitByUser(userAvailability);
     };
+
+    function resetPendingAvailabilityEntries() {
+        setPendingAvailabilityEntries({});
+        getCurrentAvailability();
+    }
+
+    async function getCurrentAvailability() {
+        const currentUser = UserService.getLoggedInUser();
+        const availability = await UserService.getAvailabilityOfUser(currentUser.id);
+        setUserAvailability(availability);
+        setPendingAvailabilityEntries(availability);
+    }
+
+    async function updateAvailability() {
+        await UserService.putAvailabilitByUser(pendingAvailabilityEntries);
+        getCurrentAvailability();
+    }
+
+    function removeAvailability(day: Weekday, start: string, end: string) {
+        // had to filter userAvailability directly, because setAvailability is async 
+        userAvailability[day] = userAvailability[day]?.filter(slot => {
+            return !(slot.start === start && slot.end === end);
+        });
+        updateAvailability();
+    }
 
     return (
         <div className='app'>
@@ -41,9 +61,10 @@ const AvailabilitySettings: React.FC = () => {
                 <div className='content-tab'>
                     <div className='tab-item'>
                         <h1>Verfügbarkeit angeben
-                            <button className="header-button" >Speichern</button>
+                            <button className="header-button" onClick={resetPendingAvailabilityEntries} >X</button>
+                            <button className="header-button" onClick={updateAvailability}>Speichern</button>
                         </h1>
-                        <WeekView useCase={'availability'} userAvailability={userAvailability} updateUserAvailability={addUserAvailability} />
+                        <WeekView useCase={'availability'} userAvailability={userAvailability} addAvailabilityEntry={addPendingAvailabilityEntry} removeAvailability={removeAvailability} />
                     </div>
                 </div>
 

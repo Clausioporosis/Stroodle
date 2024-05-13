@@ -1,9 +1,12 @@
 import FullCalendar from '@fullcalendar/react';
+import EventClickArg from '@fullcalendar/react';
+
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import React, { useEffect, useState } from 'react';
 import { Calendar } from '@fullcalendar/core';
+
 
 import UserService from '../../../services/UserService';
 import { User, Availability, Weekday, TimePeriod } from '../../../models/User';
@@ -11,10 +14,12 @@ import { User, Availability, Weekday, TimePeriod } from '../../../models/User';
 interface WeekViewProps {
     useCase: string;
     userAvailability?: Availability;
-    updateUserAvailability?: (day: Weekday, start: string, end: string) => void;
+    addAvailabilityEntry?: (day: Weekday, start: string, end: string) => void;
+    removeAvailability?: (day: Weekday, start: string, end: string) => void;
 }
 
 interface CalenderEvent {
+    id?: string;
     display: string;
     color: string;
     title?: string;
@@ -26,13 +31,14 @@ interface CalenderEvent {
     allDay?: boolean;
 }
 
-const WeekView: React.FC<WeekViewProps> = ({ useCase, userAvailability, updateUserAvailability }) => {
+const WeekView: React.FC<WeekViewProps> = ({ useCase, userAvailability, addAvailabilityEntry, removeAvailability }) => {
     const [allDaySlot, setAllDaySlot] = useState<boolean>();
     const [nowIndicator, setNowIndicator] = useState<boolean>();
     const [selectable, setSelectable] = useState<boolean>();
     const [headerToolbar, setHeaderToolbar] = useState<any>();
 
     const [calenderEvents, setCalenderEvents] = useState<CalenderEvent[]>([]);
+    const calendarRef = React.useRef<FullCalendar>(null);
 
     useEffect(() => {
         calenderSettings(useCase);
@@ -69,8 +75,9 @@ const WeekView: React.FC<WeekViewProps> = ({ useCase, userAvailability, updateUs
                 const weekDayIndex = values.indexOf(day as Weekday);
 
                 let availabilityOfWeekday: CalenderEvent = {
+                    id: day + time.start,
                     display: 'background',
-                    color: 'red',
+                    color: 'blue',
                     startTime: time.start,
                     endTime: time.end,
                     daysOfWeek: [weekDayIndex],
@@ -103,16 +110,49 @@ const WeekView: React.FC<WeekViewProps> = ({ useCase, userAvailability, updateUs
         const endTime = info.end.toLocaleTimeString();
 
         let newAvailability: CalenderEvent = {
+            id: weekday + startTime,
             display: 'background',
-            color: 'red',
+            color: 'green',
             startTime: startTime,
             endTime: endTime,
             daysOfWeek: [weekdayIndex],
             allDay: false
         }
-        updateUserAvailability?.(weekday, startTime, endTime);
         addEventToCalender(newAvailability);
+        addAvailabilityEntry?.(weekday, startTime, endTime);
     };
+
+    function handleEventDelete(eventClickInfo: EventClickArg) {
+        // @ts-ignore
+        const event = eventClickInfo.event; // unreasonable error: Property 'event' does exist
+
+        // remove event from calendar
+        if (calendarRef.current) {
+            const calendarApi = calendarRef.current.getApi();
+            const eventToRemove = calendarApi.getEventById(event.id);
+            eventToRemove?.remove();
+        }
+
+        const dayIndex = event.start.getDay();
+        const day = Object.values(Weekday)[dayIndex];
+        // adjust time to UTC... this is really awful and should be considered next time
+        const adjustTime = (date: Date) => new Date(date.getTime() + 2 * 60 * 60 * 1000).toISOString();
+        const startTime = adjustTime(event.start).split('T')[1].slice(0, -5);
+        const endTime = adjustTime(event.end).split('T')[1].slice(0, -5);
+
+        // remove event from userAvailability
+        removeAvailability?.(day, startTime, endTime);
+    }
+
+    function renderEventContent(eventClickInfo: EventClickArg) {
+        return (
+            <>
+                <button onClick={() => handleEventDelete(eventClickInfo)}>
+                    X
+                </button>
+            </>
+        );
+    }
 
     const handleCalenderClick = (info: any) => {
         if (!selectable) {
@@ -125,6 +165,7 @@ const WeekView: React.FC<WeekViewProps> = ({ useCase, userAvailability, updateUs
     return (
         <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+            ref={calendarRef}
             initialView="timeGridWeek"
             height={'100%'}
             firstDay={1}
@@ -160,6 +201,9 @@ const WeekView: React.FC<WeekViewProps> = ({ useCase, userAvailability, updateUs
             select={handleCalenderSelect}
 
             events={calenderEvents}
+            selectOverlap={false}
+            eventContent={renderEventContent}
+
         />
     );
 };
