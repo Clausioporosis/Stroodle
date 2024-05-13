@@ -1,22 +1,26 @@
 import { User, Availability } from '../models/User';
 import axios from 'axios';
 
-let loggedInUserMock: User | undefined = {
-    id: "6640f9901941ca65dc1399b0",
-    firstName: "Max",
-    lastName: "Mustermann",
-    email: "max.mustermann@example.com",
+export let loggedInUserMock: User = {
+    id: "1",
+    firstName: "Clausio",
+    lastName: "Porosis",
+    email: "clausioporosis@example.com",
     availability: {
-        MONDAY: [
+        "MONDAY": [
             {
-                start: "08:00:00",
-                end: "16:00:00"
+                "start": "09:00",
+                "end": "17:00"
             }
         ],
-        TUESDAY: [
+        "TUESDAY": [
             {
-                start: "09:00:00",
-                end: "17:00:00"
+                "start": "09:00",
+                "end": "12:00"
+            },
+            {
+                "start": "14:00",
+                "end": "22:00"
             }
         ]
     }
@@ -27,15 +31,65 @@ const apiClient = axios.create({
 });
 
 class UserService {
-    async getAllUsers(): Promise<User[]> {
+    constructor() {
+        (async () => {
+            this.createUser(loggedInUserMock);
+        })();
+    }
+
+    async createUser(user: User): Promise<User> {
         try {
-            const response = await apiClient.get('/users');
+            const response = await apiClient.post<User>('/users', user);
             return response.data;
         } catch (error) {
-            console.error('Es gab einen Fehler!', error);
+            console.error('Error creating User', error);
+            //throw new Error(`Error creating User`);
+            return user;
+        }
+    }
+
+    async getAllUsers(): Promise<User[]> {
+        try {
+            const response = await apiClient.get<User[]>(`/users`);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching all User', error);
+            //throw new Error(`Error fetching all User`);
             return [];
         }
     }
+
+    async getUserById(id: string): Promise<User> {
+        try {
+            const response = await apiClient.get<User>(`/users/search/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching User by ID', error);
+            throw new Error(`Error fetching User by ID: ${id}`);
+        }
+    }
+
+    async getAvailabilityOfUser(id: string): Promise<Availability> {
+        try {
+            const response = await apiClient.get<Availability>(`/users/${id}/availability`);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching availability', error);
+            throw new Error(`Error fetching availability of User with ID: ${id}`);
+        }
+    }
+
+    async putAvailabilitByUser(id: string): Promise<Availability> {
+        try {
+            const response = await apiClient.put<Availability>(`/users/${id}/availability`);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetchputtinging availability of User', error);
+            throw new Error(`Error putting availability of User with ID: ${id}`);
+        }
+    }
+
+
 
     async searchUsers(query: string): Promise<User[]> {
         try {
@@ -51,33 +105,6 @@ class UserService {
         }
     }
 
-    async getUserById(id: string): Promise<User | undefined> {
-        try {
-            const response = await apiClient.get(`/users/search/${id}`);
-            return response.data;
-        } catch (error) {
-            console.error('Es gab einen Fehler!', error);
-        }
-    }
-
-    async getAvailabilityOfUser(id: string): Promise<Availability | undefined> {
-        try {
-            const response = await apiClient.get(`/users/${id}/availability`);
-            return response.data;
-        } catch (error) {
-            console.error('Es gab einen Fehler!', error);
-        }
-    }
-
-    async putAvailabilitByUser(id: string): Promise<Availability | undefined> {
-        try {
-            const response = await apiClient.put(`/users/${id}/availability`);
-            console.log(response.data);
-            return response.data;
-        } catch (error) {
-            console.error('Es gab einen Fehler!', error);
-        }
-    }
 
     // temp logged in user solution until we have a proper login
     async setLoggedInUser(userId: string) {
@@ -89,7 +116,7 @@ class UserService {
         }
     }
 
-    getLoggedInUser(): User | undefined {
+    getLoggedInUser(): User {
         return loggedInUserMock;
     }
 }

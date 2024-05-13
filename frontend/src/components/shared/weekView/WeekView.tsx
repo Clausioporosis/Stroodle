@@ -6,11 +6,23 @@ import React, { useEffect, useState } from 'react';
 import { Calendar } from '@fullcalendar/core';
 
 import UserService from '../../../services/UserService';
-import { User, Availability } from '../../../models/User';
+import { User, Availability, Weekday, TimePeriod } from '../../../models/User';
 
 interface WeekViewProps {
     useCase: string;
     availability?: Availability;
+}
+
+interface CalenderEvent {
+    display: string;
+    color: string;
+    title?: string;
+    start?: Date;
+    startTime?: string;
+    end?: Date;
+    endTime?: string;
+    daysOfWeek?: number[];
+    allDay?: boolean;
 }
 
 const WeekView: React.FC<WeekViewProps> = ({ useCase, availability }) => {
@@ -19,19 +31,11 @@ const WeekView: React.FC<WeekViewProps> = ({ useCase, availability }) => {
     const [selectable, setSelectable] = useState<boolean>();
     const [headerToolbar, setHeaderToolbar] = useState<any>();
 
-    const [calenderEvents, setCalenderEvents] = useState<any[]>([]);
+    const [calenderEvents, setCalenderEvents] = useState<CalenderEvent[]>([]);
 
     useEffect(() => {
         calenderSettings(useCase);
-        availabilityToEvents();
     }, []);
-
-    function availabilityToEvents() {
-
-        for (const day in availability) {
-            console.log(day);
-        }
-    };
 
     const calenderSettings = (useCase: string) => {
         if (useCase === 'availability') {
@@ -48,18 +52,51 @@ const WeekView: React.FC<WeekViewProps> = ({ useCase, availability }) => {
         }
     };
 
-    const setAvailabilityHighlight = (calendar: Calendar) => {
+    useEffect(() => {
+        if (availability) {
+            availabilityToEvents();
+        }
+    }, [availability]);
 
+    function availabilityToEvents() {
+        setCalenderEvents([]);
+        for (let day in availability) {
+            let timeslots = availability[day as Weekday];
+
+            timeslots?.forEach((time: TimePeriod) => {
+                const values = Object.values(Weekday);
+                const weekDayIndex = values.indexOf(day as Weekday);
+
+                let availabilityOfWeekday: CalenderEvent = {
+                    display: 'background',
+                    color: 'red',
+                    startTime: time.start,
+                    endTime: time.end,
+                    daysOfWeek: [weekDayIndex],
+                    allDay: false
+                }
+                addEventToCalender(availabilityOfWeekday);
+            });
+        }
+    };
+
+    function addEventToCalender(newEvent: CalenderEvent) {
+        setCalenderEvents(prevEvents => {
+            if (!prevEvents.some(event => event.startTime === newEvent.startTime && event.endTime === newEvent.endTime)) {
+                return [...prevEvents, newEvent];
+            } else {
+                return prevEvents;
+            }
+        });
     }
 
     const handleCalenderSelect = (info: any) => {
-        if (selectable) {
-            const start = info.start;
-            const end = info.end;
+        const start = info.start;
+        const end = info.end;
 
-            console.log('Start date: ' + start);
-            console.log('End date: ' + end);
-        }
+        console.log('Start date: ' + start);
+        console.log('End date: ' + end);
+
     };
 
     const handleCalenderClick = (info: any) => {
@@ -97,6 +134,8 @@ const WeekView: React.FC<WeekViewProps> = ({ useCase, availability }) => {
             selectable={selectable}
             dateClick={handleCalenderClick}
             select={handleCalenderSelect}
+
+            events={calenderEvents}
         />
     );
 };
