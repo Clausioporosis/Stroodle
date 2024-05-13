@@ -46,9 +46,10 @@ const AvailabilitySettings: React.FC = () => {
         getCurrentAvailability();
     }
 
-    function removeAvailability(day: Weekday, start: string, end: string) {
-        // had to filter userAvailability directly, because setAvailability is async 
-        userAvailability[day] = userAvailability[day]?.filter(slot => {
+    function removeAvailability(isPending: Boolean, day: Weekday, start: string, end: string) {
+        let targetAvailability = isPending ? pendingAvailabilityEntries : userAvailability;
+        // had to filter targetAvailability directly, because setAvailability is async
+        targetAvailability[day] = targetAvailability[day]?.filter(slot => {
             return !(slot.start === start && slot.end === end);
         });
         updateAvailability();
@@ -64,7 +65,12 @@ const AvailabilitySettings: React.FC = () => {
                             <button className="header-button" onClick={resetPendingAvailabilityEntries} >X</button>
                             <button className="header-button" onClick={updateAvailability}>Speichern</button>
                         </h1>
-                        <WeekView useCase={'availability'} userAvailability={userAvailability} addAvailabilityEntry={addPendingAvailabilityEntry} removeAvailability={removeAvailability} />
+                        <WeekView
+                            useCase={'availability'}
+                            userAvailability={userAvailability}
+                            pendingAvailability={pendingAvailabilityEntries}
+                            addAvailabilityEntry={addPendingAvailabilityEntry}
+                            removeAvailability={removeAvailability} />
                     </div>
                 </div>
 

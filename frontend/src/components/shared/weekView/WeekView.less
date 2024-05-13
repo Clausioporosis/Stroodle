@@ -9,6 +9,28 @@
     margin: 10px 0 15px 0;
 }
 
+.fc-event {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    border-radius: 3px;
+
+    button {
+        background-color: transparent;
+        border: none;
+        color: var(--text-color);
+
+        &:hover {
+            background-color: var(--border-color);
+            border-radius: 3px;
+        }
+    }
+}
+
+.fc .fc-bg-event {
+    opacity: 0.65;
+}
+
 .fc .fc-widget-content {
     border-color: #00a2ff;
     /* Change #00a2ff to whatever color you want */
