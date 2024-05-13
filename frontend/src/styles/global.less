@@ -81,6 +81,8 @@ code {
 
 h1 {
     display: flex;
+    justify-content: flex-start;
+    gap: 10px;
     color: var(--text-color);
     margin: auto;
     width: 100%;
@@ -104,13 +106,17 @@ h3 {
     background-color: var(--content-color);
     color: var(--text-color);
     font-size: large;
-    margin-left: auto;
     height: 35px;
     width: auto;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     user-select: none;
+
+    &:nth-last-child(2) {
+        margin-left: auto;
+        /* Schiebt das zweite und dritte Kind nach rechts */
+    }
 
     &:hover {
         background-color: var(--hover-accent-color);

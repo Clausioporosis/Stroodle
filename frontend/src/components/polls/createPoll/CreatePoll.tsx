@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Header from "../../common/header/Header"
+import HeaderComponent from "../../common/header/Header"
 import { useNavigate } from 'react-router-dom';
 import PollService from '../../../services/PollService';
 import { Poll, ProposedDate } from '../../../models/Poll';
@@ -226,88 +226,110 @@ const Dashboard: React.FC = () => {
         }
     }, []);
 
-
-
     return (
-        <div className="create-poll-page">
-            <Header />
-            <div className="create-poll-body">
+        <div className='app'>
+            <HeaderComponent />
+            <div className='app-body'>
+                <div className='content-tab'>
+                    <div className='tab-item'>
+                        <h1>Umfrage erstellen</h1>
 
-                <div className='left-section'>
-                    <h1>Umfrage erstellen</h1>
-                    <div className='upper-section'>
-                        <form>
-                            <h3>Titel</h3>
-                            <input type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Was ist der Anlass?" />
-                            <h3>Beschreibung</h3>
-                            <textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Was muss man wissen?" />
-                            <h3>Ort</h3>
-                            <input type="text" value={location} onChange={e => setLocation(e.target.value)} placeholder="Wo wird es statt finden?" />
-                        </form>
                     </div>
-                    <div className='lower-section'>
-                        <div className='left-lower-section'>
-                            <h3>Teilnehmer</h3>
-                            <SearchBar onUserClick={addParticipant} />
-                            <AddedParticipants participantsIds={participantsIds} removeSelectedParticipant={removeParticipant} />
-                        </div>
-                        <div className='right-lower-section'>
-                            <h3>Weitere Einstellungen</h3>
-                        </div>
-                    </div>
-
                 </div>
 
-                <div className='right-section'>
-                    <h1>Termine hinzufügen
-                        <button className="header-button" onClick={createPoll}>Erstellen</button>
-                    </h1>
-                    <div className='calender-container'>
-                        <FullCalendar
-                            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-                            initialView="timeGridWeek"
-                            height={'100%'}
-                            firstDay={1}
-                            allDaySlot={true}
-                            nowIndicator={true}
-                            locale={'de'}
-                            headerToolbar={{
-                                left: 'prev,next,today,duration',
-                                center: 'title',
-                                right: ''
-                            }}
-                            customButtons={{
-                                duration: {
-                                    text: 'Dauer',
-                                }
-                            }}
-                            eventTimeFormat={{
-                                hour: '2-digit',
-                                minute: '2-digit',
-                                hour12: false
-                            }}
-                            snapDuration="00:05:00"
-                            dateClick={handleDateClick}
-                            events={calendarEvents}
-                        />
+                <div className='content-tab'>
+                    <div className='tab-item'>
+                        <h1>Termine aussuchen
+                            <button className="header-button">Erstellen</button>
+                        </h1>
                     </div>
-
-                    {/* <div className='upper-section'>
-                        <div className='left-upper-section'>
-
-                        </div>
-                        <div className='right-upper-section'>
-
-                        </div>
-                    </div>
-                    <div className='lower-section'>
-                    </div> */}
                 </div>
-
 
             </div>
         </div>
     );
+    /*
+        return (
+            <div className="create-poll-page">
+                <Header />
+                <div className="create-poll-body">
+    
+                    <div className='left-section'>
+                        <h1>Umfrage erstellen</h1>
+                        <div className='upper-section'>
+                            <form>
+                                <h3>Titel</h3>
+                                <input type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Was ist der Anlass?" />
+                                <h3>Beschreibung</h3>
+                                <textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Was muss man wissen?" />
+                                <h3>Ort</h3>
+                                <input type="text" value={location} onChange={e => setLocation(e.target.value)} placeholder="Wo wird es statt finden?" />
+                            </form>
+                        </div>
+                        <div className='lower-section'>
+                            <div className='left-lower-section'>
+                                <h3>Teilnehmer</h3>
+                                <SearchBar onUserClick={addParticipant} />
+                                <AddedParticipants participantsIds={participantsIds} removeSelectedParticipant={removeParticipant} />
+                            </div>
+                            <div className='right-lower-section'>
+                                <h3>Weitere Einstellungen</h3>
+                            </div>
+                        </div>
+    
+                    </div>
+    
+                    <div className='right-section'>
+                        <h1>Termine hinzufügen
+                            <button className="header-button" onClick={createPoll}>Erstellen</button>
+                        </h1>
+                        <div className='calender-container'>
+                            <FullCalendar
+                                plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                                initialView="timeGridWeek"
+                                height={'100%'}
+                                firstDay={1}
+                                allDaySlot={true}
+                                nowIndicator={true}
+                                locale={'de'}
+                                headerToolbar={{
+                                    left: 'prev,next,today,duration',
+                                    center: 'title',
+                                    right: ''
+                                }}
+                                customButtons={{
+                                    duration: {
+                                        text: 'Dauer',
+                                    }
+                                }}
+                                eventTimeFormat={{
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    hour12: false
+                                }}
+                                snapDuration="00:05:00"
+                                dateClick={handleDateClick}
+                                events={calendarEvents}
+                            />
+                        </div>
+    
+                         <div className='upper-section'>
+                            <div className='left-upper-section'>
+    
+                            </div>
+                            <div className='right-upper-section'>
+    
+                            </div>
+                        </div>
+                        <div className='lower-section'>
+                        </div> *
+                    </div>
+    
+    
+                </div>
+            </div>
+        );
+        */
 };
 
 export default Dashboard;

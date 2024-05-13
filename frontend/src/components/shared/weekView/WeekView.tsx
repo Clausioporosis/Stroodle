@@ -14,7 +14,6 @@ import { User, Availability, Weekday, TimePeriod } from '../../../models/User';
 interface WeekViewProps {
     useCase: string;
     userAvailability?: Availability;
-    pendingAvailability?: Availability;
     addAvailabilityEntry?: (day: Weekday, start: string, end: string) => void;
     removeAvailability?: (isPending: Boolean, day: Weekday, start: string, end: string) => void;
 }
@@ -32,7 +31,7 @@ interface CalenderEvent {
     allDay?: boolean;
 }
 
-const WeekView: React.FC<WeekViewProps> = ({ useCase, userAvailability, pendingAvailability, addAvailabilityEntry, removeAvailability }) => {
+const WeekView: React.FC<WeekViewProps> = ({ useCase, userAvailability, addAvailabilityEntry, removeAvailability }) => {
     const [allDaySlot, setAllDaySlot] = useState<boolean>();
     const [nowIndicator, setNowIndicator] = useState<boolean>();
     const [selectable, setSelectable] = useState<boolean>();
@@ -148,6 +147,7 @@ const WeekView: React.FC<WeekViewProps> = ({ useCase, userAvailability, pendingA
     function renderEventContent(eventClickInfo: EventClickArg) {
         // @ts-ignore
         const event = eventClickInfo.event; // unreasonable error: Property 'event' does exist?
+        let isPending = event.backgroundColor === 'green';
         return (
             <>
                 <button onClick={() => handleEventDelete(event)}>
