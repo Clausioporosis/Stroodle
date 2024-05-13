@@ -10,7 +10,8 @@ import { User, Availability, Weekday, TimePeriod } from '../../../models/User';
 
 interface WeekViewProps {
     useCase: string;
-    availability?: Availability;
+    userAvailability?: Availability;
+    updateUserAvailability?: (day: Weekday, start: string, end: string) => void;
 }
 
 interface CalenderEvent {
@@ -25,7 +26,7 @@ interface CalenderEvent {
     allDay?: boolean;
 }
 
-const WeekView: React.FC<WeekViewProps> = ({ useCase, availability }) => {
+const WeekView: React.FC<WeekViewProps> = ({ useCase, userAvailability, updateUserAvailability }) => {
     const [allDaySlot, setAllDaySlot] = useState<boolean>();
     const [nowIndicator, setNowIndicator] = useState<boolean>();
     const [selectable, setSelectable] = useState<boolean>();
@@ -53,15 +54,15 @@ const WeekView: React.FC<WeekViewProps> = ({ useCase, availability }) => {
     };
 
     useEffect(() => {
-        if (availability) {
+        if (userAvailability) {
             availabilityToEvents();
         }
-    }, [availability]);
+    }, [userAvailability]);
 
     function availabilityToEvents() {
         setCalenderEvents([]);
-        for (let day in availability) {
-            let timeslots = availability[day as Weekday];
+        for (let day in userAvailability) {
+            let timeslots = userAvailability[day as Weekday];
 
             timeslots?.forEach((time: TimePeriod) => {
                 const values = Object.values(Weekday);
@@ -81,22 +82,36 @@ const WeekView: React.FC<WeekViewProps> = ({ useCase, availability }) => {
     };
 
     function addEventToCalender(newEvent: CalenderEvent) {
+        /*
         setCalenderEvents(prevEvents => {
             if (!prevEvents.some(event => event.startTime === newEvent.startTime && event.endTime === newEvent.endTime)) {
                 return [...prevEvents, newEvent];
             } else {
                 return prevEvents;
             }
+            
         });
+        */
+        setCalenderEvents(prevEvents => [...prevEvents, newEvent]);
+
     }
 
     const handleCalenderSelect = (info: any) => {
-        const start = info.start;
-        const end = info.end;
+        const weekdayIndex = info.start.getDay();
+        const weekday = Object.values(Weekday)[weekdayIndex];
+        const startTime = info.start.toLocaleTimeString();
+        const endTime = info.end.toLocaleTimeString();
 
-        console.log('Start date: ' + start);
-        console.log('End date: ' + end);
-
+        let newAvailability: CalenderEvent = {
+            display: 'background',
+            color: 'red',
+            startTime: startTime,
+            endTime: endTime,
+            daysOfWeek: [weekdayIndex],
+            allDay: false
+        }
+        updateUserAvailability?.(weekday, startTime, endTime);
+        addEventToCalender(newAvailability);
     };
 
     const handleCalenderClick = (info: any) => {
@@ -132,6 +147,15 @@ const WeekView: React.FC<WeekViewProps> = ({ useCase, availability }) => {
 
             snapDuration="00:05:00"
             selectable={selectable}
+
+            // only allow selection within the same day
+            selectAllow={
+                function (selectInfo) {
+                    var startDay = selectInfo.start.getDay();
+                    var endDay = selectInfo.end.getDay();
+                    return startDay === endDay;
+                }}
+
             dateClick={handleCalenderClick}
             select={handleCalenderSelect}
 

@@ -3,11 +3,11 @@ import HeaderComponent from '../common/header/Header';
 import WeekView from '../shared/weekView/WeekView';
 import { notEqual } from 'assert';
 import UserService, { loggedInUserMock } from '../../services/UserService';
-import { User, Availability } from '../../models/User';
+import { User, Availability, Weekday } from '../../models/User';
 
 
 const AvailabilitySettings: React.FC = () => {
-    const [userAvailability, setUserAvailability] = useState<Availability>();
+    const [userAvailability, setUserAvailability] = useState<Availability>({});
 
     useEffect(() => {
         (async () => {
@@ -16,6 +16,23 @@ const AvailabilitySettings: React.FC = () => {
             setUserAvailability(availability);
         })();
     }, []);
+
+    async function addUserAvailability(day: Weekday, start: string, end: string) {
+        //console.log(day, start, end);
+        console.log(userAvailability);
+
+        if (!userAvailability[day]) {
+            userAvailability[day] = [];
+        }
+
+        userAvailability[day]?.push({
+            start,
+            end
+        });
+        console.log(userAvailability);
+
+        //await UserService.putAvailabilitByUser(userAvailability);
+    };
 
     return (
         <div className='app'>
@@ -26,7 +43,7 @@ const AvailabilitySettings: React.FC = () => {
                         <h1>Verfügbarkeit angeben
                             <button className="header-button" >Speichern</button>
                         </h1>
-                        <WeekView useCase={'availability'} availability={userAvailability} />
+                        <WeekView useCase={'availability'} userAvailability={userAvailability} updateUserAvailability={addUserAvailability} />
                     </div>
                 </div>
 
