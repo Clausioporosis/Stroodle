@@ -59,11 +59,11 @@ const AvailabilitySettings: React.FC = () => {
             <HeaderComponent />
             <div className='app-body'>
                 <div className='content-tab'>
+                    <h1>Verfügbarkeit angeben
+                        <button className="header-button" onClick={resetPendingAvailabilityEntries} >X</button>
+                        <button className="header-button" onClick={updateAvailability}>Speichern</button>
+                    </h1>
                     <div className='tab-item'>
-                        <h1>Verfügbarkeit angeben
-                            <button className="header-button" onClick={resetPendingAvailabilityEntries} >X</button>
-                            <button className="header-button" onClick={updateAvailability}>Speichern</button>
-                        </h1>
                         <WeekView useCase={'availability'} userAvailability={userAvailability} addAvailabilityEntry={addPendingAvailabilityEntry} removeAvailability={removeAvailability} />
                     </div>
                 </div>

@@ -11,6 +11,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 
 import SearchBar from './searchBar/SearchBar';
 import AddedParticipants from './addedParticipants/AddedParticipants';
+import WeekView from '../../shared/weekView/WeekView';
 
 type FullCalendarEvent = {
     start: Date;
@@ -32,6 +33,10 @@ const Dashboard: React.FC = () => {
     const [participantsIds, setParticipantsIds] = useState<string[]>([]);
     const [proposedDates, setProposedDates] = useState<ProposedDate[]>([]);
     const [calendarEvents, setCalendarEvents] = useState<FullCalendarEvent[]>([]);
+
+    useEffect(() => {
+        console.log(selectedDuration);
+    }, [selectedDuration]);
 
     //create a poll with the given data and navigate to the dashboard afterwards
     const createPoll = () => {
@@ -231,17 +236,33 @@ const Dashboard: React.FC = () => {
             <HeaderComponent />
             <div className='app-body'>
                 <div className='content-tab'>
+                    <h1>Umfrage erstellen</h1>
                     <div className='tab-item'>
-                        <h1>Umfrage erstellen</h1>
-
+                        <h3>Titel</h3>
+                        <input type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Was ist der Anlass?" />
+                        <h3>Beschreibung</h3>
+                        <textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Was muss man wissen?" />
+                        <h3>Ort</h3>
+                        <input type="text" value={location} onChange={e => setLocation(e.target.value)} placeholder="Wo wird es statt finden?" />
+                    </div>
+                    <div className='tab-item row-section'>
+                        <div className='tab-item'>
+                            <h3>Teilnehmer</h3>
+                            <SearchBar onUserClick={addParticipant} />
+                            <AddedParticipants participantsIds={participantsIds} removeSelectedParticipant={removeParticipant} />
+                        </div>
+                        <div className='tab-item right-section'>
+                            <h3>Weitere Einstellungen</h3>
+                        </div>
                     </div>
                 </div>
 
                 <div className='content-tab'>
+                    <h1>Termine aussuchen
+                        <button className="header-button single-button">Erstellen</button>
+                    </h1>
                     <div className='tab-item'>
-                        <h1>Termine aussuchen
-                            <button className="header-button">Erstellen</button>
-                        </h1>
+                        <WeekView useCase='poll' setSelectedDuration={setSelectedDuration} />
                     </div>
                 </div>
 
