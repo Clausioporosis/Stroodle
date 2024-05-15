@@ -262,7 +262,7 @@ const Dashboard: React.FC = () => {
                         <button className="header-button single-button">Erstellen</button>
                     </h1>
                     <div className='tab-item'>
-                        <WeekView useCase='poll' setSelectedDuration={setSelectedDuration} />
+                        <WeekView useCase='poll' />
                     </div>
                 </div>
 

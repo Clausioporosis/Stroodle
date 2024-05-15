@@ -17,9 +17,9 @@ import { Console } from 'console';
 interface WeekViewProps {
     useCase: string;
     userAvailability?: Availability;
+    pendingAvailabilityEntries?: Availability;
     addAvailabilityEntry?: (day: Weekday, start: string, end: string) => void;
     removeAvailability?: (isPending: Boolean, day: Weekday, start: string, end: string) => void;
-    setSelectedDuration?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface CalendarEvent {
@@ -35,7 +35,7 @@ interface CalendarEvent {
     allDay?: boolean;
 }
 
-const WeekView: React.FC<WeekViewProps> = ({ useCase, userAvailability, addAvailabilityEntry, removeAvailability, setSelectedDuration }) => {
+const WeekView: React.FC<WeekViewProps> = ({ useCase, userAvailability, pendingAvailabilityEntries, addAvailabilityEntry, removeAvailability }) => {
     const [allDaySlot, setAllDaySlot] = useState<boolean>();
     const [nowIndicator, setNowIndicator] = useState<boolean>();
     const [selectable, setSelectable] = useState<boolean>();
@@ -44,29 +44,27 @@ const WeekView: React.FC<WeekViewProps> = ({ useCase, userAvailability, addAvail
     const [calenderEvents, setCalenderEvents] = useState<CalendarEvent[]>([]);
 
     // new test code with api -------------------------------------------------------------------------------------------
-    const [hasAddedAvailability, setHasAddedAvailability] = useState(false);
-
 
     const [calendarApi, setCalendarApi] = useState<any>(null);
     const calendarRef = React.useRef<FullCalendar>(null);
 
     useEffect(() => {
-        if (calendarRef.current) {
-            setCalendarApi(calendarRef.current.getApi());
-        }
+        setCalendarApi(calendarRef.current?.getApi());
     }, []);
 
-    // only add userAvailability to calendar if it is available and has not been added yet
+    // add user availability to calendar once calendarApi is available and userAvailability is set
+    const [hasAddedAvailability, setHasAddedAvailability] = useState(false);
     useEffect(() => {
-        if (userAvailability && !hasAddedAvailability) {
-            addCurrentAvailabilityToCalendar();
+        if (userAvailability && !hasAddedAvailability && calendarApi) {
+            addAvailabilityToCalendar(userAvailability, false);
+            pendingAvailabilityEntries && addAvailabilityToCalendar(pendingAvailabilityEntries, true);
             setHasAddedAvailability(true);
         }
-    }, [userAvailability]);
+    }, [userAvailability, calendarApi]);
 
     function handleCalenderSelection(selectInfo: any) {
-        const startTime = `${selectInfo.start.toTimeString().split(' ')[0]} `;
-        const endTime = `${selectInfo.end.toTimeString().split(' ')[0]} `;
+        const startTime = selectInfo.start.toTimeString().split(' ')[0];
+        const endTime = selectInfo.end.toTimeString().split(' ')[0];
         const weekdayIndex = selectInfo.start.getDay();
         const weekday = Object.values(Weekday)[weekdayIndex];
 
@@ -86,10 +84,18 @@ const WeekView: React.FC<WeekViewProps> = ({ useCase, userAvailability, addAvail
     }
 
     function handleEventDelete(event: any) {
-        calendarApi.getEventById(event.id).remove();
+        event.remove();
+
+        const isPending = event.backgroundColor === 'green';
+        const weekdayIndex = event.start.getDay();
+        const weekday = Object.values(Weekday)[weekdayIndex];
+        const startTime = event.start.toTimeString().split(' ')[0];
+        const endTime = event.end.toTimeString().split(' ')[0];
+
+        removeAvailability?.(isPending, weekday, startTime, endTime);
     }
 
-    function renderEventContent(eventClickInfo: EventClickArg) {
+    function renderEventContent(eventClickInfo: any) {
         // @ts-ignore
         const event = eventClickInfo.event; // unreasonable error: 'event' object does exist!
         return (
@@ -101,18 +107,18 @@ const WeekView: React.FC<WeekViewProps> = ({ useCase, userAvailability, addAvail
         );
     }
 
-    function addCurrentAvailabilityToCalendar() {
-        calendarApi.removeAllEvents();
-        for (const day in userAvailability) {
+    function addAvailabilityToCalendar(availability: Availability, isPending: boolean) {
+        const color = isPending ? 'green' : '#4C9EBC';
+        for (const day in availability) {
             const weekdayIndex = Object.values(Weekday).indexOf(day as Weekday);
 
-            const timePeriods = userAvailability[day as Weekday];
+            const timePeriods = availability[day as Weekday];
             timePeriods?.forEach((time: TimePeriod) => {
 
                 const currentAvailabilityEntry: CalendarEvent = {
                     id: uuidv4(),
                     display: 'background',
-                    color: '#4C9EBC',
+                    color: color,
                     startTime: time.start,
                     endTime: time.end,
                     daysOfWeek: [weekdayIndex],
@@ -121,6 +127,7 @@ const WeekView: React.FC<WeekViewProps> = ({ useCase, userAvailability, addAvail
                 calendarApi.addEvent(currentAvailabilityEntry);
             });
         }
+
     }
 
     // ------------------------------------------------------------------------------------------------------------------
