@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@fullcalendar/common": "^5.11.5",
     "@fullcalendar/daygrid": "^6.1.11",
     "@fullcalendar/interaction": "^6.1.11",
     "@fullcalendar/react": "^6.1.11",
@@ -23,6 +24,7 @@
     "react-select": "^5.8.0",
     "react-tooltip": "^5.26.4",
     "typescript": "^4.9.5",
+    "uuid": "^9.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -52,6 +54,7 @@
   },
   "devDependencies": {
     "@types/react": "^18.2.79",
-    "@types/react-dom": "^18.2.25"
+    "@types/react-dom": "^18.2.25",
+    "@types/uuid": "^9.0.8"
   }
 }

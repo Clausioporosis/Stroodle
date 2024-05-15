@@ -1,6 +1,6 @@
 import FullCalendar from '@fullcalendar/react';
 import EventClickArg from '@fullcalendar/react';
-import DateSelectArg from '@fullcalendar/react';
+import { v4 as uuidv4 } from 'uuid';
 
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -22,10 +22,10 @@ interface WeekViewProps {
     setSelectedDuration?: React.Dispatch<React.SetStateAction<string>>;
 }
 
-interface CalenderEvent {
+interface CalendarEvent {
     id?: string;
-    display: string;
-    color: string;
+    display?: string;
+    color?: string;
     title?: string;
     start?: Date;
     startTime?: string;
@@ -41,9 +41,12 @@ const WeekView: React.FC<WeekViewProps> = ({ useCase, userAvailability, addAvail
     const [selectable, setSelectable] = useState<boolean>();
     const [headerToolbar, setHeaderToolbar] = useState<any>();
 
-    const [calenderEvents, setCalenderEvents] = useState<CalenderEvent[]>([]);
+    const [calenderEvents, setCalenderEvents] = useState<CalendarEvent[]>([]);
 
     // new test code with api -------------------------------------------------------------------------------------------
+    const [hasAddedAvailability, setHasAddedAvailability] = useState(false);
+
+
     const [calendarApi, setCalendarApi] = useState<any>(null);
     const calendarRef = React.useRef<FullCalendar>(null);
 
@@ -53,30 +56,73 @@ const WeekView: React.FC<WeekViewProps> = ({ useCase, userAvailability, addAvail
         }
     }, []);
 
-    function refTest(): void {
-        if (calendarApi) {
-            const events: any = calendarApi.getEvents();
+    // only add userAvailability to calendar if it is available and has not been added yet
+    useEffect(() => {
+        if (userAvailability && !hasAddedAvailability) {
+            addCurrentAvailabilityToCalendar();
+            setHasAddedAvailability(true);
+        }
+    }, [userAvailability]);
 
-            console.log(events);
+    function handleCalenderSelection(selectInfo: any) {
+        const startTime = `${selectInfo.start.toTimeString().split(' ')[0]} `;
+        const endTime = `${selectInfo.end.toTimeString().split(' ')[0]} `;
+        const weekdayIndex = selectInfo.start.getDay();
+        const weekday = Object.values(Weekday)[weekdayIndex];
+
+        const newAvailabilityEntry: CalendarEvent = {
+            id: uuidv4(),
+            display: 'background',
+            color: 'green',
+            startTime: startTime,
+            endTime: endTime,
+            daysOfWeek: [weekdayIndex],
+            allDay: false
+        };
+
+        calendarApi.addEvent(newAvailabilityEntry);
+        addAvailabilityEntry?.(weekday, startTime, endTime);
+        selectInfo.view.calendar.unselect();
+    }
+
+    function handleEventDelete(event: any) {
+        calendarApi.getEventById(event.id).remove();
+    }
+
+    function renderEventContent(eventClickInfo: EventClickArg) {
+        // @ts-ignore
+        const event = eventClickInfo.event; // unreasonable error: 'event' object does exist!
+        return (
+            <>
+                <button onClick={() => handleEventDelete(event)}>
+                    X
+                </button>
+            </>
+        );
+    }
+
+    function addCurrentAvailabilityToCalendar() {
+        calendarApi.removeAllEvents();
+        for (const day in userAvailability) {
+            const weekdayIndex = Object.values(Weekday).indexOf(day as Weekday);
+
+            const timePeriods = userAvailability[day as Weekday];
+            timePeriods?.forEach((time: TimePeriod) => {
+
+                const currentAvailabilityEntry: CalendarEvent = {
+                    id: uuidv4(),
+                    display: 'background',
+                    color: '#4C9EBC',
+                    startTime: time.start,
+                    endTime: time.end,
+                    daysOfWeek: [weekdayIndex],
+                    allDay: false
+                };
+                calendarApi.addEvent(currentAvailabilityEntry);
+            });
         }
     }
 
-    function handleCalenderSelection(selection: DateSelectArg): void {
-        if (calendarApi) {
-            console.log(selection);
-            /*
-            let newAvailability: CalenderEvent = {
-                id: weekday + startTime,
-                display: 'background',
-                color: 'green',
-                startTime: startTime,
-                endTime: endTime,
-                daysOfWeek: [weekdayIndex],
-                allDay: false
-            }
-            */
-        }
-    }
     // ------------------------------------------------------------------------------------------------------------------
 
 
@@ -102,12 +148,11 @@ const WeekView: React.FC<WeekViewProps> = ({ useCase, userAvailability, addAvail
         }
     };
 
-    function addEventToCalender(newEvent: CalenderEvent) {
+    function addEventToCalender(newEvent: CalendarEvent) {
         setCalenderEvents(prevEvents => [...prevEvents, newEvent]);
-        refTest();
     }
 
-    function handleEventDelete(event: any) {
+    function handleEventDeleteTemp(event: any) {
         // remove event from calendar
         if (calendarRef.current) {
             const calendarApi = calendarRef.current.getApi();
@@ -124,20 +169,7 @@ const WeekView: React.FC<WeekViewProps> = ({ useCase, userAvailability, addAvail
         let isPending = event.backgroundColor === 'green';
 
         // remove event from userAvailability
-        removeAvailability?.(isPending, day, startTime, endTime);
-    }
-
-    function renderEventContent(eventClickInfo: EventClickArg) {
-        // @ts-ignore
-        const event = eventClickInfo.event; // unreasonable error: 'event' object does exist!
-        let isPending = event.backgroundColor === 'green';
-        return (
-            <>
-                <button onClick={() => handleEventDelete(event)}>
-                    X
-                </button>
-            </>
-        );
+        //removeAvailability?.(isPending, day, startTime, endTime);
     }
 
     // poll logic --------------------------------------------------------------------------------------------
@@ -145,69 +177,69 @@ const WeekView: React.FC<WeekViewProps> = ({ useCase, userAvailability, addAvail
     const handleCalenderClick = (info: any) => {
         const start = info.dateStr;
 
-        console.log('Clicked date: ' + start);
-        let newDate: CalenderEvent = {
+        //console.log('Clicked date: ' + start);
+        let newDate: CalendarEvent = {
             id: start,
             display: 'event',
             color: 'green',
             start: start,
         };
 
-        addEventToCalender(newDate);
+        //addEventToCalender(newDate);
     }
 
     // availability logic --------------------------------------------------------------------------------------------
-
-    useEffect(() => {
-        if (userAvailability) {
-            availabilityToEvents();
-        }
-    }, [userAvailability]);
-
-    function availabilityToEvents() {
-        setCalenderEvents([]);
-        for (let day in userAvailability) {
-            let timeslots = userAvailability[day as Weekday];
-
-            timeslots?.forEach((time: TimePeriod) => {
-                const values = Object.values(Weekday);
-                const weekDayIndex = values.indexOf(day as Weekday);
-
-                let availabilityOfWeekday: CalenderEvent = {
-                    id: day + time.start,
-                    display: 'background',
-                    color: '#4C9EBC',
-                    startTime: time.start,
-                    endTime: time.end,
-                    daysOfWeek: [weekDayIndex],
-                    allDay: false
-                }
-                addEventToCalender(availabilityOfWeekday);
-            });
-        }
-    };
-
-    const handleCalenderSelect = (info: any) => {
-        const weekdayIndex = info.start.getDay();
-        const weekday = Object.values(Weekday)[weekdayIndex];
-        const startTime = info.start.toLocaleTimeString();
-        const endTime = info.end.toLocaleTimeString();
-
-        let newAvailability: CalenderEvent = {
-            id: weekday + startTime,
-            display: 'background',
-            color: 'green',
-            startTime: startTime,
-            endTime: endTime,
-            daysOfWeek: [weekdayIndex],
-            allDay: false
-        }
-
-        addEventToCalender(newAvailability);
-        addAvailabilityEntry?.(weekday, startTime, endTime);
-        info.view.calendar.unselect();
-    };
-
+    /*
+        useEffect(() => {
+            if (userAvailability) {
+                availabilityToEvents();
+            }
+        }, [userAvailability]);
+    
+        function availabilityToEvents() {
+            setCalenderEvents([]);
+            for (let day in userAvailability) {
+                let timeslots = userAvailability[day as Weekday];
+    
+                timeslots?.forEach((time: TimePeriod) => {
+                    const values = Object.values(Weekday);
+                    const weekDayIndex = values.indexOf(day as Weekday);
+    
+                    let availabilityOfWeekday: CalendarEvent = {
+                        id: day + time.start,
+                        display: 'background',
+                        color: '#4C9EBC',
+                        startTime: time.start,
+                        endTime: time.end,
+                        daysOfWeek: [weekDayIndex],
+                        allDay: false
+                    }
+                    addEventToCalender(availabilityOfWeekday);
+                });
+            }
+        };
+    
+        const handleCalenderSelect = (info: any) => {
+            const weekdayIndex = info.start.getDay();
+            const weekday = Object.values(Weekday)[weekdayIndex];
+            const startTime = info.start.toLocaleTimeString();
+            const endTime = info.end.toLocaleTimeString();
+    
+            let newAvailability: CalendarEvent = {
+                id: weekday + startTime,
+                display: 'background',
+                color: 'green',
+                startTime: startTime,
+                endTime: endTime,
+                daysOfWeek: [weekdayIndex],
+                allDay: false
+            }
+    
+            addEventToCalender(newAvailability);
+            addAvailabilityEntry?.(weekday, startTime, endTime);
+            info.view.calendar.unselect();
+        };
+    */
     return (
         <div className='tab-item'>
             <FullCalendar
@@ -244,18 +276,13 @@ const WeekView: React.FC<WeekViewProps> = ({ useCase, userAvailability, addAvail
                         return startDay === endDay && duration >= 30;
                     }}
 
-                select={handleCalenderSelect}
+                select={handleCalenderSelection}
 
                 nowIndicator={nowIndicator}
                 selectOverlap={false}
                 eventContent={renderEventContent}
 
                 dateClick={handleCalenderClick}
-                customButtons={{
-                    duration: {
-                        text: 'Dauer',
-                    }
-                }}
             />
         </div>
     );
