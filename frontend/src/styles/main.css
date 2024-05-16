@@ -123,6 +123,21 @@ textarea {
   box-sizing: border-box;
   resize: none;
 }
+select {
+  flex-grow: 0;
+  height: 25px;
+  width: 154px;
+  text-align: center;
+  background: #333333;
+  color: #bbbbbb;
+  border: none;
+  border-radius: 5px;
+  font-size: small;
+  outline: none;
+}
+select option:disabled {
+  display: none;
+}
 .header-button-group {
   display: flex;
   flex-grow: 1;
@@ -555,9 +570,6 @@ p {
   margin-left: 10px;
   padding-left: 10px;
   border-left: 1px solid var(--border-color);
-}
-.header-button.single-button:last-child {
-  margin-left: auto;
 }
 /*
 .create-poll-page {

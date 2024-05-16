@@ -7,7 +7,7 @@ import WeekView from '../shared/weekView/WeekView';
 
 
 const AvailabilitySettings: React.FC = () => {
-    const [reloadKey, setReloadKey] = useState(0);
+    const [reload, setReload] = useState(false);
     const [userAvailability, setUserAvailability] = useState<Availability>();
     const [pendingAvailabilityEntries, setPendingAvailabilityEntries] = useState<Availability>();
 
@@ -37,7 +37,6 @@ const AvailabilitySettings: React.FC = () => {
     async function updateAvailability(availability: Availability | undefined) {
         if (availability) {
             await UserService.putAvailabilitByUser(availability);
-            setReloadKey(prevKey => prevKey + 1);
         }
     }
 
@@ -70,7 +69,7 @@ const AvailabilitySettings: React.FC = () => {
 
     function handleSave() {
         mergePendingWithCurrentAvailabilities();
-        setReloadKey(prevKey => prevKey + 1);
+        setReload(prevReload => !prevReload);
     }
 
     return (
@@ -84,8 +83,9 @@ const AvailabilitySettings: React.FC = () => {
                         </div>
                     </h1>
                     <div className='tab-item'>
-                        <WeekView key={reloadKey}
+                        <WeekView
                             useCase={'availability'}
+                            reload={reload}
                             userAvailability={userAvailability}
                             pendingAvailabilityEntries={pendingAvailabilityEntries}
                             savePendingAvailabilityEntry={savePendingAvailabilityEntry}
