@@ -123,6 +123,12 @@ textarea {
   box-sizing: border-box;
   resize: none;
 }
+.header-button-group {
+  display: flex;
+  flex-grow: 1;
+  justify-content: flex-end;
+  gap: 10px;
+}
 .header-button {
   background-color: var(--content-color);
   color: var(--text-color);
@@ -133,10 +139,6 @@ textarea {
   border-radius: 5px;
   cursor: pointer;
   user-select: none;
-}
-.header-button:nth-last-child(2) {
-  margin-left: auto;
-  /* Schiebt das zweite und dritte Kind nach rechts */
 }
 .header-button:hover {
   background-color: var(--hover-accent-color);
@@ -349,7 +351,6 @@ textarea {
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
-  border-radius: 3px;
 }
 .fc-event button {
   background-color: transparent;

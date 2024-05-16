@@ -149,6 +149,13 @@ textarea {
     resize: none;
 }
 
+.header-button-group {
+    display: flex;
+    flex-grow: 1;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
 .header-button {
     background-color: var(--content-color);
     color: var(--text-color);
@@ -159,11 +166,6 @@ textarea {
     border-radius: 5px;
     cursor: pointer;
     user-select: none;
-
-    &:nth-last-child(2) {
-        margin-left: auto;
-        /* Schiebt das zweite und dritte Kind nach rechts */
-    }
 
     &:hover {
         background-color: var(--hover-accent-color);
