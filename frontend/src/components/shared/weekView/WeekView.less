@@ -2,6 +2,18 @@
     --fc-today-bg-color: transparent;
     --fc-border-color: var(--text-color);
     width: 100%;
+
+    .fc-bg-event {
+        opacity: 0.65;
+    }
+
+    .fc-toolbar-title {
+        margin-left: 10px;
+        font-size: large;
+        color: var(--text-color);
+    }
+
+
 }
 
 .fc-toolbar {
@@ -13,7 +25,6 @@
     display: flex;
     justify-content: flex-end;
     align-items: flex-start;
-    border-radius: 3px;
 
     button {
         background-color: transparent;
@@ -25,15 +36,6 @@
             border-radius: 3px;
         }
     }
-}
-
-.fc .fc-bg-event {
-    opacity: 0.65;
-}
-
-.fc .fc-widget-content {
-    border-color: #00a2ff;
-    /* Change #00a2ff to whatever color you want */
 }
 
 .fc-view {
@@ -110,10 +112,4 @@
     100% {
         transform: scale(1);
     }
-}
-
-.fc-toolbar-title {
-    margin-left: 10px;
-    font-size: large;
-    color: #bbbbbb;
 }
