@@ -1,15 +1,19 @@
+.poll-card-component {
+    border: red 1px solid;
+
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    grid-gap: 10px;
+    /* Abstand zwischen den Karten */
+    overflow: auto;
+    /* Erlaubt das Scrollen, wenn es mehr als 6 Zeilen gibt */
+}
+
 .poll-card {
-    position: relative;
-    width: 350px;
-    height: 160px;
-
-    background-color: #303030;
-    border: 1px solid #373737;
-    border-radius: 5px;
-    padding-top: 5px;
-    padding-left: 10px;
-
-    margin: 10px;
+    /* Ihre bestehenden Stile... */
+    width: 100%;
+    height: 100%;
 }
 
 .poll-card-title {

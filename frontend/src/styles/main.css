@@ -173,16 +173,6 @@ select option:disabled {
     transform: scale(1);
   }
 }
-/*
-@import "../components/dashboard/Dashboard.less";
-@import "../components/dashboard/createdPollCard/CreatedPollCard.less";
-@import "../components/polls/createPoll/CreatePoll.less";
-
-@import "../components/polls/createPoll/proposedDates/ProposedDates.less";
-
-@import "../components/polls/createPoll/weekView/WeekView.less";
-
-*/
 .app-header {
   background-color: var(--base-color);
   border-bottom: var(--border-color) 1.5px solid;
@@ -344,6 +334,34 @@ select option:disabled {
   text-decoration: none;
   padding: 10px;
   border-bottom: 1px solid #373737;
+}
+.plus-icon {
+  color: #999999;
+  font-size: 35px;
+  position: absolute;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 10%;
+}
+.plus-icon:hover {
+  background-color: #444444;
+  box-shadow: 0 0 0 0.1px #444444;
+}
+.created-polls-tab {
+  width: min-content;
+  height: max-content;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #444444;
+  background-color: #202020;
+}
+.created-polls-list {
+  width: 764px;
+  min-height: 560px;
+  max-height: 560px;
+  overflow: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
 }
 .fc {
   --fc-today-bg-color: transparent;
@@ -565,9 +583,4 @@ p {
 }
 .added-participants-body::-webkit-scrollbar-thumb:hover {
   background: #333;
-}
-.right-section {
-  margin-left: 10px;
-  padding-left: 10px;
-  border-left: 1px solid var(--border-color);
 }

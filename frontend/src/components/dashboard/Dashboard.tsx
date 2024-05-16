@@ -42,30 +42,25 @@ const Dashboard: React.FC = () => {
     };
 
     return (
-        <div className="dashboard-container">
+        <div className="app">
             <Header />
-            <div className="dashboard-content-container">
-                <div className="created-polls-tab">
-                    <h1 className="created-polls-tab-header">
-                        Meine Umfragen
-                        <PlusSquare className="plus-icon" onClick={handleCreateClick} />
-                    </h1>
-                    <div className="created-polls-list">
-                        {polls.map((poll, index) => (
-                            <CreatedPollCard
-                                key={index}
-                                id={poll.id}
-                                title={poll.title}
-                                description={poll.description}
-                                location={poll.location}
-                                organizerId={poll.organizerId}
-                                proposedDates={poll.proposedDates}
-                                participantIds={poll.participantIds}
-                                onEditClick={handleEditClick}
-                                onShareClick={handleShareClick}
-                                onDeleteClick={handleDeleteClick}
-                            />
-                        ))}
+            <div className="app-body">
+                <div className="content-tab">
+                    <div className="tab-item">
+                        <h1 className="created-polls-tab-header">
+                            Meine Umfragen
+                            <div className='header-button-group'>
+                                <PlusSquare className="plus-icon" onClick={handleCreateClick} />
+                            </div>
+                        </h1>
+                        <div className="tab-item">
+
+                        </div>
+                    </div>
+                </div>
+                <div className="content-tab">
+                    <div className="tab-item">
+
                     </div>
                 </div>
             </div>
