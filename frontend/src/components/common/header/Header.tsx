@@ -46,14 +46,14 @@ const Header: React.FC = () => {
 
                 <div className='end'>
                     <div className='button-container'>
-
-                        <select value={''} onChange={e => handleUserChange(e.target.value)}>
-                            <option value="">{currentUser?.firstName}</option>
-                            {users.map(user => (
-                                <option key={user.id} value={user.id}>{user.firstName}</option>
-                            ))}
-                        </select>
-
+                        {/*
+                            <select value={''} onChange={e => handleUserChange(e.target.value)}>
+                                <option value="">{currentUser?.firstName}</option>
+                                {users.map(user => (
+                                    <option key={user.id} value={user.id}>{user.firstName}</option>
+                                ))}
+                            </select>
+                            */}
                         <button className='profile-button'>
                             <PersonCircle className='icon profile-icon' />
                         </button>

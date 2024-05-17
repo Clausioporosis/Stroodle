@@ -1,15 +1,23 @@
 import React from 'react';
 
+import UserService from '../../../services/UserService';
+import PollService from '../../../services/PollService';
+import { Poll } from '../../../models/Poll';
+
+import Card from './card/Card';
+
 interface InfoCardsProps {
-    // Define your props here
+    pollData: Poll[];
 }
 
 const InfoCards: React.FC<InfoCardsProps> = (props) => {
-    // Implement your component logic here
+
 
     return (
-        <div>
-            {/* Render your component content here */}
+        <div className='info-cards-component'>
+            {props.pollData.map((poll, index) => (
+                <Card key={index} poll={poll} />
+            ))}
         </div>
     );
 };

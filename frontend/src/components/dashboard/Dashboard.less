@@ -4,29 +4,14 @@
     position: absolute;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
     border-radius: 10%;
-}
 
-.plus-icon:hover {
-    background-color: #444444;
-    box-shadow: 0 0 0 0.1px #444444;
-}
+    .plus-icon:hover {
+        background-color: #444444;
+        box-shadow: 0 0 0 0.1px #444444;
+    }
 
-.created-polls-tab {
-    width: min-content;
-    height: max-content;
-    padding: 10px;
-    border-radius: 10px;
-    border: 1px solid #444444;
-    background-color: #202020;
-}
-
-.created-polls-list {
-    width: 764px;
-    min-height: 560px;
-    max-height: 560px;
-    overflow: auto;
-
-    display: flex;
-    flex-wrap: wrap;
-    align-content: flex-start;
+    &:active {
+        background-color: var(--accent-color);
+        animation: buttonPress 0.2s ease;
+    }
 }

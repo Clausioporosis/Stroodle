@@ -1,0 +1,59 @@
+.card {
+    display: grid;
+    grid-template-columns: 1fr auto; // 1fr für card-info und auto für card-button-group
+    background-color: rgb(61, 61, 61);
+    border-radius: 10px;
+    padding: 10px;
+    height: 100%;
+
+    .card-info {
+        min-width: 100px;
+        margin-right: 10px;
+
+        h2 {
+            margin: 0 0 5px 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        p {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-wrap: break-word;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+    }
+
+    .card-button-group {
+        display: flex;
+        height: 100%;
+        flex-direction: column;
+        align-items: center;
+
+        .icon {
+            font-size: 20px;
+        }
+
+        button {
+            border: none;
+            padding: 10px;
+            background-color: rgb(61, 61, 61);
+            color: white;
+            flex-grow: 1;
+            width: auto;
+            border-bottom: 1px var(--border-color) solid;
+            cursor: pointer;
+
+            &:last-child {
+                border-bottom: none;
+            }
+
+            &:hover {
+                background-color: var(--hover-color);
+            }
+        }
+    }
+}

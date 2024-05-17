@@ -82,15 +82,15 @@ const AvailabilitySettings: React.FC = () => {
                             <button className="header-button" onClick={handleSave}>Speichern</button>
                         </div>
                     </h1>
-                    <div className='tab-item'>
-                        <WeekView
-                            useCase={'availability'}
-                            reload={reload}
-                            userAvailability={userAvailability}
-                            pendingAvailabilityEntries={pendingAvailabilityEntries}
-                            savePendingAvailabilityEntry={savePendingAvailabilityEntry}
-                            removeAvailability={removeAvailability} />
-                    </div>
+
+                    <WeekView
+                        useCase={'availability'}
+                        reload={reload}
+                        userAvailability={userAvailability}
+                        pendingAvailabilityEntries={pendingAvailabilityEntries}
+                        savePendingAvailabilityEntry={savePendingAvailabilityEntry}
+                        removeAvailability={removeAvailability} />
+
                 </div>
             </div>
         </div>
