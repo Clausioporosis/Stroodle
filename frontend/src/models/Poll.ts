@@ -12,7 +12,7 @@ export class ProposedDate {
 
 export class Poll {
     id?: string;
-    organizerId: String;
+    organizerId: string;
     title: string;
     description: string;
     location: string;

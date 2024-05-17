@@ -12,7 +12,7 @@ import InfoCards from '../shared/infoCards/InfoCards';
 
 const Dashboard: React.FC = () => {
     const [myPolls, setMyPolls] = useState<Poll[]>([]);
-    const [invitedPolls, setInvitedPolls] = useState<Poll[]>([]);
+    const [runningPolls, setRunningPolls] = useState<Poll[]>([]);
 
     const navigate = useNavigate();
 
@@ -43,14 +43,18 @@ const Dashboard: React.FC = () => {
                         </div>
                     </h1>
 
-                    < InfoCards pollData={myPolls} />
+                    < InfoCards useCase={'myPolls'} pollData={myPolls} onPollDelete={getMyPolls} />
 
 
                 </div>
                 <div className="content-tab">
-                    <div className="tab-item">
 
-                    </div>
+                    <h1 className="created-polls-tab-header">
+                        Events
+                    </h1>
+
+                    < InfoCards useCase={'runningPolls'} pollData={myPolls} />
+
                 </div>
             </div>
         </div>

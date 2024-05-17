@@ -1,14 +1,160 @@
 .card {
     display: grid;
-    grid-template-columns: 1fr auto; // 1fr für card-info und auto für card-button-group
+    grid-template-columns: 1fr auto;
     background-color: rgb(61, 61, 61);
     border-radius: 10px;
     padding: 10px;
     height: 100%;
 
+    .info-section {
+        display: grid;
+        grid-template-rows: 1fr auto;
+
+        .info-text {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+
+            h2 {
+                margin: 0;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            p {
+                display: -webkit-box;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+                hyphens: auto;
+                overflow: hidden;
+                word-wrap: break-word;
+            }
+        }
+
+        .info-plus {
+            min-width: 0;
+
+            p {
+                margin-top: 5px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+
+
+                .icon {
+                    margin-bottom: -2.5px;
+                    margin-right: 10px;
+                }
+            }
+        }
+    }
+
+    .button-group {
+        margin-left: 5px;
+        display: grid;
+        grid-template-rows: auto auto auto;
+
+        button {
+            border: none;
+            padding: 10px;
+            background-color: rgb(61, 61, 61);
+            color: white;
+            flex-grow: 1;
+            width: auto;
+            border-bottom: 1px var(--border-color) solid;
+            cursor: pointer;
+
+            &:last-child {
+                border-bottom: none;
+
+                &:hover {
+                    background-color: #673232;
+                }
+            }
+
+            &:hover {
+                background-color: var(--hover-color);
+            }
+
+            &:active {
+                background-color: var(--active-color);
+                animation: buttonPress 0.2s ease;
+            }
+        }
+
+        .icon {
+            font-size: large;
+        }
+    }
+
+    .state-section {
+        min-width: 100px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        text-align: center;
+        border-left: var(--border-color) 1px solid;
+        padding-left: 10px;
+
+        .date {}
+
+        .state {}
+
+        .time {}
+
+        .first {
+            font-weight: bolder;
+            color: var(--accent-color)
+        }
+
+        .rest {
+            font-weight: bold;
+        }
+    }
+}
+
+/*
+    .card-status {
+        padding: 15px 0 15px 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        border-left: var(--border-color) 1px solid;
+        min-width: 100px;
+        padding-left: 10px;
+
+        p {
+            text-align: center;
+
+            &:last-child {
+                color: var(--accent-color);
+                margin-top: auto;
+                font-size: 20px;
+                font-weight: bold;
+
+            }
+        }
+    }
+
     .card-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
         min-width: 100px;
         margin-right: 10px;
+
+        .card-info-bottom {
+            p {
+                display: flex;
+                align-items: center;
+                justify-content: start;
+
+                .icon {
+                    margin-right: 5px;
+                }
+            }
+        }
 
         h2 {
             margin: 0 0 5px 0;
@@ -27,11 +173,10 @@
         }
     }
 
-    .card-button-group {
+    .button-group {
         display: flex;
         height: 100%;
         flex-direction: column;
-        align-items: center;
 
         .icon {
             font-size: 20px;
@@ -54,6 +199,12 @@
             &:hover {
                 background-color: var(--hover-color);
             }
+
+            &:active {
+                background-color: var(--active-color);
+                animation: buttonPress 0.2s ease;
+            }
         }
     }
 }
+*/

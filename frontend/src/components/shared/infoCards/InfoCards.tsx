@@ -7,16 +7,18 @@ import { Poll } from '../../../models/Poll';
 import Card from './card/Card';
 
 interface InfoCardsProps {
+    useCase: string;
     pollData: Poll[];
+    onPollDelete?: () => void;
 }
 
-const InfoCards: React.FC<InfoCardsProps> = (props) => {
+const InfoCards: React.FC<InfoCardsProps> = ({ pollData, useCase, onPollDelete }) => {
 
 
     return (
         <div className='info-cards-component'>
-            {props.pollData.map((poll, index) => (
-                <Card key={index} poll={poll} />
+            {pollData.map((poll, index) => (
+                <Card useCase={useCase} key={index} poll={poll} onPollDelete={onPollDelete} />
             ))}
         </div>
     );
