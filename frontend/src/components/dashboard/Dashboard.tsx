@@ -27,7 +27,7 @@ const Dashboard: React.FC = () => {
     }
 
     const handleCreateClick = () => {
-        navigate('/polls/create');
+        navigate('/polls');
     };
 
     return (

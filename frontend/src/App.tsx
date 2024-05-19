@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-route
 import Dashboard from './components/dashboard/Dashboard';
 import CreatePoll from './components/polls/createPoll/CreatePoll';
 import AvailabilitySettings from './components/availability/Availability';
+import PollView from './components/polls/view/View'
 //import Login from './components/login/Login';
 
 const RedirectToDashboard: React.FC = () => {
@@ -21,7 +22,8 @@ const App: React.FC = () => {
         <Route path="/login" element={<RedirectToDashboard />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/availability" element={<AvailabilitySettings />} />
-        <Route path="/polls/create" element={<CreatePoll />} />
+        <Route path="/polls" element={<CreatePoll />} />
+        <Route path="/polls/:pollId" element={<PollView />} />
         <Route path="/" element={<RedirectToDashboard />} />
       </Routes>
     </Router>

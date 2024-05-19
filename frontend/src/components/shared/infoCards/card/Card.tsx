@@ -6,6 +6,7 @@ import UserService from '../../../../services/UserService';
 import { User } from '../../../../models/User';
 import { ClockHistory, Hourglass, Pencil, Share, Trash3, Person, GeoAlt } from 'react-bootstrap-icons';
 import { get } from 'http';
+import { useNavigate } from 'react-router-dom';
 
 interface CardProps {
     useCase: string;
@@ -23,6 +24,7 @@ interface BookedDate {
 const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
     const [bookedDate, setBookedDate] = useState<BookedDate>();
     const [organizerInfo, setOrganizerInfo] = useState<User>();
+    const navigate = useNavigate();
 
     useEffect(() => {
         setBookedDateInfo();
@@ -39,6 +41,10 @@ const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
             .catch((error) => {
                 console.error('Es gab einen Fehler beim Löschen des Polls!', error);
             });
+    }
+
+    function handleCardClick() {
+        navigate(`/polls/${poll.id}`);
     }
 
     function getOrganizerInfo() {
@@ -67,7 +73,7 @@ const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
     }
 
     return (
-        <div className="card">
+        <div className="card" onClick={handleCardClick}>
             <div className='info-section'>
                 <div className='info-text'>
                     <h2>{poll.title}</h2>
