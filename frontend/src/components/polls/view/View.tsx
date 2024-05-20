@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../../common/header/Header';
 import { useParams } from 'react-router-dom';
 
@@ -11,8 +11,10 @@ import VotingStatus from './votingStatus/VotingStatus';
 
 const View: React.FC = () => {
     const { pollId } = useParams<{ pollId: string }>();
-    const [poll, setPoll] = React.useState<Poll>();
-    const [organizer, setOrganizer] = React.useState<User>();
+    const [poll, setPoll] = useState<Poll>();
+    const [selectedDateIndex, setSelectedDateIndex] = useState<number | undefined>();
+    const [votedDates, setVotedDates] = useState<number[] | undefined>();
+    const [isOrganizer, setIsOrganizer] = useState<boolean>(false);
 
     useEffect(() => {
         getPoll();
@@ -22,21 +24,50 @@ const View: React.FC = () => {
         PollService.getPollById(pollId!)
             .then(poll => {
                 setPoll(poll);
-                getUser(poll!.organizerId);
+                setIsOrganizer(poll!.organizerId === UserService.getLoggedInUser().id);
+                setSelectedDateIndex(poll?.bookedDateIndex);
+
+                // has to be rewritten in separate function
+                const votedDates: number[] = [];
+                poll?.proposedDates?.forEach((date, index) => {
+                    if (date.voterIds?.includes(UserService.getLoggedInUser().id)) {
+                        votedDates.push(index);
+                    }
+                });
+                setVotedDates(votedDates);
+
             })
             .catch(error => {
                 console.error('Es gab einen Fehler beim Abrufen des Polls!', error);
             });
     }
 
-    function getUser(organizerId: string) {
-        UserService.getUserById(organizerId)
-            .then(user => {
-                setOrganizer(user);
-            })
-            .catch(error => {
-                console.error('Es gab einen Fehler beim Abrufen des Benutzers!', error);
-            });
+    function handleButtonClick() {
+        if (!poll?.organizerId) return;
+
+        let updatedPoll = { ...poll };
+        updatedPoll.bookedDateIndex = selectedDateIndex;
+
+        const userId = UserService.getLoggedInUser().id;
+
+        updatedPoll.proposedDates?.forEach((date, index) => {
+            if (!date.voterIds) {
+                date.voterIds = [];
+            }
+
+            if (votedDates?.includes(index)) {
+                if (!date.voterIds.includes(userId)) {
+                    date.voterIds.push(userId);
+                }
+            } else {
+                if (date.voterIds.includes(userId)) {
+                    date.voterIds = date.voterIds.filter(id => id !== userId);
+                }
+            }
+        });
+
+        setPoll(updatedPoll);
+        PollService.putPoll(updatedPoll);
     }
 
     return (
@@ -44,67 +75,34 @@ const View: React.FC = () => {
             <Header />
             <div className='app-body'>
                 <div className='content-tab'>
-                    <div className='tab-item'>
 
-
-                        <div className="poll-details">
-                            {poll && <VotingStatus proposedDates={poll.proposedDates} participantIds={poll.participantIds} />}
-                        </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                        {/* proposed dates row
-                        <div className='grid-container'>
-
-                            <div className='grid-item' key='empty-cell'>Namen</div>
-
-                            {poll?.proposedDates?.map((proposedDate, index) => (
-
-                                <div className='grid-item' key={`date-${index}`}>
-                                    {new Date(proposedDate.date).toLocaleDateString()}
-                                </div>
-
-                            ))}
-                        </div>
-                        */}
-                        {/* organizer row
-                        <div className='grid-container'>
-
-                            <div className='grid-item first' key='organizer-row'>{poll?.organizerId}</div>
-
-                            {poll?.proposedDates?.map((proposedDate, index) => (
-                                <div className='grid-item' key={`organizer-row-${index}`}>
-                                    checked
-                                </div>
-                            ))}
-                        </div>
-                         */}
-                        {/* participants row 
-                        {poll?.participantIds?.map((participantId, index) => (
-                            <div className='grid-container' key={`participant-row-${index}`}>
-
-                                <div className='grid-item first'>{participantId}</div>
-
-                                {poll?.proposedDates?.map((proposedDate, index) => (
-                                    <div className='grid-item' key={`participant-${index}-${proposedDate.date}`}>
-                                        voted?
-                                    </div>
-                                ))}
+                    {isOrganizer ? (
+                        <h1>Deine Umfrage
+                            <div className='header-button-group'>
+                                <button className="header-button" onClick={handleButtonClick}>Termin Buchen</button>
                             </div>
-                        ))}
-                        */}
+                        </h1>
+                    ) : (
+                        <h1>Termine Auswählen
+                            <div className='header-button-group'>
+                                <button className="header-button" onClick={handleButtonClick}>Auswahl Speichern</button>
+                            </div>
+                        </h1>
+                    )}
+
+                    <div className='tab-item'>
+                        <div className="poll-details">
+                            {poll && <VotingStatus
+                                setSelectedDateIndex={setSelectedDateIndex}
+                                selectedDateIndex={selectedDateIndex}
+                                proposedDates={poll.proposedDates}
+                                participantIds={poll.participantIds}
+                                isOrganizer={isOrganizer}
+                                votedDates={votedDates}
+                                setVotedDates={setVotedDates}
+                            />}
+                        </div>
+
                     </div>
                 </div>
             </div>

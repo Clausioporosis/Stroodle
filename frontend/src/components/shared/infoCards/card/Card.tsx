@@ -31,7 +31,10 @@ const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
         getOrganizerInfo();
     }, []);
 
-    function deletePoll() {
+    //add a general button handle function
+    function handleDeleteClick(event: React.MouseEvent) {
+        // Prevent the click event from bubbling up to the card
+        event.stopPropagation();
         if (!window.confirm('Möchtest du den Poll wirklich löschen?')) return;
         PollService?.deletePollById(poll.id!)
             .then(() => {
@@ -106,7 +109,7 @@ const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
                     <button className='button'>
                         <Share className='icon' />
                     </button>
-                    <button className='button' onClick={deletePoll}>
+                    <button className='button' onClick={(event) => { handleDeleteClick(event) }}>
                         <Trash3 className='icon' />
                     </button>
                 </div>

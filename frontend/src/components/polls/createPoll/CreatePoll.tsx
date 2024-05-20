@@ -78,7 +78,11 @@ const Dashboard: React.FC = () => {
 
     function saveProposedDate(start: Date) {
         const newProposedDate = new ProposedDate(start, duration, []);
-        setProposedDates(prevProposedDates => [...prevProposedDates, newProposedDate]);
+        setProposedDates(prevProposedDates => {
+            const updatedProposedDates = [...prevProposedDates, newProposedDate];
+            updatedProposedDates.sort((a, b) => a.date.getTime() - b.date.getTime());
+            return updatedProposedDates;
+        });
         console.log('Proposed Dates:', proposedDates);
     }
 

@@ -43,6 +43,16 @@ class PollService {
         }
     }
 
+    async putPoll(poll: Poll): Promise<Poll> {
+        try {
+            const response = await apiClient.put<Poll>(`/polls/${poll.id}`, poll);
+            return response.data;
+        } catch (error) {
+            console.error('Error putting poll', error);
+            throw new Error(`Error putting poll`);
+        }
+    }
+
     async deletePollById(id: string): Promise<void> {
         try {
             await apiClient.delete(`/polls/${id}`);

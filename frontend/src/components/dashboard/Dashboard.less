@@ -1,16 +1,16 @@
 .plus-icon {
-    color: #999999;
+    color: var(--icon-color);
     font-size: 35px;
     position: absolute;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
     border-radius: 10%;
 
     &:hover {
-        background-color: var(--hover-color);
+        background-color: var(--container-hover-color);
     }
 
     &:active {
-        background-color: var(--accent-color);
+        background-color: var(--container-active-color);
         animation: buttonPress 0.2s ease;
     }
 }
