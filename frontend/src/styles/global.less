@@ -50,6 +50,28 @@ code {
     --highlight-color: #666;
 }
 
+::-webkit-scrollbar {
+    width: 15px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--item-color);
+    border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--item-hover-color);
+}
+
+::-webkit-scrollbar-thumb:active {
+    background: var(--item-active-color);
+}
+
 /* Website Layout CSS */
 .app {
     display: grid;
@@ -90,7 +112,7 @@ code {
     background-color: var(--container-color);
     max-width: 1000px;
     width: 100%;
-    height: 600px;
+    min-height: 600px;
     margin: auto;
     border-radius: 5px;
     padding: 10px;
@@ -118,6 +140,7 @@ code {
 
 h1 {
     display: flex;
+    justify-content: space-between;
     gap: 10px;
     color: var(--text-color);
     margin: 0;
@@ -183,14 +206,14 @@ select {
 }
 
 .header-button-group {
+    overflow: hidden;
     display: flex;
-    flex-grow: 1;
-    justify-content: flex-end;
+    justify-content: flex-start;
     gap: 10px;
 }
 
 .header-button {
-    background-color: var(--content-color);
+    background-color: var(--item-color);
     color: var(--text-color);
     font-size: large;
     height: 35px;
@@ -201,11 +224,11 @@ select {
     user-select: none;
 
     &:hover {
-        background-color: var(--hover-accent-color);
+        background-color: var(--item-hover-color);
     }
 
     &:active {
-        background-color: var(--accent-color);
+        background-color: var(--item-active-color);
         animation: buttonPress 0.2s ease;
     }
 

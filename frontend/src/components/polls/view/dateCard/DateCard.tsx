@@ -1,6 +1,6 @@
 import React from 'react';
 import { ProposedDate } from '../../../../models/Poll';
-import { People, Star, StarFill } from 'react-bootstrap-icons';
+import { People, Star, StarFill, Check2 } from 'react-bootstrap-icons';
 
 interface DateCardProps {
     proposedDate?: ProposedDate;
@@ -24,7 +24,7 @@ const DateCard: React.FC<DateCardProps> = ({ proposedDate, isOrganizer, onDateCl
     const formatDate = (proposedDate: ProposedDate) => {
         const date = new Date(proposedDate.date);
         const isAllDay = proposedDate.duration === 'allDay';
-        const duration = isAllDay ? 'Ganztägig' : `${proposedDate.duration} Minuten`;
+        const duration = isAllDay ? 'Ganztägig' : `${proposedDate.duration} Min.`;
         const weekday = date.toLocaleString('de-DE', { weekday: 'long' });
         const month = date.toLocaleString('de-DE', { month: 'long' });
         const day = date.getDate();
@@ -42,31 +42,50 @@ const DateCard: React.FC<DateCardProps> = ({ proposedDate, isOrganizer, onDateCl
 
     const { weekday, month, day, year, startTime, endTime, duration, isAllDay } = formatDate(proposedDate!);
 
-
     return (
         <div className='date-card-component' onClick={onDateClick}>
-            <p>{weekday}</p>
-            <p>{day}</p>
-            <p>{month}</p>
-            {!isAllDay &&
-                <div className='time'>
-                    <p>&nbsp;&nbsp;{startTime} Uhr</p>
-                    <p>- {endTime} Uhr</p>
-                </div>
-            }
-            <p>{duration}</p>
+            <div className='date-section'>
+                <p className='weekday'>
+                    <span className='first'>{weekday.substring(0, 2)}</span>
+                    <span className='rest'>{weekday.substring(2)}</span>
+                </p>
+                <p className='day'>{day}</p>
+                <p className='month'>{month}</p>
+            </div>
 
-            {isOrganizer ? (
-                isActive ? (
-                    <StarFill />
+            <div className='time-section'>
+                {!isAllDay && (
+                    <div className='time'>
+                        <p className='start'>
+                            <span className='first'>{startTime?.substring(0, 1)}</span>
+                            <span className='rest'>{startTime?.substring(1)} Uhr</span>
+                        </p>
+                        <p className='end'>
+                            <span>-&nbsp;</span>
+                            <span className='first'>{endTime?.substring(0, 1)}</span>
+                            <span className='rest'>{endTime?.substring(1)} Uhr</span>
+                        </p>
+                    </div>
+                )}
+                <p className='duration'>{duration}</p>
+            </div>
+
+            <div className='action-section'>
+                {isOrganizer ? (
+                    isActive ? (
+                        <p className={'booked'}><StarFill className='icon star-fill' /></p>
+                    ) : (
+                        <p className={'booked'}><Star className='icon star' /></p>
+                    )
                 ) : (
-                    <Star />
-                )
-            ) : (
-                <input type="checkbox" id="myCheckbox" name="myCheckbox" checked={isActive} onChange={() => {/*leer um react error zu umgehen*/ }} />
-            )}
+                    <div className='check-box'>
+                        {isActive && <Check2 className='icon' />}
+                    </div>
+                )}
 
-            <p><People className='icon' />{'voters'}</p>
+                <p className={'voter-count'}><People className='icon' />{proposedDate?.voterIds.length}</p>
+            </div >
+
         </div>
     );
 };

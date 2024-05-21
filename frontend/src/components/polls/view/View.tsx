@@ -8,6 +8,7 @@ import UserService from '../../../services/UserService';
 import { User } from '../../../models/User';
 
 import VotingStatus from './votingStatus/VotingStatus';
+import Card from '../../shared/infoCards/card/Card';
 
 const View: React.FC = () => {
     const { pollId } = useParams<{ pollId: string }>();
@@ -91,6 +92,8 @@ const View: React.FC = () => {
                     )}
 
                     <div className='tab-item'>
+                        {poll && <Card useCase={'runningPolls'} poll={poll} />}
+
                         <div className="poll-details">
                             {poll && <VotingStatus
                                 setSelectedDateIndex={setSelectedDateIndex}
@@ -102,6 +105,7 @@ const View: React.FC = () => {
                                 setVotedDates={setVotedDates}
                             />}
                         </div>
+
 
                     </div>
                 </div>

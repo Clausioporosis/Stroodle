@@ -4,17 +4,102 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
+    gap: 5px;
     height: 100%;
+    width: 100%;
+    margin: 2.5px;
+    padding: 3px 0 3px 0;
+    text-align: center;
 
-    .time {
-        width: fit-content;
-        height: auto;
-
-        p {
-            text-align: right;
-        }
-
+    .first {
+        color: var(--accent-color)
     }
 
+    .rest {}
+
+    .date-section {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+
+        >* {
+            line-height: 1;
+        }
+
+        .weekday {
+            font-weight: lighter;
+        }
+
+        .day {
+            font-size: xx-large;
+        }
+
+        .month {
+            font-weight: lighter;
+        }
+    }
+
+    .time-section {
+        .time {
+            font-size: small;
+
+            p {
+                display: flex;
+                justify-content: end;
+            }
+        }
+
+        .duration {
+            font-size: small;
+            font-weight: lighter;
+        }
+    }
+
+    .action-section {
+        border-top: var(--border-color) 1px solid;
+        width: 90%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 10px;
+
+        .booked {
+            font-size: large;
+
+
+            .icon {
+                font-size: 35px;
+                margin: 0;
+                padding: 0;
+            }
+
+            .star-fill {
+                color: var(--accent-color);
+            }
+        }
+
+        .check-box {
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            border: var(--border-color) 1.5px solid;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .icon {
+                font-size: xx-large;
+                color: var(--accent-color);
+            }
+        }
+
+        p {
+            .icon {
+                margin-bottom: -2.5px;
+                margin-right: 10px;
+            }
+        }
+    }
 }

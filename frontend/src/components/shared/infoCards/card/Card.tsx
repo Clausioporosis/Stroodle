@@ -24,6 +24,7 @@ interface BookedDate {
 const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
     const [bookedDate, setBookedDate] = useState<BookedDate>();
     const [organizerInfo, setOrganizerInfo] = useState<User>();
+    const [buttonsClicked, setButtonsClicked] = useState<boolean>(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -75,8 +76,16 @@ const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
         setBookedDate(bookedDateObj);
     }
 
+    function areButtonsClicked() {
+        !buttonsClicked ? setButtonsClicked(true) : setButtonsClicked(false);
+    }
+
+    useEffect(() => {
+        console.log('Buttons clicked: ', buttonsClicked);
+    }, [buttonsClicked]);
+
     return (
-        <div className="card" onClick={handleCardClick}>
+        <div className={`card ${buttonsClicked ? 'not-active' : ''}`} onClick={handleCardClick}>
             <div className='info-section'>
                 <div className='info-text'>
                     <h2>{poll.title}</h2>
@@ -102,14 +111,14 @@ const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
             </div>
 
             {useCase === 'myPolls' && (
-                <div className='button-group'>
-                    <button className='button'>
+                <div className='button-group' onMouseDown={areButtonsClicked} onMouseUp={areButtonsClicked}>
+                    <button className='button' onClick={(event) => { event.stopPropagation(); event.preventDefault(); }}>
                         <Pencil className='icon' />
                     </button>
-                    <button className='button'>
+                    <button className='button' onClick={(event) => { event.stopPropagation(); event.preventDefault(); }}>
                         <Share className='icon' />
                     </button>
-                    <button className='button' onClick={(event) => { handleDeleteClick(event) }}>
+                    <button className='button' onClick={(event) => { event.stopPropagation(); event.preventDefault(); handleDeleteClick(event); }}>
                         <Trash3 className='icon' />
                     </button>
                 </div>

@@ -38,6 +38,23 @@ code {
   --icon-color: #bbbbbb;
   --highlight-color: #666;
 }
+::-webkit-scrollbar {
+  width: 15px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--item-color);
+  border-radius: 20px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--item-hover-color);
+}
+::-webkit-scrollbar-thumb:active {
+  background: var(--item-active-color);
+}
 /* Website Layout CSS */
 .app {
   display: grid;
@@ -72,7 +89,7 @@ code {
   background-color: var(--container-color);
   max-width: 1000px;
   width: 100%;
-  height: 600px;
+  min-height: 600px;
   margin: auto;
   border-radius: 5px;
   padding: 10px;
@@ -94,6 +111,7 @@ code {
 }
 h1 {
   display: flex;
+  justify-content: space-between;
   gap: 10px;
   color: var(--text-color);
   margin: 0;
@@ -152,13 +170,13 @@ select option:disabled {
   display: none;
 }
 .header-button-group {
+  overflow: hidden;
   display: flex;
-  flex-grow: 1;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 10px;
 }
 .header-button {
-  background-color: var(--content-color);
+  background-color: var(--item-color);
   color: var(--text-color);
   font-size: large;
   height: 35px;
@@ -169,10 +187,10 @@ select option:disabled {
   user-select: none;
 }
 .header-button:hover {
-  background-color: var(--hover-accent-color);
+  background-color: var(--item-hover-color);
 }
 .header-button:active {
-  background-color: var(--accent-color);
+  background-color: var(--item-active-color);
   animation: buttonPress 0.2s ease;
 }
 @keyframes buttonPress {
@@ -275,23 +293,37 @@ select option:disabled {
 .dropdown-container a:active {
   background-color: var(--base-active-color);
 }
-.plus-icon {
+.create-button {
+  position: relative;
+  display: flex;
+  overflow: visible;
+  right: calc(-100% + 35px);
+  transition: right 0.25s linear;
+}
+.create-button .plus-icon {
   color: var(--icon-color);
   font-size: 35px;
-  position: absolute;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
   border-radius: 10%;
 }
-.plus-icon:hover {
+.create-button .text {
+  padding-left: 5px;
+  width: fit-content;
+}
+.create-button:hover {
+  right: 0;
+}
+.create-button:hover .plus-icon {
   background-color: var(--container-hover-color);
 }
-.plus-icon:active {
-  background-color: var(--container-active-color);
+.create-button:active {
   animation: buttonPress 0.2s ease;
+}
+.create-button:active .plus-icon {
+  background-color: var(--container-active-color);
 }
 .info-cards-component {
   width: 100%;
-  height: 100%;
+  height: 600px;
   padding-right: 5px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -304,21 +336,8 @@ select option:disabled {
     grid-template-columns: repeat(1, 1fr);
   }
 }
-.info-cards-component::-webkit-scrollbar {
-  width: 10px;
-}
-.info-cards-component::-webkit-scrollbar-track {
-  background: transparent;
-}
-.info-cards-component::-webkit-scrollbar-thumb {
-  background: var(--base-hover-color);
-  border-radius: 5px;
-}
-.info-cards-component::-webkit-scrollbar-thumb:hover {
-  background: var(--container-hover-color);
-}
-.info-cards-component::-webkit-scrollbar-thumb:active {
-  background: var(--container-active-color);
+.not-active {
+  background-color: var(--item-hover-color) !important;
 }
 .card {
   display: grid;
@@ -327,6 +346,7 @@ select option:disabled {
   border-radius: 10px;
   padding: 10px;
   height: 100%;
+  width: 100%;
 }
 .card:hover {
   background-color: var(--item-hover-color);
@@ -385,16 +405,23 @@ select option:disabled {
   border-bottom: 1px var(--border-color) solid;
   cursor: pointer;
 }
+.card .button-group .button:first-child {
+  border-bottom: none;
+}
+.card .button-group .button:first-child:hover {
+  border-top-right-radius: 7px;
+  border-top-left-radius: 7px;
+}
 .card .button-group .button:last-child {
   border-bottom: none;
 }
 .card .button-group .button:last-child:hover {
-  background-color: #ff000060;
+  background-color: #ff000055;
   border-bottom-right-radius: 7px;
   border-bottom-left-radius: 7px;
 }
 .card .button-group .button:last-child:active {
-  background-color: #ff000012;
+  background-color: #ff000084;
 }
 .card .button-group .button:hover {
   background-color: var(--item-color);
@@ -422,100 +449,6 @@ select option:disabled {
 .card .state-section .rest {
   font-weight: bold;
 }
-/*
-    .card-status {
-        padding: 15px 0 15px 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        border-left: var(--border-color) 1px solid;
-        min-width: 100px;
-        padding-left: 10px;
-
-        p {
-            text-align: center;
-
-            &:last-child {
-                color: var(--accent-color);
-                margin-top: auto;
-                font-size: 20px;
-                font-weight: bold;
-
-            }
-        }
-    }
-
-    .card-info {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        min-width: 100px;
-        margin-right: 10px;
-
-        .card-info-bottom {
-            p {
-                display: flex;
-                align-items: center;
-                justify-content: start;
-
-                .icon {
-                    margin-right: 5px;
-                }
-            }
-        }
-
-        h2 {
-            margin: 0 0 5px 0;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        p {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            word-wrap: break-word;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-        }
-    }
-
-    .button-group {
-        display: flex;
-        height: 100%;
-        flex-direction: column;
-
-        .icon {
-            font-size: 20px;
-        }
-
-        button {
-            border: none;
-            padding: 10px;
-            background-color: rgb(61, 61, 61);
-            color: white;
-            flex-grow: 1;
-            width: auto;
-            border-bottom: 1px var(--border-color) solid;
-            cursor: pointer;
-
-            &:last-child {
-                border-bottom: none;
-            }
-
-            &:hover {
-                background-color: var(--hover-color);
-            }
-
-            &:active {
-                background-color: var(--active-color);
-                animation: buttonPress 0.2s ease;
-            }
-        }
-    }
-}
-*/
 .fc {
   --fc-today-bg-color: transparent;
   --fc-border-color: var(--text-color);
@@ -610,9 +543,16 @@ select option:disabled {
   }
 }
 .poll-details {
-  border: red 1px dotted;
   width: 100%;
   overflow: auto;
+  /* to display the scrollbar on top  */
+  transform: rotateX(180deg);
+}
+.poll-details > * {
+  transform: rotateX(180deg);
+}
+.poll-details::-webkit-scrollbar-track {
+  margin-left: 200px;
 }
 .date-card-component {
   background-color: var(--item-color);
@@ -620,25 +560,90 @@ select option:disabled {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
+  gap: 5px;
   height: 100%;
+  width: 100%;
+  margin: 2.5px;
+  padding: 3px 0 3px 0;
+  text-align: center;
 }
-.date-card-component .time {
-  width: fit-content;
-  height: auto;
+.date-card-component .first {
+  color: var(--accent-color);
 }
-.date-card-component .time p {
-  text-align: right;
+.date-card-component .date-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.date-card-component .date-section > * {
+  line-height: 1;
+}
+.date-card-component .date-section .weekday {
+  font-weight: lighter;
+}
+.date-card-component .date-section .day {
+  font-size: xx-large;
+}
+.date-card-component .date-section .month {
+  font-weight: lighter;
+}
+.date-card-component .time-section .time {
+  font-size: small;
+}
+.date-card-component .time-section .time p {
+  display: flex;
+  justify-content: end;
+}
+.date-card-component .time-section .duration {
+  font-size: small;
+  font-weight: lighter;
+}
+.date-card-component .action-section {
+  border-top: var(--border-color) 1px solid;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+}
+.date-card-component .action-section .booked {
+  font-size: large;
+}
+.date-card-component .action-section .booked .icon {
+  font-size: 35px;
+  margin: 0;
+  padding: 0;
+}
+.date-card-component .action-section .booked .star-fill {
+  color: var(--accent-color);
+}
+.date-card-component .action-section .check-box {
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+  border: var(--border-color) 1.5px solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.date-card-component .action-section .check-box .icon {
+  font-size: xx-large;
+  color: var(--accent-color);
+}
+.date-card-component .action-section p .icon {
+  margin-bottom: -2.5px;
+  margin-right: 10px;
 }
 .grid {
-  border: green 1px dotted;
+  padding-top: 10px;
   display: grid;
   grid-template-rows: auto;
   gap: 10px;
   width: 0;
 }
 .date-row {
-  border: hotpink 1px dotted;
   display: grid;
   grid-template-columns: 1fr repeat(auto-fill, minmax(150px, 1fr));
   grid-auto-flow: column;
@@ -649,34 +654,44 @@ select option:disabled {
   grid-auto-flow: column;
 }
 .date-cell {
-  border: snow 1px dotted;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 150px;
+  width: 100px;
   height: auto;
+}
+.date-cell:first-child {
+  background-color: var(--container-color);
 }
 .first-cell {
   position: sticky;
   left: 0;
 }
 .first-cell:first-child {
+  z-index: 10;
   width: 200px;
+}
+.first-cell-bg {
+  background: var(--item-color);
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  padding-left: 5px;
 }
 .voter-cell {
   border-right: 1px solid var(--border-color);
   background-color: var(--item-color);
-  width: 150px;
+  width: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 40px;
 }
 .voter-cell:first-child {
-  justify-content: flex-start;
-  padding-left: 5px;
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
+  background-color: var(--container-color);
 }
 .voter-cell:last-child {
   border-right: none;
@@ -696,7 +711,6 @@ select option:disabled {
   display: flex;
   flex-direction: column;
   width: 100%;
-  /*Scrollbar style*/
 }
 .search-bar-component .search-icon {
   position: absolute;
@@ -723,19 +737,6 @@ select option:disabled {
 }
 .search-bar-component .result-list .list-item:hover {
   background-color: #6b6b6b;
-}
-.search-bar-component .result-list::-webkit-scrollbar {
-  width: 10px;
-}
-.search-bar-component .result-list::-webkit-scrollbar-track {
-  background: transparent;
-}
-.search-bar-component .result-list::-webkit-scrollbar-thumb {
-  border-radius: 5px;
-  background: #333;
-}
-.search-bar-component .result-list::-webkit-scrollbar-thumb:hover {
-  background: #333;
 }
 .added-participants-body {
   width: 100%;
@@ -804,18 +805,4 @@ select option:disabled {
 }
 p {
   margin: 0;
-}
-/*Scrollbar style*/
-.added-participants-body::-webkit-scrollbar {
-  width: 10px;
-}
-.added-participants-body::-webkit-scrollbar-track {
-  background: transparent;
-}
-.added-participants-body::-webkit-scrollbar-thumb {
-  border-radius: 5px;
-  background: #333;
-}
-.added-participants-body::-webkit-scrollbar-thumb:hover {
-  background: #333;
 }

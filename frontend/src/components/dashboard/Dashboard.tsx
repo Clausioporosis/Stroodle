@@ -39,7 +39,10 @@ const Dashboard: React.FC = () => {
                     <h1 className="created-polls-tab-header">
                         Meine Umfragen
                         <div className='header-button-group'>
-                            <PlusSquare className="plus-icon" onClick={handleCreateClick} />
+                            <div className="create-button" onClick={handleCreateClick}>
+                                <PlusSquare className="plus-icon" />
+                                <span className="text">Erstellen</span>
+                            </div>
                         </div>
                     </h1>
 

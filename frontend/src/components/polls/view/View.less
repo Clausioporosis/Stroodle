@@ -1,6 +1,17 @@
 .poll-details {
-    border: red 1px dotted;
-
     width: 100%;
     overflow: auto;
+
+    /* to display the scrollbar on top  */
+    transform: rotateX(180deg);
+
+    >* {
+        transform: rotateX(180deg);
+    }
+
+
+}
+
+.poll-details::-webkit-scrollbar-track {
+    margin-left: 200px;
 }

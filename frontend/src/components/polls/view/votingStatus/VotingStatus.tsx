@@ -53,8 +53,11 @@ const VotingStatus: React.FC<VotingStatusProps> = ({ proposedDates, participantI
         <div className="grid">
 
             <div className="date-row">
-                <div className="date-cell first-cell">Teilnehmer</div>
-
+                <div className="date-cell first-cell">
+                    <div>
+                        Teilnehmer
+                    </div>
+                </div>
                 {proposedDates?.map((date, index) => (
                     <div key={index} className="date-cell">
                         <DateCard
@@ -70,10 +73,11 @@ const VotingStatus: React.FC<VotingStatusProps> = ({ proposedDates, participantI
 
                 <div key={participantId} className="voter-row">
                     <div className="voter-cell first-cell">
-                        <UserInitials firstName={users[participantId]?.firstName} lastName={users[participantId]?.lastName} />
-                        {getUserName(participantId)}
+                        <div className='first-cell-bg'>
+                            <UserInitials firstName={users[participantId]?.firstName} lastName={users[participantId]?.lastName} />
+                            {getUserName(participantId)}
+                        </div>
                     </div>
-
                     {proposedDates?.map((date, index) => (
                         <div key={index} className="voter-cell">
                             {date.voterIds && date.voterIds.includes(participantId) ? <Check2 className='icon' /> : <X className='icon' />}
