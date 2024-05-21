@@ -36,7 +36,25 @@ const Dashboard: React.FC = () => {
             <div className="app-body">
 
 
+                <div className='tab my-poll-tab'>
 
+                    <h1 className="created-polls-tab-header">
+                        Meine Umfragen
+                        <div className='header-button-group'>
+                            <div className="create-button" onClick={handleCreateClick}>
+                                <PlusSquare className="plus-icon" />
+                                <span className="text">Erstellen</span>
+                            </div>
+                        </div>
+                    </h1>
+                    < InfoCards useCase={'myPolls'} pollData={myPolls} onPollDelete={getMyPolls} />
+                </div>
+                <div className='tab event-tab'>
+                    <h1 className="created-polls-tab-header">
+                        Events
+                    </h1>
+                    < InfoCards useCase={'runningPolls'} pollData={myPolls} />
+                </div>
 
 
 

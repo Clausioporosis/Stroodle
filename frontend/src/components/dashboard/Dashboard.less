@@ -1,15 +1,61 @@
+/* global */
+.tab {
+    display: flex;
+    flex-direction: column;
+
+    padding: 15px;
+    background-color: transparent;
+    border: var(--border-color) 1px solid;
+    grid-column: span 5;
+    height: 600px;
+}
+
+.single-tab {
+    grid-column-start: 3;
+    grid-column-end: span 6;
+}
+
+.grow-tab {
+    height: auto;
+    min-height: 600px;
+}
+
+/* dashboard */
+.my-poll-tab {
+    grid-column: span 6;
+}
+
+.event-tab {
+    grid-column: span 4;
+}
+
+
+.test {
+    border: red 1px dotted;
+}
+
+@media (max-width: 1400px) {
+    .tab {
+        width: 100%;
+        max-width: 865px;
+        grid-column: span 1;
+    }
+}
+
 .create-button {
     position: relative;
     display: flex;
     overflow: visible;
+    cursor: pointer;
 
     right: calc(-100% + 35px);
-    transition: right 0.25s linear, ;
+    transition: right 0.25s linear;
 
     .plus-icon {
         color: var(--icon-color);
         font-size: 35px;
         border-radius: 10%;
+        transition: background-color 0.25s linear;
     }
 
     .text {
@@ -21,7 +67,7 @@
         right: 0;
 
         .plus-icon {
-            background-color: var(--container-hover-color);
+            background-color: var(--accent-hover-color);
         }
     }
 
@@ -29,7 +75,7 @@
         animation: buttonPress 0.2s ease;
 
         .plus-icon {
-            background-color: var(--container-active-color);
+            background-color: var(--accent-active-color);
         }
     }
 }

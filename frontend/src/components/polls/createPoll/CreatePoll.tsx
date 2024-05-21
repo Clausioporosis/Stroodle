@@ -90,53 +90,44 @@ const Dashboard: React.FC = () => {
         <div className='app'>
             <HeaderComponent />
             <div className='app-body'>
-                <div className='content-tab'>
+                <div className='tab'>
                     <h1>Umfrage erstellen</h1>
-                    <div className='tab-item'>
-                        <h3>Titel</h3>
-                        <input type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Was ist der Anlass?" />
-                        <h3>Beschreibung</h3>
-                        <textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Was muss man wissen?" />
-                        <h3>Ort</h3>
-                        <input type="text" value={location} onChange={e => setLocation(e.target.value)} placeholder="Wo wird es statt finden?" />
-                    </div>
-                    <div className='tab-item row-section'>
-                        <div className='tab-item'>
-                            <h3>Teilnehmer</h3>
-                            <SearchBar onUserClick={addParticipant} />
-                            <AddedParticipants participantsIds={participantsIds} removeSelectedParticipant={removeParticipant} />
-                        </div>
-                        {/*
-                        <div className='tab-item right-section'>
-                            <h3>Weitere Einstellungen</h3>
-                        </div>
-                        */}
-                    </div>
+
+                    <h3>Titel</h3>
+                    <input type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Was ist der Anlass?" />
+                    <h3>Beschreibung</h3>
+                    <textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Was muss man wissen?" />
+                    <h3>Ort</h3>
+                    <input type="text" value={location} onChange={e => setLocation(e.target.value)} placeholder="Wo wird es statt finden?" />
+
+                    <h3>Teilnehmer</h3>
+                    <SearchBar onUserClick={addParticipant} />
+                    <AddedParticipants participantsIds={participantsIds} removeSelectedParticipant={removeParticipant} />
+
                 </div>
 
-                <div className='content-tab'>
+                <div className='tab'>
                     <h1>Termine aussuchen
                         <div className='header-button-group'>
                             <button className="header-button" onClick={createPoll}>Erstellen</button>
                         </div>
                     </h1>
-                    <div className='tab-item'>
-                        <select
-                            title='Termin Dauer'
-                            className='duration-select'
-                            value={duration}
-                            onChange={handleDurationSelect}
-                        >
-                            <option value={duration} disabled>{selectedDuration}</option>
-                            <option value="15" >15 Minuten</option>
-                            <option value="25">25 Minuten</option>
-                            <option value="30">30 Minuten</option>
-                            <option value="45">45 Minuten</option>
-                            <option value="allDay">Ganztägig</option>
-                            <option value="custom">Individuell</option>
-                        </select>
-                        <WeekView useCase='poll' duration={duration} saveProposedDate={saveProposedDate} />
-                    </div>
+
+                    <select
+                        title='Termin Dauer'
+                        className='duration-select'
+                        value={duration}
+                        onChange={handleDurationSelect}
+                    >
+                        <option value={duration} disabled>{selectedDuration}</option>
+                        <option value="15" >15 Minuten</option>
+                        <option value="25">25 Minuten</option>
+                        <option value="30">30 Minuten</option>
+                        <option value="45">45 Minuten</option>
+                        <option value="allDay">Ganztägig</option>
+                        <option value="custom">Individuell</option>
+                    </select>
+                    <WeekView useCase='poll' duration={duration} saveProposedDate={saveProposedDate} />
                 </div>
 
             </div>

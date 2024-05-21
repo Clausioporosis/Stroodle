@@ -1,22 +1,14 @@
-.not-active {
-    background-color: var(--item-hover-color) !important;
-}
-
 .card {
     display: grid;
     grid-template-columns: 1fr auto;
-    background-color: var(--item-color);
-    border-radius: 10px;
+    background-color: var(--base-color-2);
+    border-radius: 5px;
     padding: 10px;
-    height: 100%;
     width: 100%;
+    border: transparent 1px solid;
 
     &:hover {
-        background-color: var(--item-hover-color);
-    }
-
-    &:active {
-        background-color: var(--item-active-color);
+        border: var(--accent-color) 1px solid;
     }
 
     .info-section {
@@ -79,7 +71,6 @@
             cursor: pointer;
 
             &:first-child {
-                border-bottom: none;
 
                 &:hover {
                     border-top-right-radius: 7px;

@@ -84,12 +84,12 @@ const View: React.FC = () => {
         <div className='app'>
             <Header />
             <div className='app-body'>
-                <div className='content-tab'>
+                <div className='tab single-tab grow-tab'>
 
                     {isOrganizer ? (
                         <h1>Deine Umfrage
                             <div className='header-button-group'>
-                                <button className="header-button" onClick={handleReopenClick}>Buchung Bearbeiten</button>
+                                <button className="header-button" onClick={handleReopenClick}>Bearbeiten</button>
                                 <button className="header-button" onClick={handleButtonClick}>Termin Buchen</button>
                             </div>
                         </h1>

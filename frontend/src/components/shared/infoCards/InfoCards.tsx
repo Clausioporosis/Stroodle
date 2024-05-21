@@ -16,7 +16,7 @@ const InfoCards: React.FC<InfoCardsProps> = ({ pollData, useCase, onPollDelete }
 
 
     return (
-        <div className='info-cards-component'>
+        <div className={`info-cards-component ${useCase === 'myPolls' ? 'my-cards' : 'event-cards'}`}>
             {pollData.map((poll, index) => (
                 <Card useCase={useCase} key={index} poll={poll} onPollDelete={onPollDelete} />
             ))}

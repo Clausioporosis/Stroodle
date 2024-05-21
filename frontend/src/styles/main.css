@@ -4,7 +4,7 @@
 body {
   position: relative;
   margin: 0;
-  background-color: var(--base-color);
+  background-color: var(--base-color-1);
   color: var(--text-color);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -14,12 +14,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 :root {
-  /* Colors MORE COLORS LIKE RED ETC111111 */
+  /* Colors */
   --accent-color: #4C9EBC;
-  --base-color: #101010;
-  --container-color: #151515;
+  --base-color-0: #101010;
+  --base-color-1: #151515;
+  --base-color-2: #202020;
   --item-color: #303030;
-  --border-color: #656565;
+  --border-color: #606060;
   /* actions */
   /* base */
   --base-hover-color: #202020;
@@ -31,8 +32,8 @@ code {
   --item-hover-color: #404040;
   --item-active-color: #808080;
   /* accent */
-  --accent-hover-color: #5bbee2;
-  --accent-active-color: #6ad7ff;
+  --accent-hover-color: #4c9ebcc6;
+  --accent-active-color: #4c9ebc;
   /* Text Colors */
   --text-color: #bbb;
   --icon-color: #bbbbbb;
@@ -63,28 +64,39 @@ code {
 }
 .app-body {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  /* It just works. Only for two items tho. Without, column items don't have any width for 100%. */
-  padding: 10px;
-  gap: 10px;
-  align-items: center;
-  justify-content: center;
+  justify-self: center;
+  align-content: center;
+  grid-template-columns: repeat(10, 1fr);
+  width: 100%;
+  max-width: 2000px;
+  padding: 20px;
+  gap: 20px;
 }
 @media (max-width: 1400px) {
   .app-body {
     grid-template-columns: 1fr;
+    justify-items: center;
   }
 }
+/*
+@media (max-width: 1400px) {
+    .app-body {
+        grid-template-columns: 1fr;
+    }
+}
+
 @media (max-width: 800px) {
-  .tab-item.row-section {
-    flex-direction: column;
-  }
-  .tab-item.row-section .right-section {
-    border-left: none;
-    padding: 0;
-    margin-top: 20px;
-  }
+    .tab-item.row-section {
+        flex-direction: column;
+
+        .right-section {
+            border-left: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+    }
 }
+*/
 .content-tab {
   background-color: var(--container-color);
   max-width: 1000px;
@@ -175,6 +187,11 @@ select option:disabled {
   justify-content: flex-start;
   gap: 10px;
 }
+@media (max-width: 600px) {
+  .header-button-group {
+    flex-direction: column;
+  }
+}
 .header-button {
   background-color: var(--item-color);
   color: var(--text-color);
@@ -205,7 +222,7 @@ select option:disabled {
   }
 }
 .app-header {
-  background-color: var(--base-color);
+  background-color: var(--base-color-0);
   border-bottom: var(--border-color) 1.5px solid;
   display: flex;
   flex-direction: row;
@@ -263,7 +280,7 @@ select option:disabled {
 }
 .dropdown-container {
   width: 140px;
-  background-color: var(--base-color);
+  background-color: var(--base-color-0);
   border-left: var(--border-color) 1px solid;
   position: absolute;
   display: grid;
@@ -293,10 +310,46 @@ select option:disabled {
 .dropdown-container a:active {
   background-color: var(--base-active-color);
 }
+/* global */
+.tab {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  background-color: transparent;
+  border: var(--border-color) 1px solid;
+  grid-column: span 5;
+  height: 600px;
+}
+.single-tab {
+  grid-column-start: 3;
+  grid-column-end: span 6;
+}
+.grow-tab {
+  height: auto;
+  min-height: 600px;
+}
+/* dashboard */
+.my-poll-tab {
+  grid-column: span 6;
+}
+.event-tab {
+  grid-column: span 4;
+}
+.test {
+  border: red 1px dotted;
+}
+@media (max-width: 1400px) {
+  .tab {
+    width: 100%;
+    max-width: 865px;
+    grid-column: span 1;
+  }
+}
 .create-button {
   position: relative;
   display: flex;
   overflow: visible;
+  cursor: pointer;
   right: calc(-100% + 35px);
   transition: right 0.25s linear;
 }
@@ -304,6 +357,7 @@ select option:disabled {
   color: var(--icon-color);
   font-size: 35px;
   border-radius: 10%;
+  transition: background-color 0.25s linear;
 }
 .create-button .text {
   padding-left: 5px;
@@ -313,46 +367,45 @@ select option:disabled {
   right: 0;
 }
 .create-button:hover .plus-icon {
-  background-color: var(--container-hover-color);
+  background-color: var(--accent-hover-color);
 }
 .create-button:active {
   animation: buttonPress 0.2s ease;
 }
 .create-button:active .plus-icon {
-  background-color: var(--container-active-color);
+  background-color: var(--accent-active-color);
 }
 .info-cards-component {
   width: 100%;
   height: 555px;
   padding-right: 5px;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-auto-rows: calc((100% / 3) - 15px);
-  gap: 20px;
+  grid-auto-rows: calc((100% / 3) - 10px);
+  gap: 15px;
   overflow-y: auto;
 }
-@media screen and (max-width: 600px) {
-  .info-cards-component {
+.my-cards {
+  grid-template-columns: repeat(2, 1fr);
+}
+@media screen and (max-width: 700px) {
+  .my-cards {
     grid-template-columns: repeat(1, 1fr);
   }
 }
-.not-active {
-  background-color: var(--item-hover-color) !important;
+.event-cards {
+  grid-template-columns: repeat(1, 1fr);
 }
 .card {
   display: grid;
   grid-template-columns: 1fr auto;
-  background-color: var(--item-color);
-  border-radius: 10px;
+  background-color: var(--base-color-2);
+  border-radius: 5px;
   padding: 10px;
-  height: 100%;
   width: 100%;
+  border: transparent 1px solid;
 }
 .card:hover {
-  background-color: var(--item-hover-color);
-}
-.card:active {
-  background-color: var(--item-active-color);
+  border: var(--accent-color) 1px solid;
 }
 .card .info-section {
   display: grid;
@@ -404,9 +457,6 @@ select option:disabled {
   width: auto;
   border-bottom: 1px var(--border-color) solid;
   cursor: pointer;
-}
-.card .button-group .button:first-child {
-  border-bottom: none;
 }
 .card .button-group .button:first-child:hover {
   border-top-right-radius: 7px;

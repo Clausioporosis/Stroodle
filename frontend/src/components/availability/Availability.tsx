@@ -76,7 +76,7 @@ const AvailabilitySettings: React.FC = () => {
         <div className='app'>
             <HeaderComponent />
             <div className='app-body'>
-                <div className='content-tab'>
+                <div className='tab single-tab'>
                     <h1>Verfügbarkeit angeben
                         <div className='header-button-group'>
                             <button className="header-button" onClick={handleSave}>Speichern</button>
