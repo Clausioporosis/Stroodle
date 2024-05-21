@@ -78,24 +78,31 @@ const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
     return (
         <div className='card' onClick={handleCardClick}>
             <div className='info-section'>
-                <div className='info-text'>
+                <div className={`info-text ${useCase === 'runningPolls' ? 'line-clamp-2' : ''}`}>
                     <h2>{poll.title}</h2>
-                    {useCase === 'myPolls' && (
-                        <p>{poll.description !== '' ? poll.description : '-'}</p>
-                    )}
+
+                    <p className={`${useCase === 'runningPolls' ? 'line-clamp-2' : ''}`}>
+                        {poll.description !== '' ? poll.description : '-'}
+                    </p>
+
                 </div>
                 <div className='info-plus'>
                     {useCase === 'myPolls' ? (
                         <p><Hourglass className='icon' />-</p>
                     ) : useCase === 'runningPolls' ? (
                         <>
-                            {poll.bookedDateIndex !== null ? (
-                                <p><ClockHistory className='icon' />{bookedDate?.duration}</p>
-                            ) : (
-                                <p><Hourglass className='icon' />-</p>
-                            )}
+
                             <p><GeoAlt className='icon' />{poll.location !== '' ? poll.location : '-'}</p>
-                            <p><Person className='icon' />{organizerInfo?.firstName} {organizerInfo?.lastName}</p>
+                            <div className='flex'>
+                                <p><Person className='icon' />
+                                    {organizerInfo?.firstName} {organizerInfo?.lastName}
+                                </p>
+                                {poll.bookedDateIndex !== null ? (
+                                    <p><ClockHistory className='icon' />{bookedDate?.duration}</p>
+                                ) : (
+                                    <p><Hourglass className='icon' />-</p>
+                                )}
+                            </div>
                         </>
                     ) : null}
                 </div>

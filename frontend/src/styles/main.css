@@ -129,9 +129,19 @@ h1 {
   margin: 0;
   width: 100%;
   padding-bottom: 10px;
-  border-bottom: 1px solid var(--border-color);
+  position: relative;
   margin-bottom: 10px;
   font-size: x-large;
+}
+h1::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--border-color), transparent);
+  pointer-events: none;
 }
 h3 {
   color: var(--icon-color);
@@ -296,19 +306,36 @@ select option:disabled {
   transform: translateY(0);
   pointer-events: auto;
 }
-.dropdown-container a {
+a {
   padding: 10px;
-  border-bottom: var(--border-color) 1px solid;
   color: var(--icon-color);
   text-decoration: none;
   font-size: 16px;
   font-family: "Inter", Arial, Helvetica, sans-serif;
+  position: relative;
 }
-.dropdown-container a:hover {
-  background-color: var(--base-hover-color);
-}
-.dropdown-container a:active {
+a:active {
   background-color: var(--base-active-color);
+}
+.border-hover:hover::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1.5px;
+  background: linear-gradient(to right, transparent, var(--border-color), transparent);
+  pointer-events: none;
+}
+.border::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1.5px;
+  background: linear-gradient(to right, transparent, var(--border-color), transparent);
+  pointer-events: none;
 }
 /* global */
 .tab {
@@ -316,6 +343,7 @@ select option:disabled {
   flex-direction: column;
   padding: 15px;
   background-color: transparent;
+  border-radius: 3px;
   border: var(--border-color) 1px solid;
   grid-column: span 5;
   height: 600px;
@@ -351,7 +379,7 @@ select option:disabled {
   overflow: visible;
   cursor: pointer;
   right: calc(-100% + 35px);
-  transition: right 0.25s linear;
+  transition: right 0.15s linear;
 }
 .create-button .plus-icon {
   color: var(--icon-color);
@@ -421,6 +449,7 @@ select option:disabled {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-weight: normal;
 }
 .card .info-section .info-text p {
   display: -webkit-box;
@@ -430,8 +459,15 @@ select option:disabled {
   overflow: hidden;
   word-wrap: break-word;
 }
+.card .info-section .line-clamp-2 {
+  -webkit-line-clamp: 2 !important;
+}
 .card .info-section .info-plus {
   min-width: 0;
+}
+.card .info-section .info-plus .flex {
+  display: flex;
+  gap: 50px;
 }
 .card .info-section .info-plus p {
   margin-top: 5px;
@@ -597,6 +633,7 @@ select option:disabled {
   }
 }
 .poll-details {
+  margin-top: 30px;
   width: 100%;
   overflow: auto;
   /* to display the scrollbar on top  */
@@ -608,8 +645,12 @@ select option:disabled {
 .poll-details::-webkit-scrollbar-track {
   margin-left: 200px;
 }
+.selected {
+  border: var(--accent-color) 1px solid !important;
+  background-color: var(--base-color-2);
+}
 .date-card-component {
-  background-color: var(--item-color);
+  border: transparent 1px solid;
   border-radius: 5px;
   display: flex;
   flex-direction: column;
@@ -655,7 +696,7 @@ select option:disabled {
 }
 .date-card-component .action-section {
   border-top: var(--border-color) 1px solid;
-  width: 90%;
+  width: 70%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -691,10 +732,10 @@ select option:disabled {
   margin-right: 10px;
 }
 .grid {
-  padding-top: 10px;
+  padding-top: 15px;
   display: grid;
   grid-template-rows: auto;
-  gap: 10px;
+  gap: 15px;
   width: 0;
 }
 .date-row {
@@ -714,30 +755,29 @@ select option:disabled {
   width: 100px;
   height: auto;
 }
-.date-cell:first-child {
-  background-color: var(--container-color);
-}
 .first-cell {
   position: sticky;
   left: 0;
+  background-color: var(--base-color-1);
 }
 .first-cell:first-child {
-  z-index: 10;
+  z-index: 1;
   width: 200px;
+  background-color: var(--base-color-1);
 }
 .first-cell-bg {
-  background: var(--item-color);
+  background: var(--base-color-2);
   display: flex;
   align-items: center;
   width: 100%;
   height: 100%;
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
   padding-left: 5px;
 }
 .voter-cell {
   border-right: 1px solid var(--border-color);
-  background-color: var(--item-color);
+  background-color: var(--base-color-2);
   width: 100px;
   display: flex;
   justify-content: center;
@@ -749,8 +789,8 @@ select option:disabled {
 }
 .voter-cell:last-child {
   border-right: none;
-  border-top-right-radius: 15px;
-  border-bottom-right-radius: 15px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 .voter-cell .icon {
   font-size: x-large;

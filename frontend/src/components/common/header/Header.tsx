@@ -33,10 +33,10 @@ const Header: React.FC = () => {
         <div className='app-header'>
             {/* nasty solution, but now the dropdown gets rendered behind the header while still being useable */}
             <div className={`dropdown-container ${isOpen ? 'visible' : ''}`}>
-                <a href='/dashboard'>Dashboard</a>
-                <a href='/availability'>Verfügbarkeit</a>
-                <a href='/profile'>Profil</a>
-                <a href='/login'>Abmelden</a>
+                <a className='border' href='/dashboard'>Dashboard</a>
+                <a className='border' href='/availability'>Verfügbarkeit</a>
+                <a className='border' href='/profile'>Profil</a>
+                <a className='border' href='/login'>Abmelden</a>
             </div>
 
             <div className='app-header'>
@@ -54,6 +54,10 @@ const Header: React.FC = () => {
                                 ))}
                             </select>
                             */}
+                        <a className='border-hover' href='/dashboard'>Dashboard</a>
+                        <a className='border-hover' href='/availability'>Verfügbarkeit</a>
+                        <a className='border-hover' href='/profile'>Profil</a>
+                        <a className='border-hover' href='/login'>Abmelden</a>
                         <button className='profile-button'>
                             <PersonCircle className='icon profile-icon' />
                         </button>

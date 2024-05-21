@@ -25,6 +25,7 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
+                font-weight: normal;
             }
 
             p {
@@ -37,8 +38,17 @@
             }
         }
 
+        .line-clamp-2 {
+            -webkit-line-clamp: 2 !important;
+        }
+
         .info-plus {
             min-width: 0;
+
+            .flex {
+                display: flex;
+                gap: 50px;
+            }
 
             p {
                 margin-top: 5px;

@@ -54,7 +54,7 @@ const VotingStatus: React.FC<VotingStatusProps> = ({ proposedDates, participantI
 
             <div className="date-row">
                 <div className="date-cell first-cell">
-                    <div>
+                    <div className='participants'>
                         Teilnehmer
                     </div>
                 </div>

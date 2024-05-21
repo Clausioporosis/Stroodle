@@ -43,7 +43,7 @@ const DateCard: React.FC<DateCardProps> = ({ proposedDate, isOrganizer, onDateCl
     const { weekday, month, day, year, startTime, endTime, duration, isAllDay } = formatDate(proposedDate!);
 
     return (
-        <div className='date-card-component' onClick={onDateClick}>
+        <div className={`date-card-component ${isActive ? 'selected' : ''}`} onClick={onDateClick}>
             <div className='date-section'>
                 <p className='weekday'>
                     <span className='first'>{weekday.substring(0, 2)}</span>
