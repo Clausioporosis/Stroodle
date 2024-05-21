@@ -95,7 +95,7 @@ code {
   padding: 10px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
 }
 .tab-item {
@@ -323,7 +323,7 @@ select option:disabled {
 }
 .info-cards-component {
   width: 100%;
-  height: 600px;
+  height: 555px;
   padding-right: 5px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -448,6 +448,10 @@ select option:disabled {
 }
 .card .state-section .rest {
   font-weight: bold;
+}
+.week-view-component {
+  width: 100%;
+  height: 555px;
 }
 .fc {
   --fc-today-bg-color: transparent;

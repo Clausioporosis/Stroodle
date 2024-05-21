@@ -14,6 +14,7 @@ const View: React.FC = () => {
     const { pollId } = useParams<{ pollId: string }>();
     const [poll, setPoll] = useState<Poll>();
     const [selectedDateIndex, setSelectedDateIndex] = useState<number | undefined>();
+    const [isBooked, setIsBooked] = useState<boolean>(false);
     const [votedDates, setVotedDates] = useState<number[] | undefined>();
     const [isOrganizer, setIsOrganizer] = useState<boolean>(false);
 
@@ -27,6 +28,7 @@ const View: React.FC = () => {
                 setPoll(poll);
                 setIsOrganizer(poll!.organizerId === UserService.getLoggedInUser().id);
                 setSelectedDateIndex(poll?.bookedDateIndex);
+                setIsBooked(poll?.bookedDateIndex === null ? false : true);
 
                 // has to be rewritten in separate function
                 const votedDates: number[] = [];
@@ -69,6 +71,13 @@ const View: React.FC = () => {
 
         setPoll(updatedPoll);
         PollService.putPoll(updatedPoll);
+
+        //temp solution, because card state is not updating
+        window.location.reload();
+    }
+
+    function handleReopenClick() {
+        setIsBooked(false);
     }
 
     return (
@@ -80,6 +89,7 @@ const View: React.FC = () => {
                     {isOrganizer ? (
                         <h1>Deine Umfrage
                             <div className='header-button-group'>
+                                <button className="header-button" onClick={handleReopenClick}>Buchung Bearbeiten</button>
                                 <button className="header-button" onClick={handleButtonClick}>Termin Buchen</button>
                             </div>
                         </h1>
@@ -91,9 +101,10 @@ const View: React.FC = () => {
                         </h1>
                     )}
 
-                    <div className='tab-item'>
-                        {poll && <Card useCase={'runningPolls'} poll={poll} />}
 
+                    {poll && <Card useCase={'runningPolls'} poll={poll} />}
+
+                    {!isBooked &&
                         <div className="poll-details">
                             {poll && <VotingStatus
                                 setSelectedDateIndex={setSelectedDateIndex}
@@ -105,9 +116,9 @@ const View: React.FC = () => {
                                 setVotedDates={setVotedDates}
                             />}
                         </div>
+                    }
 
 
-                    </div>
                 </div>
             </div>
         </div>

@@ -34,6 +34,19 @@ const Dashboard: React.FC = () => {
         <div className="app">
             <Header />
             <div className="app-body">
+
+
+
+
+
+
+
+
+
+
+
+
+                {/* 
                 <div className="content-tab">
 
                     <h1 className="created-polls-tab-header">
@@ -59,6 +72,7 @@ const Dashboard: React.FC = () => {
                     < InfoCards useCase={'runningPolls'} pollData={myPolls} />
 
                 </div>
+                */}
             </div>
         </div>
     );

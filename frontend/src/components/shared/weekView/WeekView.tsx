@@ -260,14 +260,14 @@ const WeekView: React.FC<WeekViewProps> = ({
     }
 
     return (
-        <div className='tab-item'>
+        <div className='week-view-component'>
             <FullCalendar
                 ref={calendarRef}
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                 eventContent={renderEventContent}
                 initialView="timeGridWeek"
                 snapDuration="00:15:00"
-                height={'600px'}
+                height={'100%'}
                 locale={'de'}
                 firstDay={1}
                 eventTimeFormat={{
