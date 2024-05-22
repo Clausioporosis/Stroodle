@@ -43,9 +43,9 @@ class PollService {
         }
     }
 
-    async putPoll(poll: Poll): Promise<Poll> {
+    async putPoll(id: string, poll: Poll): Promise<Poll> {
         try {
-            const response = await apiClient.put<Poll>(`/polls/${poll.id}`, poll);
+            const response = await apiClient.put<Poll>(`/polls/${id}`, poll);
             return response.data;
         } catch (error) {
             console.error('Error putting poll', error);

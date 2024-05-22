@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import HeaderComponent from "../../common/header/Header"
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import UserService from '../../../services/UserService';
 import { User, } from '../../../models/User';
@@ -13,13 +13,15 @@ import WeekView from '../../shared/weekView/WeekView';
 
 const Dashboard: React.FC = () => {
     const navigate = useNavigate();
+    const { pollId } = useParams();
+
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [location, setLocation] = useState('');
     const [duration, setDuration] = useState('15');
     const [selectedDuration, setSelectedDuration] = useState('15 Minuten');
     const [participantsIds, setParticipantsIds] = useState<string[]>([]);
-    const [proposedDates, setProposedDates] = useState<ProposedDate[]>([]);
+    const [proposedDates, setProposedDates] = useState<ProposedDate[] | undefined>();
 
     //create a poll with the given data and navigate to the dashboard afterwards
     const createPoll = () => {
@@ -31,19 +33,43 @@ const Dashboard: React.FC = () => {
             description: description,
             location: location,
             participantIds: participantsIds,
-            proposedDates: proposedDates
+            proposedDates: sortProposedDates(proposedDates || [])
         };
 
-        PollService.createPoll(newPoll)
-            .then(() => {
-                alert('Umfrage wurde erfolgreich erstellt.');
+        if (pollId) {
+            // If pollId is present, update the existing poll
+            PollService.putPoll(pollId, newPoll).then(() => {
+                alert('Umfrage wurde erfolgreich geändert.');
                 navigate('/dashboard');
             })
-            .catch(error => {
-                alert('Es gab einen Fehler beim Erstellen der Umfrage. Bitte versuchen Sie es erneut.');
-                console.error('Es gab einen Fehler beim Erstellen der Umfrage:', error);
-            });
+                .catch(error => {
+                    alert('Es gab einen Fehler beim ändern der Umfrage. Bitte versuchen Sie es erneut.');
+                    console.error('Es gab einen Fehler beim ändern der Umfrage:', error);
+                });
+        } else {
+            PollService.createPoll(newPoll)
+                .then(() => {
+                    alert('Umfrage wurde erfolgreich erstellt.');
+                    navigate('/dashboard');
+                })
+                .catch(error => {
+                    alert('Es gab einen Fehler beim erstellen der Umfrage. Bitte versuchen Sie es erneut.');
+                    console.error('Es gab einen Fehler beim erstellen der Umfrage:', error);
+                });
+        }
     };
+
+    useEffect(() => {
+        if (pollId) {
+            PollService.getPollById(pollId).then(poll => {
+                setTitle(poll!.title);
+                setDescription(poll!.description);
+                setLocation(poll!.location);
+                setParticipantsIds(poll!.participantIds);
+                setProposedDates(poll!.proposedDates);
+            });
+        }
+    }, [pollId]);
 
     // add a participant to the list
     const addParticipant = (addedParticipantId: string) => {
@@ -77,14 +103,26 @@ const Dashboard: React.FC = () => {
     };
 
     function saveProposedDate(start: Date) {
+        console.log('saveProposedDate: ', start);
         const newProposedDate = new ProposedDate(start, duration, []);
-        setProposedDates(prevProposedDates => {
-            const updatedProposedDates = [...prevProposedDates, newProposedDate];
-            updatedProposedDates.sort((a, b) => a.date.getTime() - b.date.getTime());
-            return updatedProposedDates;
-        });
-        console.log('Proposed Dates:', proposedDates);
+        setProposedDates(prevProposedDates => [...prevProposedDates || [], newProposedDate]);
     }
+
+    const sortProposedDates = (proposedDates: ProposedDate[]): ProposedDate[] => {
+        return proposedDates.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    };
+
+    function removeProposedDate(date: string, duration: string) {
+        const filteredProposedDates = proposedDates?.filter(proposedDate => {
+            console.log(new Date(date).toISOString() === new Date(proposedDate.date).toISOString());
+            return !(new Date(date).toISOString() === new Date(proposedDate.date).toISOString() && duration === proposedDate.duration);
+        });
+        setProposedDates(filteredProposedDates || []);
+    }
+
+    useEffect(() => {
+        console.log(duration);
+    }, [duration]);
 
     return (
         <div className='app'>
@@ -127,7 +165,7 @@ const Dashboard: React.FC = () => {
                         <option value="allDay">Ganztägig</option>
                         <option value="custom">Individuell</option>
                     </select>
-                    <WeekView useCase='poll' duration={duration} saveProposedDate={saveProposedDate} />
+                    <WeekView useCase='poll' duration={duration} saveProposedDate={saveProposedDate} proposedDates={proposedDates} pollId={pollId} removeProposedDate={removeProposedDate} />
                 </div>
 
             </div>

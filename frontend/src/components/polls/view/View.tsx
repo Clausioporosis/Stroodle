@@ -70,7 +70,7 @@ const View: React.FC = () => {
         });
 
         setPoll(updatedPoll);
-        PollService.putPoll(updatedPoll);
+        PollService.putPoll(updatedPoll.id || '', updatedPoll);
 
         //temp solution, because card state is not updating
         window.location.reload();

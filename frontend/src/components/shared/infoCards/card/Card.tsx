@@ -46,6 +46,10 @@ const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
             });
     }
 
+    function handleEditClick() {
+        navigate(`/polls/edit/${poll.id}`);
+    }
+
     function handleCardClick() {
         navigate(`/polls/${poll.id}`);
     }
@@ -110,7 +114,7 @@ const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
 
             {useCase === 'myPolls' && (
                 <div className='button-group'>
-                    <button className='button' onClick={(event) => { event.stopPropagation(); event.preventDefault(); }}>
+                    <button className='button' onClick={(event) => { event.stopPropagation(); event.preventDefault(); handleEditClick(); }}>
                         <Pencil className='icon' />
                     </button>
                     <button className='button' onClick={(event) => { event.stopPropagation(); event.preventDefault(); }}>

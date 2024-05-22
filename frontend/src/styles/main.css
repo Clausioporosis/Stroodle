@@ -438,6 +438,7 @@ a:active {
 .card .info-section {
   display: grid;
   grid-template-rows: 1fr auto;
+  padding-right: 10px;
 }
 .card .info-section .info-text {
   display: flex;
@@ -560,6 +561,7 @@ a:active {
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
+  margin: 0;
 }
 .fc-event button {
   background-color: transparent;
@@ -567,8 +569,11 @@ a:active {
   color: var(--text-color);
 }
 .fc-event button:hover {
-  background-color: var(--border-color);
-  border-radius: 3px;
+  cursor: pointer;
+}
+.fc-event .event-button {
+  border: red 1px solid;
+  padding-bottom: 0;
 }
 .fc-view {
   color: #bbbbbb;
@@ -828,6 +833,9 @@ a:active {
   padding: 5px 10px 5px 10px;
   list-style: none;
   transition: background-color 0.3s ease;
+}
+.search-bar-component .result-list li span {
+  color: #161616;
 }
 .search-bar-component .result-list .list-item:hover {
   background-color: #6b6b6b;

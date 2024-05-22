@@ -23,6 +23,7 @@ const App: React.FC = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/availability" element={<AvailabilitySettings />} />
         <Route path="/polls" element={<CreatePoll />} />
+        <Route path="/polls/edit/:pollId" element={<CreatePoll />} />
         <Route path="/polls/:pollId" element={<PollView />} />
         <Route path="/" element={<RedirectToDashboard />} />
       </Routes>
