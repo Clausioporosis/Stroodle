@@ -54,16 +54,23 @@ const Header: React.FC = () => {
                                 ))}
                             </select>
                             */}
-                        <a className='border-hover' href='/dashboard'>Dashboard</a>
-                        <a className='border-hover' href='/availability'>Verfügbarkeit</a>
-                        <a className='border-hover' href='/profile'>Profil</a>
-                        <a className='border-hover' href='/login'>Abmelden</a>
+                        <div className='nav-bar'>
+                            <a className='border-hover' href='/dashboard'>Dashboard</a>
+                            <a className='border-hover' href='/availability'>Verfügbarkeit</a>
+                            <a className='border-hover' href='/profile'>Profil</a>
+                        </div>
+
                         <button className='profile-button'>
                             <PersonCircle className='icon profile-icon' />
                         </button>
-                        <button className='list-button' onClick={toggleDropdown}>
-                            <List className='icon list-icon' />
-                        </button>
+                        <div className='nav-bar'>
+                            <a className='border-hover' href='/login'>Abmelden</a>
+                        </div>
+                        <div className='nav-drop-down'>
+                            <button className='list-button' onClick={toggleDropdown}>
+                                <List className='icon list-icon' />
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

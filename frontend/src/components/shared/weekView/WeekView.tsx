@@ -87,9 +87,16 @@ const WeekView: React.FC<WeekViewProps> = ({
         return (
             <>
                 {((event.id !== 'expiredTimeHighlight') &&
-                    < button className='event-button' onClick={() => handleEventDelete(event)}>
-                        X
-                    </button >
+                    <div className='events-content'>
+                        <p>
+                            {/*event.start.toLocaleTimeString().substring(0, 5)} - {event.end.toLocaleTimeString().substring(0, 5)*/}
+                            {event.start.toLocaleTimeString().substring(0, 5)}
+
+                        </p>
+                        < button className='event-button' onClick={() => handleEventDelete(event)}>
+                            X
+                        </button >
+                    </div>
                 )}
             </>
         );

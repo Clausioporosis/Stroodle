@@ -125,3 +125,17 @@ a {
     background: linear-gradient(to right, transparent, var(--border-color), transparent);
     pointer-events: none;
 }
+
+.nav-drop-down {
+    display: none;
+}
+
+@media (max-width: 685px) {
+    .nav-bar {
+        display: none;
+    }
+
+    .nav-drop-down {
+        display: contents;
+    }
+}
