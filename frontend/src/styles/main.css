@@ -451,8 +451,9 @@ a:active {
   grid-template-columns: repeat(1, 1fr);
 }
 .card {
+  border: red 1px solid;
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr auto auto;
   background-color: var(--base-color-2);
   border-radius: 5px;
   padding: 10px;
@@ -821,6 +822,10 @@ a:active {
   width: 100%;
   height: 100%;
   font-weight: bold;
+}
+.first-cell .participants p {
+  margin: 0;
+  padding: 0 5px;
 }
 .first-cell:first-child {
   z-index: 1;

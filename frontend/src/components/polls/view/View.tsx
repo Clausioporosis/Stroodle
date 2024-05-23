@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Header from '../../common/header/Header';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import PollService from '../../../services/PollService';
 import { Poll } from '../../../models/Poll';
@@ -13,6 +13,8 @@ import Card from '../../shared/infoCards/card/Card';
 const View: React.FC = () => {
     const scrollRef = useRef<HTMLDivElement>(null);
     const { pollId } = useParams<{ pollId: string }>();
+    const navigate = useNavigate();
+
     const [poll, setPoll] = useState<Poll>();
     const [selectedDateIndex, setSelectedDateIndex] = useState<number | undefined>();
 
@@ -149,6 +151,7 @@ const View: React.FC = () => {
                     {isOrganizer ? (
                         <h1>Deine Umfrage
                             <div className='header-button-group'>
+                                <button className="header-button" onClick={() => navigate(-1)}>Zurück</button>
                                 {(!isBooked) ? (
                                     <button className="header-button" onClick={handleButtonClick} disabled={!hasEdited}>
                                         {getOrganizerButtonText()}
@@ -161,6 +164,7 @@ const View: React.FC = () => {
                     ) : (
                         <h1>Termine Auswählen
                             <div className='header-button-group'>
+                                <button className="header-button" onClick={() => navigate(-1)}>Zurück</button>
                                 <button className="header-button" onClick={handleButtonClick} disabled={!hasEdited}>Auswahl speichern</button>
                             </div>
                         </h1>

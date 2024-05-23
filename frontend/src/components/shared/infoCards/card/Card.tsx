@@ -126,7 +126,7 @@ const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
                 </div>
             )}
 
-            {useCase === 'runningPolls' && (
+            {(useCase === 'runningPolls' || useCase === 'myPolls' && poll.bookedDateIndex !== null) && (
                 <div className='state-section'>
                     {poll.bookedDateIndex !== null ? (
                         <>
@@ -137,8 +137,18 @@ const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
                                 {bookedDate?.date}
                             </div>
                             <div className='time'>
-                                <span className="first">{bookedDate?.time.substring(0, 1)}</span>
-                                <span className="rest">{bookedDate?.time.substring(1)}  Uhr</span>
+                                {(bookedDate?.duration !== 'ganztägig') ? (
+                                    <>
+                                        <span className="first">{bookedDate?.time.substring(0, 1)}</span>
+                                        <span className="rest">{bookedDate?.time.substring(1)}  Uhr</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <span className="first">{bookedDate?.duration.substring(0, 1)}</span>
+                                        <span className="rest">{bookedDate?.duration.substring(1)}</span>
+                                    </>
+                                )}
+
                             </div>
                         </>
                     ) : (
@@ -149,6 +159,7 @@ const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
                     )}
                 </div>
             )}
+
         </div>
     );
 };

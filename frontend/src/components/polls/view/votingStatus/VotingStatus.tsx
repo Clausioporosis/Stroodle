@@ -57,7 +57,7 @@ const VotingStatus: React.FC<VotingStatusProps> = ({ setHasEdited, proposedDates
             <div className="date-row">
                 <div className="date-cell first-cell">
                     <div className='participants'>
-                        Teilnehmer
+                        <p>Teilnehmer</p>
                     </div>
                 </div>
                 {proposedDates?.map((date, index) => (

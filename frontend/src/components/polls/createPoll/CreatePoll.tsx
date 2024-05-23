@@ -129,8 +129,11 @@ const Dashboard: React.FC = () => {
             <HeaderComponent />
             <div className='app-body'>
                 <div className='tab'>
-                    <h1>Umfrage erstellen</h1>
-
+                    <h1>Umfrage erstellen
+                        <div className='header-button-group'>
+                            <button className="header-button" onClick={() => navigate(-1)}>Zurück</button>
+                        </div>
+                    </h1>
                     <h3>Titel</h3>
                     <input type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Was ist der Anlass?" />
                     <h3>Beschreibung</h3>
