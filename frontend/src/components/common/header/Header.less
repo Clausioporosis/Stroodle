@@ -1,12 +1,16 @@
 .app-header {
+    position: sticky;
     background-color: var(--base-color-0);
     border-bottom: var(--border-color) 1.5px solid;
-
     display: flex;
     flex-direction: row;
     height: 80px;
     width: 100%;
     z-index: 1000;
+}
+
+.hide-header {
+    transition: all .2s ease !important;
 }
 
 .start {

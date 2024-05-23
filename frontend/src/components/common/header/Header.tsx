@@ -29,8 +29,27 @@ const Header: React.FC = () => {
         setCurrentUser(UserService.getLoggedInUser());
     };
 
+
+
+    var prevScrollpos = window.pageYOffset;
+    useEffect(() => {
+
+        window.onscroll = function () {
+            var currentScrollPos = window.pageYOffset;
+            if (prevScrollpos > currentScrollPos) {
+                console.log("scrolling up");
+                document.getElementById("hide-header")!.style.top = "0";
+            } else {
+                console.log("scrolling down");
+                document.getElementById("hide-header")!.style.top = "-80px";
+            }
+            prevScrollpos = currentScrollPos;
+        }
+    }, [prevScrollpos]);
+
+
     return (
-        <div className='app-header'>
+        <div id='hide-header' className='app-header hide-header'>
             {/* nasty solution, but now the dropdown gets rendered behind the header while still being useable */}
             <div className={`dropdown-container ${isOpen ? 'visible' : ''}`}>
                 <a className='border' href='/dashboard'>Dashboard</a>
