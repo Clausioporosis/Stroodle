@@ -114,13 +114,13 @@ const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
 
             {useCase === 'myPolls' && (
                 <div className='button-group'>
-                    <button className='button' onClick={(event) => { event.stopPropagation(); event.preventDefault(); handleEditClick(); }}>
+                    <button className='card-button' onClick={(event) => { event.stopPropagation(); event.preventDefault(); handleEditClick(); }}>
                         <Pencil className='icon' />
                     </button>
-                    <button className='button' onClick={(event) => { event.stopPropagation(); event.preventDefault(); }}>
+                    <button className='card-button' onClick={(event) => { event.stopPropagation(); event.preventDefault(); }}>
                         <Share className='icon' />
                     </button>
-                    <button className='button' onClick={(event) => { event.stopPropagation(); event.preventDefault(); handleDeleteClick(event); }}>
+                    <button className='card-button' onClick={(event) => { event.stopPropagation(); event.preventDefault(); handleDeleteClick(event); }}>
                         <Trash3 className='icon' />
                     </button>
                 </div>

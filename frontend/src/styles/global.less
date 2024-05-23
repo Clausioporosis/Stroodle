@@ -212,7 +212,7 @@ textarea {
 select {
     flex-grow: 0;
     height: 25px;
-    width: 154px;
+    width: 149px;
     text-align: center;
     background: #333333;
     color: #bbbbbb;
@@ -247,6 +247,21 @@ select {
     border-radius: 5px;
     cursor: pointer;
     user-select: none;
+
+    &:disabled {
+        background-color: var(--base-color-2);
+        color: #808080;
+        cursor: not-allowed;
+
+        &:hover {
+            background-color: var(--base-color-2);
+        }
+
+        &:active {
+            background-color: var(--base-color-2);
+            animation: none;
+        }
+    }
 
     &:hover {
         background-color: var(--item-hover-color);

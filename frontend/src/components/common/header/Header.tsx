@@ -3,6 +3,7 @@ import { List, PersonCircle } from 'react-bootstrap-icons';
 
 import { User } from '../../../models/User';
 import UserService from '../../../services/UserService';
+import UserInitials from '../../shared/UserInitials';
 
 const Header: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -29,21 +30,16 @@ const Header: React.FC = () => {
         setCurrentUser(UserService.getLoggedInUser());
     };
 
-
-
-    var prevScrollpos = window.pageYOffset;
+    let [prevScrollpos, setPrevScrollpos] = useState(window.pageYOffset);
     useEffect(() => {
-
         window.onscroll = function () {
             var currentScrollPos = window.pageYOffset;
             if (prevScrollpos > currentScrollPos) {
-                console.log("scrolling up");
                 document.getElementById("hide-header")!.style.top = "0";
             } else {
-                console.log("scrolling down");
                 document.getElementById("hide-header")!.style.top = "-80px";
             }
-            prevScrollpos = currentScrollPos;
+            setPrevScrollpos(currentScrollPos);
         }
     }, [prevScrollpos]);
 
@@ -81,6 +77,7 @@ const Header: React.FC = () => {
 
                         <button className='profile-button'>
                             <PersonCircle className='icon profile-icon' />
+
                         </button>
                         <div className='nav-bar'>
                             <a className='border-hover' href='/login'>Abmelden</a>

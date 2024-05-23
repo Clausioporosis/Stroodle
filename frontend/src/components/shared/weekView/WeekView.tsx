@@ -88,13 +88,18 @@ const WeekView: React.FC<WeekViewProps> = ({
             <>
                 {((event.id !== 'expiredTimeHighlight') &&
                     <div className='events-content'>
-                        <p>
-                            {/*event.start.toLocaleTimeString().substring(0, 5)} - {event.end.toLocaleTimeString().substring(0, 5)*/}
-                            {event.start.toLocaleTimeString().substring(0, 5)}
+                        {(!event.allDay) ? (
+                            <p>
+                                {event.start.toLocaleTimeString().substring(0, 5)} - {event.end.toLocaleTimeString().substring(0, 5)}
 
-                        </p>
+                            </p>
+                        ) : (
+                            <p>
+                                Ganztägig
+                            </p>
+                        )}
                         < button className='event-button' onClick={() => handleEventDelete(event)}>
-                            X
+                            <p>x</p>
                         </button >
                     </div>
                 )}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Header from '../../common/header/Header';
 import { useParams } from 'react-router-dom';
 
@@ -11,9 +11,13 @@ import VotingStatus from './votingStatus/VotingStatus';
 import Card from '../../shared/infoCards/card/Card';
 
 const View: React.FC = () => {
+    const scrollRef = useRef<HTMLDivElement>(null);
     const { pollId } = useParams<{ pollId: string }>();
     const [poll, setPoll] = useState<Poll>();
     const [selectedDateIndex, setSelectedDateIndex] = useState<number | undefined>();
+
+    const [hasEdited, setHasEdited] = useState<boolean>(false);
+
     const [isBooked, setIsBooked] = useState<boolean>(false);
     const [votedDates, setVotedDates] = useState<number[] | undefined>();
     const [isOrganizer, setIsOrganizer] = useState<boolean>(false);
@@ -21,6 +25,14 @@ const View: React.FC = () => {
     useEffect(() => {
         getPoll();
     }, []);
+
+    useEffect(() => {
+        if (isOrganizer) {
+            if (poll?.bookedDateIndex === null && selectedDateIndex === undefined && hasEdited || poll?.bookedDateIndex === selectedDateIndex) {
+                setHasEdited(false);
+            }
+        }
+    }, [hasEdited, selectedDateIndex, votedDates]);
 
     function getPoll() {
         PollService.getPollById(pollId!)
@@ -38,7 +50,6 @@ const View: React.FC = () => {
                     }
                 });
                 setVotedDates(votedDates);
-
             })
             .catch(error => {
                 console.error('Es gab einen Fehler beim Abrufen des Polls!', error);
@@ -80,6 +91,55 @@ const View: React.FC = () => {
         setIsBooked(false);
     }
 
+    const scrollLeft = () => {
+        scrollRef.current!.scrollTo({
+            left: scrollRef.current!.scrollLeft - 100,
+            behavior: 'smooth'
+        });
+    };
+
+    const scrollRight = () => {
+        scrollRef.current!.scrollTo({
+            left: scrollRef.current!.scrollLeft + 100,
+            behavior: 'smooth'
+        });
+    };
+
+    const [isOverflowing, setIsOverflowing] = useState(false);
+
+    useEffect(() => {
+        const checkOverflow = () => {
+            if (scrollRef.current) {
+                setIsOverflowing(scrollRef.current.scrollWidth > scrollRef.current.clientWidth);
+            }
+        };
+
+        checkOverflow();
+
+        const observer = new MutationObserver(checkOverflow);
+        if (scrollRef.current) {
+            observer.observe(scrollRef.current, { childList: true, subtree: true });
+        }
+
+        window.addEventListener('resize', checkOverflow);
+
+        return () => {
+            observer.disconnect();
+            window.removeEventListener('resize', checkOverflow);
+        };
+    }, []);
+
+    function getOrganizerButtonText() {
+        if (poll?.bookedDateIndex && selectedDateIndex === undefined) {
+            return 'Wieder eröffnen';
+        } else if (poll?.bookedDateIndex === null) {
+            return 'Termin buchen';
+        } else if (poll?.bookedDateIndex !== selectedDateIndex || poll?.bookedDateIndex === selectedDateIndex) {
+            return 'Termin ändern';
+        }
+        return 'Error?';
+    }
+
     return (
         <div className='app'>
             <Header />
@@ -89,14 +149,19 @@ const View: React.FC = () => {
                     {isOrganizer ? (
                         <h1>Deine Umfrage
                             <div className='header-button-group'>
-                                <button className="header-button" onClick={handleReopenClick}>Bearbeiten</button>
-                                <button className="header-button" onClick={handleButtonClick}>Termin Buchen</button>
+                                {(!isBooked) ? (
+                                    <button className="header-button" onClick={handleButtonClick} disabled={!hasEdited}>
+                                        {getOrganizerButtonText()}
+                                    </button>
+                                ) : (
+                                    <button className="header-button" onClick={handleReopenClick}>Bearbeiten</button>
+                                )}
                             </div>
                         </h1>
                     ) : (
                         <h1>Termine Auswählen
                             <div className='header-button-group'>
-                                <button className="header-button" onClick={handleButtonClick}>Auswahl Speichern</button>
+                                <button className="header-button" onClick={handleButtonClick} disabled={!hasEdited}>Auswahl speichern</button>
                             </div>
                         </h1>
                     )}
@@ -104,9 +169,18 @@ const View: React.FC = () => {
 
                     {poll && <Card useCase={'runningPolls'} poll={poll} />}
 
+                    {isOverflowing && (
+                        <div className='scroll-buttons'>
+                            <p>Weitere Termine verfügbar!</p>
+                            <button onClick={scrollLeft}>{'<<'}</button>
+                            <button onClick={scrollRight}>{'>>'}</button>
+                        </div>
+                    )}
+
                     {!isBooked &&
-                        <div className="poll-details">
+                        <div className="poll-details" ref={scrollRef}>
                             {poll && <VotingStatus
+                                setHasEdited={setHasEdited}
                                 setSelectedDateIndex={setSelectedDateIndex}
                                 selectedDateIndex={selectedDateIndex}
                                 proposedDates={poll.proposedDates}

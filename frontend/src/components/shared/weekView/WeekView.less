@@ -9,7 +9,7 @@
     width: 100%;
 
     .fc-bg-event {
-        opacity: 0.65;
+        opacity: 0.85;
     }
 
     .fc-toolbar-title {
@@ -26,10 +26,21 @@
     margin: 10px 0 15px 0;
 }
 
-.fc-event {
+.fc {
+    a {
+        padding: 0;
+    }
+}
+
+
+.events-content {
+    padding: 0 3px 0 3px;
+    position: relative;
+    top: -2px;
     display: flex;
-    justify-content: flex-end;
-    align-items: flex-start;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
 
     button {
         background-color: transparent;
@@ -42,40 +53,32 @@
     }
 }
 
-.fc-v-event {
-    padding: 0;
-    display: flex;
-    flex-direction: column;
 
-    .events-content {
-        /*border: 1px solid red;*/
+.fc .fc-daygrid-body-natural .fc-daygrid-day-events {
+    margin-bottom: 2px;
+}
 
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-
-        .event-button {
-            padding-left: 3px;
-        }
-    }
+.fc .fc-daygrid-body-unbalanced .fc-daygrid-day-events {
+    min-height: 0;
 }
 
 
-
-
-.fc-view {
-    color: #bbbbbb;
-}
 
 .fc-button-primary {
-    background-color: #333;
-    color: #bbb;
-    border: none;
+    background-color: var(--item-color) !important;
+    border: none !important;
+    box-shadow: none !important;
+    height: 25px !important;
     display: flex;
-    border-radius: 5px;
-    padding: 5px;
-    height: 35px;
-    margin-right: 10px;
+    justify-content: center;
+    align-items: center;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+
+    span {
+        position: relative;
+        top: -1px;
+    }
 
     &:disabled {
         pointer-events: none;
@@ -86,55 +89,11 @@
     }
 
     &:hover {
-        background-color: #444;
+        background-color: var(--item-hover-color) !important;
     }
 
     &:active {
-        background-color: #555;
+        background-color: var(--item-active-color) !important;
         animation: buttonPress 0.2s ease;
-    }
-}
-
-.fc-duration-button {
-    position: relative;
-    background-color: #333;
-    height: 100%;
-    width: 115px;
-
-    &:hover,
-    &:active,
-    &:focus {
-        background-color: #333; // Setzt die Hintergrundfarbe auf die gleiche Farbe wie der nicht deaktivierte Button
-        box-shadow: none; // Entfernt den Schatten, wenn der Button fokussiert ist
-        animation: none; // Entfernt die Animation, wenn der Button aktiv ist
-    }
-
-    .duration-select {
-        position: absolute;
-        height: 100%;
-        margin: -5px 0 0 -5px;
-        padding-top: 2px;
-        padding-right: 5px;
-        background-color: #333;
-        font-size: 1em;
-
-        option:disabled {
-            display: none;
-        }
-    }
-
-}
-
-@keyframes buttonPress {
-    0% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(0.95);
-    }
-
-    100% {
-        transform: scale(1);
     }
 }

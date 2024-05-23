@@ -8,6 +8,7 @@ import { Check2, X } from 'react-bootstrap-icons';
 import { idText } from 'typescript';
 
 interface VotingStatusProps {
+    setHasEdited: (hasEdited: boolean) => void;
     proposedDates?: ProposedDate[];
     participantIds?: string[];
     isOrganizer: boolean;
@@ -17,7 +18,7 @@ interface VotingStatusProps {
     setVotedDates: (index: number[] | undefined) => void;
 }
 
-const VotingStatus: React.FC<VotingStatusProps> = ({ proposedDates, participantIds, isOrganizer, setSelectedDateIndex, selectedDateIndex, votedDates, setVotedDates }) => {
+const VotingStatus: React.FC<VotingStatusProps> = ({ setHasEdited, proposedDates, participantIds, isOrganizer, setSelectedDateIndex, selectedDateIndex, votedDates, setVotedDates }) => {
     const [users, setUsers] = useState<{ [key: string]: User }>({});
 
     useEffect(() => {
@@ -36,6 +37,7 @@ const VotingStatus: React.FC<VotingStatusProps> = ({ proposedDates, participantI
     const getUserName = (id: string) => users[id]?.firstName + ' ' + users[id]?.lastName || '';
 
     function handleDateClick(index: number) {
+        setHasEdited(true);
         if (isOrganizer) {
             index === selectedDateIndex ? setSelectedDateIndex(undefined) : setSelectedDateIndex(index);
         } else {
