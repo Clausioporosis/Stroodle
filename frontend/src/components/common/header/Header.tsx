@@ -3,6 +3,7 @@ import { List, PersonCircle } from 'react-bootstrap-icons';
 
 import { User } from '../../../models/User';
 import UserService from '../../../services/UserService';
+import UserInitials from '../../shared/UserInitials';
 
 const Header: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -29,14 +30,28 @@ const Header: React.FC = () => {
         setCurrentUser(UserService.getLoggedInUser());
     };
 
+    let [prevScrollpos, setPrevScrollpos] = useState(window.pageYOffset);
+    useEffect(() => {
+        window.onscroll = function () {
+            var currentScrollPos = window.pageYOffset;
+            if (prevScrollpos > currentScrollPos) {
+                document.getElementById("hide-header")!.style.top = "0";
+            } else {
+                document.getElementById("hide-header")!.style.top = "-80px";
+            }
+            setPrevScrollpos(currentScrollPos);
+        }
+    }, [prevScrollpos]);
+
+
     return (
-        <div className='app-header'>
+        <div id='hide-header' className='app-header hide-header'>
             {/* nasty solution, but now the dropdown gets rendered behind the header while still being useable */}
             <div className={`dropdown-container ${isOpen ? 'visible' : ''}`}>
-                <a href='/dashboard'>Dashboard</a>
-                <a href='/availability'>Verfügbarkeit</a>
-                <a href='/profile'>Profil</a>
-                <a href='/login'>Abmelden</a>
+                <a className='border' href='/dashboard'>Dashboard</a>
+                <a className='border' href='/availability'>Verfügbarkeit</a>
+                <a className='border' href='/profile'>Profil</a>
+                <a className='border' href='/login'>Abmelden</a>
             </div>
 
             <div className='app-header'>
@@ -46,20 +61,32 @@ const Header: React.FC = () => {
 
                 <div className='end'>
                     <div className='button-container'>
-
-                        <select value={''} onChange={e => handleUserChange(e.target.value)}>
-                            <option value="">{currentUser?.firstName}</option>
-                            {users.map(user => (
-                                <option key={user.id} value={user.id}>{user.firstName}</option>
-                            ))}
-                        </select>
+                        {/*
+                            <select value={''} onChange={e => handleUserChange(e.target.value)}>
+                                <option value="">{currentUser?.firstName}</option>
+                                {users.map(user => (
+                                    <option key={user.id} value={user.id}>{user.firstName}</option>
+                                ))}
+                            </select>
+                            */}
+                        <div className='nav-bar'>
+                            <a className='border-hover' href='/dashboard'>Dashboard</a>
+                            <a className='border-hover' href='/availability'>Verfügbarkeit</a>
+                            <a className='border-hover' href='/profile'>Profil</a>
+                        </div>
 
                         <button className='profile-button'>
                             <PersonCircle className='icon profile-icon' />
+
                         </button>
-                        <button className='list-button' onClick={toggleDropdown}>
-                            <List className='icon list-icon' />
-                        </button>
+                        <div className='nav-bar'>
+                            <a className='border-hover' href='/login'>Abmelden</a>
+                        </div>
+                        <div className='nav-drop-down'>
+                            <button className='list-button' onClick={toggleDropdown}>
+                                <List className='icon list-icon' />
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

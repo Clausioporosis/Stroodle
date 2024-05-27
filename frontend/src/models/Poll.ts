@@ -1,18 +1,18 @@
 export class ProposedDate {
     date: Date;
     duration: string;
-    votersId: string[];
+    voterIds: string[];
 
-    constructor(date: Date, duration: string, votersId: string[]) {
+    constructor(date: Date, duration: string, voterIds: string[]) {
         this.date = date;
         this.duration = duration;
-        this.votersId = votersId;
+        this.voterIds = voterIds;
     }
 }
 
 export class Poll {
     id?: string;
-    organizerId: String;
+    organizerId: string;
     title: string;
     description: string;
     location: string;

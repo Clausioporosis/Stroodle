@@ -4,10 +4,12 @@ import { Availability, Weekday, TimePeriod } from '../../models/User';
 import HeaderComponent from '../common/header/Header';
 import UserService from '../../services/UserService';
 import WeekView from '../shared/weekView/WeekView';
+import { useNavigate } from "react-router-dom";
 
 
 const AvailabilitySettings: React.FC = () => {
     const [reload, setReload] = useState(false);
+    const navigate = useNavigate();
     const [userAvailability, setUserAvailability] = useState<Availability>();
     const [pendingAvailabilityEntries, setPendingAvailabilityEntries] = useState<Availability>();
 
@@ -76,21 +78,22 @@ const AvailabilitySettings: React.FC = () => {
         <div className='app'>
             <HeaderComponent />
             <div className='app-body'>
-                <div className='content-tab'>
+                <div className='tab single-tab'>
                     <h1>Verfügbarkeit angeben
                         <div className='header-button-group'>
+                            <button className="header-button" onClick={() => navigate(-1)}>Zurück</button>
                             <button className="header-button" onClick={handleSave}>Speichern</button>
                         </div>
                     </h1>
-                    <div className='tab-item'>
-                        <WeekView
-                            useCase={'availability'}
-                            reload={reload}
-                            userAvailability={userAvailability}
-                            pendingAvailabilityEntries={pendingAvailabilityEntries}
-                            savePendingAvailabilityEntry={savePendingAvailabilityEntry}
-                            removeAvailability={removeAvailability} />
-                    </div>
+
+                    <WeekView
+                        useCase={'availability'}
+                        reload={reload}
+                        userAvailability={userAvailability}
+                        pendingAvailabilityEntries={pendingAvailabilityEntries}
+                        savePendingAvailabilityEntry={savePendingAvailabilityEntry}
+                        removeAvailability={removeAvailability} />
+
                 </div>
             </div>
         </div>

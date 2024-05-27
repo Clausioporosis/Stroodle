@@ -7,6 +7,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 
 import { Availability, Weekday, TimePeriod } from '../../../models/User';
+import { ProposedDate } from '../../../models/Poll';
 
 interface WeekViewProps {
     useCase: string;
@@ -17,8 +18,11 @@ interface WeekViewProps {
     savePendingAvailabilityEntry?: (day: Weekday, start: string, end: string) => void;
     removeAvailability?: (isPending: Boolean, day: Weekday, start: string, end: string) => void;
 
+    pollId?: string;
     duration?: string;
+    proposedDates?: ProposedDate[];
     saveProposedDate?: (date: Date) => void;
+    removeProposedDate?: (date: string, duration: string) => void;
 }
 
 interface CalendarEvent {
@@ -40,8 +44,11 @@ const WeekView: React.FC<WeekViewProps> = ({
     duration,
     userAvailability,
     pendingAvailabilityEntries,
+    proposedDates,
+    pollId,
     savePendingAvailabilityEntry,
     removeAvailability,
+    removeProposedDate,
     saveProposedDate }) => {
 
     const [calendarApi, setCalendarApi] = useState<any>(null);
@@ -69,7 +76,7 @@ const WeekView: React.FC<WeekViewProps> = ({
         if (useCase === 'availability') {
             removeAvailabilityEntry(event);
         } else if (useCase === 'poll') {
-
+            deleteProposedDate(event);
         }
         event.remove();
     }
@@ -80,9 +87,21 @@ const WeekView: React.FC<WeekViewProps> = ({
         return (
             <>
                 {((event.id !== 'expiredTimeHighlight') &&
-                    < button onClick={() => handleEventDelete(event)}>
-                        X
-                    </button >
+                    <div className='events-content'>
+                        {(!event.allDay) ? (
+                            <p>
+                                {event.start.toLocaleTimeString().substring(0, 5)} - {event.end.toLocaleTimeString().substring(0, 5)}
+
+                            </p>
+                        ) : (
+                            <p>
+                                Ganztägig
+                            </p>
+                        )}
+                        < button className='event-button' onClick={() => handleEventDelete(event)}>
+                            <p>x</p>
+                        </button >
+                    </div>
                 )}
             </>
         );
@@ -90,11 +109,48 @@ const WeekView: React.FC<WeekViewProps> = ({
 
     // poll functions --------------------------------------------------------------------------------------------------
 
+    const hasPoposedDates = useRef<boolean>(false);
+
+    useEffect(() => {
+        if (!calendarApi || pollId === undefined) return;
+        setTimeout(() => {
+            setProposedDatesToCalendar();
+        }, 0);
+    }, [calendarApi, proposedDates]);
+
+    // add user availability to calendar once calendarApi is available and userAvailability is set
+    function setProposedDatesToCalendar() {
+        if (proposedDates && !hasPoposedDates.current && calendarApi) {
+            proposedDates.map((proposedDate: ProposedDate) => {
+                let start = new Date(proposedDate.date);
+                let end = new Date(proposedDate.date);
+                end.setMinutes(end.getMinutes() + Number(proposedDate.duration));
+                const allDay = proposedDate.duration === 'allDay' ? true : false;
+
+                const newProposedDate: CalendarEvent = {
+                    id: uuidv4(),
+                    start: start,
+                    end: end,
+                    allDay: allDay,
+                    color: '#4C9EBC'
+                };
+                calendarApi.addEvent(newProposedDate);
+                hasPoposedDates.current = true;
+            });
+        }
+    }
+
     function addProposedDate(clickInfo: any) {
         let start = new Date(clickInfo.date);
         let end = new Date(clickInfo.date);
-        end.setMinutes(end.getMinutes() + Number(duration));
         const allDay = duration === 'allDay' ? true : false;
+
+        if (allDay) {
+            start.setHours(0, 0, 0, 0);
+            end.setHours(23, 59, 59, 999);
+        } else {
+            end.setMinutes(end.getMinutes() + Number(duration));
+        }
 
         if (checkIfProposedDateIsAllowed(start, end, allDay)) return;
 
@@ -106,8 +162,30 @@ const WeekView: React.FC<WeekViewProps> = ({
             color: '#4C9EBC'
         };
 
+        console.log('newProposedDate: ', newProposedDate);
+
         calendarApi.addEvent(newProposedDate);
         saveProposedDate?.(start);
+    }
+    function deleteProposedDate(event: any) {
+        let startDate = new Date(event.start);
+        let duration = '';
+
+        if (startDate.getTimezoneOffset() === 0) {
+            startDate.setMinutes(startDate.getMinutes() + startDate.getTimezoneOffset());
+        }
+
+        if (event.allDay) {
+            duration = 'allDay';
+        } else {
+            const endDate = new Date(event.end);
+            const durationInMilliseconds = endDate.getTime() - startDate.getTime();
+            const durationInMinutes = durationInMilliseconds / (1000 * 60);
+            duration = `${durationInMinutes}`;
+        }
+
+        let startDateString = startDate.toISOString().replace('Z', '+00:00');
+        removeProposedDate?.(startDateString, duration);
     }
 
     // check if proposed date is allowed (not in the past or overlapping with other allDay events)
@@ -142,7 +220,7 @@ const WeekView: React.FC<WeekViewProps> = ({
             start: new Date(0),
             end: new Date(),
             display: 'background',
-            color: '#ddd'
+            color: '#303030'
         };
         calendarApi.addEvent(expiredTimeHighlight);
     };
@@ -156,16 +234,16 @@ const WeekView: React.FC<WeekViewProps> = ({
         setTimeout(() => {
             hasAddedAvailability.current = false;
             calendarApi.removeAllEvents();
-            refreshAvailability();
+            setAvailabilityToCalender();
         }, 0); // delays execution until after the current render cycle to avoid flushSync warnings
     }, [reload]);
 
     useEffect(() => {
-        refreshAvailability();
+        setAvailabilityToCalender();
     }, [calendarApi, userAvailability]);
 
     // add user availability to calendar once calendarApi is available and userAvailability is set
-    function refreshAvailability() {
+    function setAvailabilityToCalender() {
         if (userAvailability && !hasAddedAvailability.current && calendarApi) {
             addAvailabilityToCalendar(userAvailability, false);
             pendingAvailabilityEntries && addAvailabilityToCalendar(pendingAvailabilityEntries, true);
@@ -260,13 +338,13 @@ const WeekView: React.FC<WeekViewProps> = ({
     }
 
     return (
-        <div className='tab-item'>
+        <div className='week-view-component'>
             <FullCalendar
                 ref={calendarRef}
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                 eventContent={renderEventContent}
                 initialView="timeGridWeek"
-                snapDuration="00:15:00"
+                snapDuration="00:05:00"
                 height={'100%'}
                 locale={'de'}
                 firstDay={1}

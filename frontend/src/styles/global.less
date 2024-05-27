@@ -5,7 +5,7 @@
 body {
     position: relative;
     margin: 0;
-    background-color: var(--base-color);
+    background-color: var(--base-color-0);
     color: var(--text-color);
 
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -22,16 +22,55 @@ code {
 }
 
 :root {
-    --base-color: #070707;
-    --container-color: #161616;
-    --content-color: #333;
-    --hover-color: #333;
-    --active-color: #484848;
+    /* Colors */
+    --accent-color: #4C9EBC;
+    --base-color-0: #101010;
+    --base-color-1: #151515;
+    --base-color-2: #202020;
+    --item-color: #303030;
+    --border-color: #606060;
+
+    /* actions */
+    /* base */
+    --base-hover-color: #202020;
+    --base-active-color: #464646;
+    /* container */
+    --container-hover-color: #404040;
+    --container-active-color: #808080;
+    /* item */
+    --item-hover-color: #404040;
+    --item-active-color: #808080;
+    /* accent */
+    --accent-hover-color: #4c9ebcc6;
+    --accent-active-color: #4c9ebc;
+
+    /* Text Colors */
     --text-color: #bbb;
     --icon-color: #bbbbbb;
-    --border-color: #666;
-    --accent-color: #4C9EBC;
-    --hover-accent-color: #3a7a92;
+
+    --highlight-color: #666;
+}
+
+::-webkit-scrollbar {
+    width: 15px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--item-color);
+    border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--item-hover-color);
+}
+
+::-webkit-scrollbar-thumb:active {
+    background: var(--item-active-color);
 }
 
 /* Website Layout CSS */
@@ -43,15 +82,24 @@ code {
 
 .app-body {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    /* It just works. Only for two items tho. Without, column items don't have any width for 100%. */
-    padding: 10px;
-    gap: 10px;
-    align-items: center;
-    justify-content: center;
+    justify-self: center;
+    align-content: center;
+    grid-template-columns: repeat(10, 1fr);
+
+    width: 100%;
+    max-width: 2000px;
+    padding: 20px;
+    gap: 20px;
 }
 
+@media (max-width: 1400px) {
+    .app-body {
+        grid-template-columns: 1fr;
+        justify-items: center;
+    }
+}
 
+/*
 @media (max-width: 1400px) {
     .app-body {
         grid-template-columns: 1fr;
@@ -69,23 +117,23 @@ code {
         }
     }
 }
-
+*/
 .content-tab {
     background-color: var(--container-color);
     max-width: 1000px;
     width: 100%;
-    height: 600px;
+    min-height: 600px;
     margin: auto;
     border-radius: 5px;
     padding: 10px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
 }
 
 .tab-item {
-    /*border: red 1px solid;*/
+    border: red 1px dotted;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -102,14 +150,26 @@ code {
 
 h1 {
     display: flex;
+    justify-content: space-between;
     gap: 10px;
     color: var(--text-color);
     margin: 0;
     width: 100%;
     padding-bottom: 10px;
-    border-bottom: 1px solid var(--border-color);
+    position: relative;
     margin-bottom: 10px;
     font-size: x-large;
+
+    &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 1px;
+        background: linear-gradient(to right, transparent, var(--border-color), transparent);
+        pointer-events: none;
+    }
 }
 
 
@@ -152,7 +212,7 @@ textarea {
 select {
     flex-grow: 0;
     height: 25px;
-    width: 154px;
+    width: 149px;
     text-align: center;
     background: #333333;
     color: #bbbbbb;
@@ -167,14 +227,18 @@ select {
 }
 
 .header-button-group {
+    overflow: hidden;
     display: flex;
-    flex-grow: 1;
-    justify-content: flex-end;
+    justify-content: flex-start;
     gap: 10px;
+
+    @media (max-width: 600px) {
+        flex-direction: column;
+    }
 }
 
 .header-button {
-    background-color: var(--content-color);
+    background-color: var(--item-color);
     color: var(--text-color);
     font-size: large;
     height: 35px;
@@ -184,12 +248,27 @@ select {
     cursor: pointer;
     user-select: none;
 
+    &:disabled {
+        background-color: var(--base-color-2);
+        color: #808080;
+        cursor: not-allowed;
+
+        &:hover {
+            background-color: var(--base-color-2);
+        }
+
+        &:active {
+            background-color: var(--base-color-2);
+            animation: none;
+        }
+    }
+
     &:hover {
-        background-color: var(--hover-accent-color);
+        background-color: var(--item-hover-color);
     }
 
     &:active {
-        background-color: var(--accent-color);
+        background-color: var(--item-active-color);
         animation: buttonPress 0.2s ease;
     }
 

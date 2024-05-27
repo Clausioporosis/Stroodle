@@ -1,61 +1,82 @@
-.dashboard-container {
-    background-color: #171717;
-    color: #ddd;
-    min-height: 100vh;
-    width: 100%;
-}
-
-.dashboard-content-container {
+/* global */
+.tab {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: calc(100vh - 80px);
+    flex-direction: column;
+
+    padding: 15px;
+    background-color: transparent;
+    border-radius: 3px;
+    border: var(--border-color) 1px solid;
+    grid-column: span 5;
+    height: 600px;
 }
 
-.created-polls-tab-header {
+.single-tab {
+    grid-column-start: 3;
+    grid-column-end: span 6;
+}
+
+.grow-tab {
+    height: auto;
+    min-height: 600px;
+}
+
+/* dashboard */
+.my-poll-tab {
+    grid-column: span 6;
+}
+
+.event-tab {
+    grid-column: span 4;
+}
+
+
+.test {
+    border: red 1px dotted;
+}
+
+@media (max-width: 1400px) {
+    .tab {
+        width: 100%;
+        max-width: 865px;
+        grid-column: span 1;
+    }
+}
+
+.create-button {
     position: relative;
-    color: #bbbbbb;
-    width: auto;
-    margin: auto;
-    margin-left: 10px;
-    margin-right: 10px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #444444;
-}
-
-.plus-icon {
-    color: #999999;
-    font-size: 35px;
-    position: absolute;
-    margin-right: -10px;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    border-radius: 10%;
-}
-
-.plus-icon:hover {
-    background-color: #444444;
-    box-shadow: 0 0 0 0.1px #444444;
-}
-
-.created-polls-tab {
-    width: min-content;
-    height: max-content;
-    padding: 10px;
-    border-radius: 10px;
-    border: 1px solid #444444;
-    background-color: #202020;
-}
-
-.created-polls-list {
-    width: 764px;
-    min-height: 560px;
-    max-height: 560px;
-    overflow: auto;
-
     display: flex;
-    flex-wrap: wrap;
-    align-content: flex-start;
+    overflow: visible;
+    cursor: pointer;
+
+    right: calc(-100% + 35px);
+    transition: right 0.15s linear;
+
+    .plus-icon {
+        color: var(--icon-color);
+        font-size: 35px;
+        border-radius: 10%;
+        transition: background-color 0.25s linear;
+    }
+
+    .text {
+        padding-left: 5px;
+        width: fit-content;
+    }
+
+    &:hover {
+        right: 0;
+
+        .plus-icon {
+            background-color: var(--accent-hover-color);
+        }
+    }
+
+    &:active {
+        animation: buttonPress 0.2s ease;
+
+        .plus-icon {
+            background-color: var(--accent-active-color);
+        }
+    }
 }

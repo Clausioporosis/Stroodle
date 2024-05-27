@@ -14,7 +14,16 @@ const SearchBar: React.FC<SearchBarProps> = ({ onUserClick }) => {
     const handleSearchChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
         if (event.target.value) {
-            const results = await UserService.searchUsers(event.target.value);
+            let results = await UserService.searchUsers(event.target.value);
+            results = results.filter(user => user.id !== UserService.getLoggedInUser().id);
+            results.sort((a, b) => {
+                const firstNameComparison = a.firstName.localeCompare(b.firstName);
+                if (firstNameComparison !== 0) {
+                    return firstNameComparison;
+                } else {
+                    return a.lastName.localeCompare(b.lastName);
+                }
+            });
             setSearchResults(results);
         } else {
             setSearchResults([]);
@@ -41,7 +50,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onUserClick }) => {
                     {searchResults.length > 0 ? (
                         searchResults.map(user => (
                             <li className='list-item' key={user.id} onClick={() => handleUserClick(user)}>
-                                {user.firstName} {user.lastName}
+                                {user.firstName} {user.lastName} <span className='email'>{user.email}</span>
                             </li>
                         ))
                     ) : (
