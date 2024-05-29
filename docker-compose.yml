@@ -13,20 +13,20 @@ services:
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=https://login.stroodle.online/realms/Stroodle
     depends_on:
       - mongo
-    restart: unless-stopped
+#    restart: unless-stopped
     networks:
       - stroodle-net
 
-  react-app:
-    build: ./frontend
-    container_name: frontend
-    ports:
-      - "3000:3000"
-    volumes:
-      - /app/node_modules
-      - ./frontend:/app
-    networks:
-      - stroodle-net
+#  react-app:
+#    build: ./frontend
+#    container_name: frontend
+#    ports:
+#      - "3000:3000"
+#    volumes:
+#      - /app/node_modules
+#      - ./frontend:/app
+#    networks:
+#      - stroodle-net
 
   mongo:
     image: mongo

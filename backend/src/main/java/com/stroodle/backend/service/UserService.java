@@ -1,91 +1,34 @@
 package com.stroodle.backend.service;
 
+import org.keycloak.admin.client.Keycloak;
+import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-
-import com.stroodle.backend.exception.ResourceNotFoundException;
-import com.stroodle.backend.model.User;
-import com.stroodle.backend.repository.UserRepository;
+import com.stroodle.backend.config.KeycloakConfig;
+import com.stroodle.backend.model.UserDto;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
+
     @Autowired
-    private UserRepository userRepository;
+    private KeycloakConfig keycloakConfig;
 
-    public User saveUser(User user) {
-        return userRepository.save(user);
+    public List<UserDto> getUsers() {
+        Keycloak keycloak = keycloakConfig.keycloak();
+        List<UserRepresentation> users = keycloak.realm("Stroodle").users().list();
+        return users.stream()
+                .map(user -> {
+                    UserDto dto = new UserDto();
+                    dto.setId(user.getId());
+                    dto.setUsername(user.getUsername());
+                    dto.setFirstName(user.getFirstName());
+                    dto.setLastName(user.getLastName());
+                    dto.setEmail(user.getEmail());
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
-
-    public User createUser(User user) {
-        if (user.getId() != null && userRepository.existsById(user.getId())) {
-            throw new DataIntegrityViolationException("User with ID " + user.getId() + " already exists.");
-        }
-        return userRepository.save(user);
-    }
-
-    public List<User> getAllUsers() {
-        List<User> users = userRepository.findAll();
-        if (users.isEmpty()) {
-            throw new ResourceNotFoundException("No users found.");
-        }
-        return users;
-    }
-
-    public Optional<User> getUserById(String id) {
-        if (!userRepository.existsById(id)) {
-            throw new ResourceNotFoundException("User not found with id " + id);
-        }
-        return userRepository.findById(id);
-    }
-
-    public List<User> searchUsers(String query) {
-        List<User> users = userRepository.findByFirstNameOrLastNameOrEmail(query);
-        if (users.isEmpty()) {
-            throw new ResourceNotFoundException("No user found with the query " + query);
-        }
-        return users;
-    }
-
-    public List<User> getUserByEmail(String email) {
-        List<User> users = userRepository.findByEmail(email);
-        if (users.isEmpty()) {
-            throw new ResourceNotFoundException("No user found with the email " + email);
-        }
-        return users;
-    }
-
-    public List<User> getUserByFirstName(String name) {
-        List<User> users = userRepository.findByFirstName(name);
-        if (users.isEmpty()) {
-            throw new ResourceNotFoundException("No user found with the name " + name);
-        }
-        return users;
-    }
-
-    public List<User> getUserByLastName(String name) {
-        List<User> users = userRepository.findByLastName(name);
-        if (users.isEmpty()) {
-            throw new ResourceNotFoundException("No user found with the name " + name);
-        }
-        return users;
-    }
-
-    public User updateUser(User user) {
-        userRepository.findById(user.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + user.getId()));
-        return userRepository.save(user);
-    }
-
-    public void deleteUser(String id) {
-        if (!userRepository.existsById(id)) {
-            throw new ResourceNotFoundException("User not found with id " + id);
-        }
-        userRepository.deleteById(id);
-    }
-
-    // Methoden zur Verwaltung von Benutzern
 }
