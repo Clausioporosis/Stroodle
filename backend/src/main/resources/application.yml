@@ -1,0 +1,29 @@
+keycloak:
+  auth-server-url: https://login.stroodle.online
+  realm: Stroodle
+  resource: stroodle-rest-api
+  credentials:
+    secret: E6rjyoGAO7JO4NRE55KYtTLP7yT9UsBG
+
+spring:
+  devtools:
+    restart:
+      enabled: true
+  data:
+    mongodb:
+      uri: mongodb://mongo:27017/StroodleDatabase
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://login.stroodle.online/realms/Stroodle
+          jwk-set-uri: https://login.stroodle.online/realms/Stroodle/protocol/openid-connect/certs
+
+server:
+  port: 8081
+
+jwt:
+  auth:
+    converter:
+      resource-id: stroodle-rest-api
+      principle-attribute: preferred_username

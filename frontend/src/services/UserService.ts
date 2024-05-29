@@ -27,7 +27,7 @@ export let loggedInUserMock: User = {
 };
 
 const apiClient = axios.create({
-    baseURL: 'http://localhost:8080/api',
+    baseURL: 'http://localhost:8081/api',
 });
 
 class UserService {

@@ -1,50 +1,46 @@
 package com.stroodle.backend.config;
-/*
- * package com.stroodle.backend;
- * 
- * import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
- * import org.keycloak.adapters.springsecurity.KeycloakConfiguration;
- * import org.keycloak.adapters.springsecurity.config.
- * KeycloakWebSecurityConfigurerAdapter;
- * import org.springframework.beans.factory.annotation.Autowired;
- * import org.springframework.context.annotation.Bean;
- * import
- * org.springframework.security.config.annotation.web.builders.HttpSecurity;
- * import org.springframework.security.core.session.SessionRegistryImpl;
- * import org.springframework.security.web.authentication.session.
- * SessionAuthenticationStrategy;
- * import org.springframework.security.web.authentication.session.
- * RegisterSessionAuthenticationStrategy;
- * 
- * @KeycloakConfiguration
- * public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
- * 
- * @Autowired
- * public void configureGlobal(AuthenticationManagerBuilder auth) throws
- * Exception {
- * auth.authenticationProvider(keycloakAuthenticationProvider());
- * }
- * 
- * @Bean
- * public KeycloakSpringBootConfigResolver keycloakConfigResolver() {
- * return new KeycloakSpringBootConfigResolver();
- * }
- * 
- * @Bean
- * 
- * @Override
- * protected SessionAuthenticationStrategy sessionAuthenticationStrategy() {
- * return new RegisterSessionAuthenticationStrategy(new SessionRegistryImpl());
- * }
- * 
- * @Override
- * protected void configure(HttpSecurity http) throws Exception {
- * super.configure(http);
- * http
- * .csrf().disable()
- * .authorizeRequests()
- * .antMatchers("/api/**").hasRole("USER")
- * .anyRequest().permitAll();
- * }
- * }
- */
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
+@RequiredArgsConstructor
+public class SecurityConfig {
+
+        private final JwtAuthConverter jwtAuthConverter;
+
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                http
+                                .csrf(csrf -> csrf.disable())
+                                .authorizeHttpRequests(auth -> auth
+                                                .requestMatchers("/swagger-ui/**",
+                                                                "/swagger-ui.html",
+                                                                "/swagger-ui/index.html",
+                                                                "/swagger-resources/**",
+                                                                "/v3/api-docs/**",
+                                                                "/v2/api-docs",
+                                                                "/webjars/**",
+                                                                "/configuration/ui",
+                                                                "/configuration/security")
+                                                .permitAll()
+                                                .anyRequest().authenticated())
+
+                                .oauth2ResourceServer(oauth2 -> oauth2
+                                                .jwt()
+                                                .jwtAuthenticationConverter(jwtAuthConverter))
+                                .sessionManagement(management -> management
+                                                .sessionCreationPolicy(STATELESS));
+
+                return http.build();
+        }
+}

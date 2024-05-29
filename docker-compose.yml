@@ -1,20 +1,41 @@
 services:
-  stroodle-backend:
-    build: ./backend
+  springboot-app:
+    build:
+      context: ./backend
+    container_name: backend
     ports:
-      - "8080:8080"
+      - 8081:8081
     volumes:
       - ./backend:/api-app
     environment:
       - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/StroodleDatabase
-  stroodle-frontend:
+      - SPRING_PROFILES_ACTIVE=default
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=https://login.stroodle.online/realms/Stroodle
+    depends_on:
+      - mongo
+    restart: unless-stopped
+    networks:
+      - stroodle-net
+
+  react-app:
     build: ./frontend
+    container_name: frontend
     ports:
       - "3000:3000"
     volumes:
       - /app/node_modules
       - ./frontend:/app
+    networks:
+      - stroodle-net
+
   mongo:
     image: mongo
+    container_name: mongo
     ports:
       - "27017:27017"
+    networks:
+      - stroodle-net
+
+networks:
+  stroodle-net:
+    driver: bridge
