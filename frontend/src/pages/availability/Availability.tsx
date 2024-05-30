@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Availability, Weekday, TimePeriod } from '../../models/User';
 
 import HeaderComponent from '../../components/common/header/Header';
-import UserService from '../../services/UserService';
 import WeekView from '../../components/shared/weekView/WeekView';
 import { useNavigate } from "react-router-dom";
+
+import { useKeycloak } from '@react-keycloak/web';
+import UserService from '../../services/UserService';
 
 
 const AvailabilitySettings: React.FC = () => {
@@ -13,8 +15,23 @@ const AvailabilitySettings: React.FC = () => {
     const [userAvailability, setUserAvailability] = useState<Availability>();
     const [pendingAvailabilityEntries, setPendingAvailabilityEntries] = useState<Availability>();
 
+    const { keycloak, initialized } = useKeycloak();
+
     useEffect(() => {
-        getCurrentAvailability();
+        getAllUsers();
+    }, []);
+
+    async function getAllUsers() {
+        console.log('getAllUsers');
+        const users = await UserService.getAllUsersTest(keycloak.token!);
+        console.log(users);
+    }
+
+
+
+
+    useEffect(() => {
+        //getCurrentAvailability();
     }, []);
 
     async function getCurrentAvailability() {

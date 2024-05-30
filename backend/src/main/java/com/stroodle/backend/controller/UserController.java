@@ -11,9 +11,9 @@ import com.stroodle.backend.service.UserService;
 
 import java.util.List;
 
-@RestController
 @CrossOrigin(origins = "http://localhost:3000")
-@RequestMapping("/users")
+@RestController
+@RequestMapping("/api/users")
 public class UserController {
 
     @Autowired

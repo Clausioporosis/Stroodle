@@ -7,7 +7,7 @@ import com.stroodle.backend.service.AvailabilityService;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
-@RequestMapping("/users/{userId}/availability")
+@RequestMapping("/api/users/{userId}/availability")
 public class AvailabilityController {
 
     @Autowired

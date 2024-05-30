@@ -1,29 +1,14 @@
 import { User, Availability } from '../models/User';
 import axios from 'axios';
 
+
+
 export let loggedInUserMock: User = {
     id: "1",
+    username: "clausi",
     firstName: "Clausio",
     lastName: "Porosis",
-    email: "clausioporosis@example.com",
-    availability: {
-        "MONDAY": [
-            {
-                "start": "09:00",
-                "end": "17:00"
-            }
-        ],
-        "TUESDAY": [
-            {
-                "start": "09:00",
-                "end": "12:00"
-            },
-            {
-                "start": "14:00",
-                "end": "22:00"
-            }
-        ]
-    }
+    email: "clausioporosis@example.com"
 };
 
 const apiClient = axios.create({
@@ -31,13 +16,36 @@ const apiClient = axios.create({
 });
 
 class UserService {
-
-
     constructor() {
         (async () => {
-            this.createUser(loggedInUserMock);
+
         })();
     }
+
+    async getAllUsersTest(token: string): Promise<User[]> {
+        try {
+            const response = await apiClient.get('/users', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            return response.data.map((user: User) => new User(
+                user.id,
+                user.username,
+                user.firstName,
+                user.lastName,
+                user.email
+            ));
+        } catch (error) {
+            console.error('Error fetching all users', error);
+            return [];
+        }
+    }
+
+
+
+
+
 
     async createUser(user: User): Promise<User> {
         try {

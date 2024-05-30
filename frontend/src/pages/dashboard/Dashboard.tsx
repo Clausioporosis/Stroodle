@@ -17,12 +17,14 @@ const Dashboard: React.FC = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+
         getMyPolls();
     }, []);
 
     async function getMyPolls() {
         // get all polls, till specific api requests are implemented
         const allPolls = await PollService.getAllPolls();
+
         setMyPolls(allPolls);
     }
 
