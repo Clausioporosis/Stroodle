@@ -50,14 +50,6 @@ public class PollService {
         return polls;
     }
 
-    public List<Poll> getPollByDescription(String description) {
-        List<Poll> polls = pollRepository.findByDescription(description);
-        if (polls.isEmpty()) {
-            throw new ResourceNotFoundException("No poll found with the description " + description);
-        }
-        return polls;
-    }
-
     public Poll updatePoll(Poll poll) {
         pollRepository.findById(poll.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Poll not found with id " + poll.getId()));

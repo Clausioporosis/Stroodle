@@ -15,11 +15,10 @@ import java.util.Optional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = "http://localhost:3000")
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/polls")
 public class PollController {
-    // HTTP-Methoden für Umfragen
     @Autowired
     private PollService pollService;
 
@@ -45,12 +44,6 @@ public class PollController {
     @GetMapping("/search/title")
     public ResponseEntity<List<Poll>> findByTitle(@RequestParam String title) {
         List<Poll> polls = pollService.getPollByTitle(title);
-        return ResponseEntity.ok(polls);
-    }
-
-    @GetMapping("/search/description")
-    public ResponseEntity<List<Poll>> findByDescription(@RequestParam String description) {
-        List<Poll> polls = pollService.getPollByDescription(description);
         return ResponseEntity.ok(polls);
     }
 
