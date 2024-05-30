@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from 'react';
-import Header from '../../common/header/Header';
 import { useParams, useNavigate } from 'react-router-dom';
 
 import PollService from '../../../services/PollService';
@@ -7,8 +6,8 @@ import { Poll } from '../../../models/Poll';
 import UserService from '../../../services/UserService';
 import { User } from '../../../models/User';
 
-import VotingStatus from './votingStatus/VotingStatus';
-import Card from '../../shared/infoCards/card/Card';
+import VotingStatus from '../../../components/polls/view/votingStatus/VotingStatus';
+import Card from '../../../components/shared/infoCards/card/Card';
 
 const View: React.FC = () => {
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -143,64 +142,60 @@ const View: React.FC = () => {
     }
 
     return (
-        <div className='app'>
-            <Header />
-            <div className='app-body'>
-                <div className='tab single-tab grow-tab'>
+        <div className='app-body'>
+            <div className='tab single-tab grow-tab'>
 
-                    {isOrganizer ? (
-                        <h1>Deine Umfrage
-                            <div className='header-button-group'>
-                                <button className="header-button" onClick={() => navigate(-1)}>Zurück</button>
-                                {(!isBooked) ? (
-                                    <button className="header-button" onClick={handleButtonClick} disabled={!hasEdited}>
-                                        {getOrganizerButtonText()}
-                                    </button>
-                                ) : (
-                                    <button className="header-button" onClick={handleReopenClick}>Bearbeiten</button>
-                                )}
-                            </div>
-                        </h1>
-                    ) : (
-                        <h1>Termine Auswählen
-                            <div className='header-button-group'>
-                                <button className="header-button" onClick={() => navigate(-1)}>Zurück</button>
-                                <button className="header-button" onClick={handleButtonClick} disabled={!hasEdited}>Auswahl speichern</button>
-                            </div>
-                        </h1>
-                    )}
-
-
-                    {poll && <Card useCase={'runningPolls'} poll={poll} />}
-
-                    {isOverflowing && (
-                        <div className='scroll-buttons'>
-                            <p>Weitere Termine verfügbar!</p>
-                            <button onClick={scrollLeft}>{'<<'}</button>
-                            <button onClick={scrollRight}>{'>>'}</button>
+                {isOrganizer ? (
+                    <h1>Deine Umfrage
+                        <div className='header-button-group'>
+                            <button className="header-button" onClick={() => navigate(-1)}>Zurück</button>
+                            {(!isBooked) ? (
+                                <button className="header-button" onClick={handleButtonClick} disabled={!hasEdited}>
+                                    {getOrganizerButtonText()}
+                                </button>
+                            ) : (
+                                <button className="header-button" onClick={handleReopenClick}>Bearbeiten</button>
+                            )}
                         </div>
-                    )}
-
-                    {!isBooked &&
-                        <div className="poll-details" ref={scrollRef}>
-                            {poll && <VotingStatus
-                                setHasEdited={setHasEdited}
-                                setSelectedDateIndex={setSelectedDateIndex}
-                                selectedDateIndex={selectedDateIndex}
-                                proposedDates={poll.proposedDates}
-                                participantIds={poll.participantIds}
-                                isOrganizer={isOrganizer}
-                                votedDates={votedDates}
-                                setVotedDates={setVotedDates}
-                            />}
+                    </h1>
+                ) : (
+                    <h1>Termine Auswählen
+                        <div className='header-button-group'>
+                            <button className="header-button" onClick={() => navigate(-1)}>Zurück</button>
+                            <button className="header-button" onClick={handleButtonClick} disabled={!hasEdited}>Auswahl speichern</button>
                         </div>
-                    }
+                    </h1>
+                )}
 
 
-                </div>
+                {poll && <Card useCase={'runningPolls'} poll={poll} />}
+
+                {isOverflowing && (
+                    <div className='scroll-buttons'>
+                        <p>Weitere Termine verfügbar!</p>
+                        <button onClick={scrollLeft}>{'<<'}</button>
+                        <button onClick={scrollRight}>{'>>'}</button>
+                    </div>
+                )}
+
+                {!isBooked &&
+                    <div className="poll-details" ref={scrollRef}>
+                        {poll && <VotingStatus
+                            setHasEdited={setHasEdited}
+                            setSelectedDateIndex={setSelectedDateIndex}
+                            selectedDateIndex={selectedDateIndex}
+                            proposedDates={poll.proposedDates}
+                            participantIds={poll.participantIds}
+                            isOrganizer={isOrganizer}
+                            votedDates={votedDates}
+                            setVotedDates={setVotedDates}
+                        />}
+                    </div>
+                }
+
+
             </div>
         </div>
-
     );
 };
 

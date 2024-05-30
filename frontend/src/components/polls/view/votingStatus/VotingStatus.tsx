@@ -5,7 +5,6 @@ import UserService from '../../../../services/UserService';
 import { User } from '../../../../models/User';
 import { ProposedDate } from '../../../../models/Poll';
 import { Check2, X } from 'react-bootstrap-icons';
-import { idText } from 'typescript';
 
 interface VotingStatusProps {
     setHasEdited: (hasEdited: boolean) => void;

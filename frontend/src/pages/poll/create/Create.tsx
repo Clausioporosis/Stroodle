@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import HeaderComponent from "../../common/header/Header"
 import { useNavigate, useParams } from 'react-router-dom';
 
 import UserService from '../../../services/UserService';
@@ -7,11 +6,11 @@ import { User, } from '../../../models/User';
 import PollService from '../../../services/PollService';
 import { Poll, ProposedDate } from '../../../models/Poll';
 
-import SearchBar from './searchBar/SearchBar';
-import AddedParticipants from './addedParticipants/AddedParticipants';
-import WeekView from '../../shared/weekView/WeekView';
+import SearchBar from '../../../components/polls/create/searchBar/SearchBar';
+import AddedParticipants from '../../../components/polls/create/addedParticipants/AddedParticipants';
+import WeekView from '../../../components/shared/weekView/WeekView';
 
-const Dashboard: React.FC = () => {
+const Create: React.FC = () => {
     const navigate = useNavigate();
     const { pollId } = useParams();
 
@@ -125,55 +124,52 @@ const Dashboard: React.FC = () => {
     }, [duration]);
 
     return (
-        <div className='app'>
-            <HeaderComponent />
-            <div className='app-body'>
-                <div className='tab'>
-                    <h1>Umfrage erstellen
-                        <div className='header-button-group'>
-                            <button className="header-button" onClick={() => navigate(-1)}>Zurück</button>
-                        </div>
-                    </h1>
-                    <h3>Titel</h3>
-                    <input type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Was ist der Anlass?" />
-                    <h3>Beschreibung</h3>
-                    <textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Was muss man wissen?" />
-                    <h3>Ort</h3>
-                    <input type="text" value={location} onChange={e => setLocation(e.target.value)} placeholder="Wo wird es statt finden?" />
+        <div className='app-body'>
+            <div className='tab'>
+                <h1>Umfrage erstellen
+                    <div className='header-button-group'>
+                        <button className="header-button" onClick={() => navigate(-1)}>Zurück</button>
+                    </div>
+                </h1>
+                <h3>Titel</h3>
+                <input type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Was ist der Anlass?" />
+                <h3>Beschreibung</h3>
+                <textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Was muss man wissen?" />
+                <h3>Ort</h3>
+                <input type="text" value={location} onChange={e => setLocation(e.target.value)} placeholder="Wo wird es statt finden?" />
 
-                    <h3>Teilnehmer</h3>
-                    <SearchBar onUserClick={addParticipant} />
-                    <AddedParticipants participantsIds={participantsIds} removeSelectedParticipant={removeParticipant} />
-
-                </div>
-
-                <div className='tab'>
-                    <h1>Termine aussuchen
-                        <div className='header-button-group'>
-                            <button className="header-button" onClick={createPoll}>Erstellen</button>
-                        </div>
-                    </h1>
-
-                    <select
-                        title='Termin Dauer'
-                        className='duration-select'
-                        value={duration}
-                        onChange={handleDurationSelect}
-                    >
-                        <option value={duration} disabled>{selectedDuration}</option>
-                        <option value="15" >15 Minuten</option>
-                        <option value="25">25 Minuten</option>
-                        <option value="30">30 Minuten</option>
-                        <option value="45">45 Minuten</option>
-                        <option value="allDay">Ganztägig</option>
-                        <option value="custom">Individuell</option>
-                    </select>
-                    <WeekView useCase='poll' duration={duration} saveProposedDate={saveProposedDate} proposedDates={proposedDates} pollId={pollId} removeProposedDate={removeProposedDate} />
-                </div>
+                <h3>Teilnehmer</h3>
+                <SearchBar onUserClick={addParticipant} />
+                <AddedParticipants participantsIds={participantsIds} removeSelectedParticipant={removeParticipant} />
 
             </div>
+
+            <div className='tab'>
+                <h1>Termine aussuchen
+                    <div className='header-button-group'>
+                        <button className="header-button" onClick={createPoll}>Erstellen</button>
+                    </div>
+                </h1>
+
+                <select
+                    title='Termin Dauer'
+                    className='duration-select'
+                    value={duration}
+                    onChange={handleDurationSelect}
+                >
+                    <option value={duration} disabled>{selectedDuration}</option>
+                    <option value="15" >15 Minuten</option>
+                    <option value="25">25 Minuten</option>
+                    <option value="30">30 Minuten</option>
+                    <option value="45">45 Minuten</option>
+                    <option value="allDay">Ganztägig</option>
+                    <option value="custom">Individuell</option>
+                </select>
+                <WeekView useCase='poll' duration={duration} saveProposedDate={saveProposedDate} proposedDates={proposedDates} pollId={pollId} removeProposedDate={removeProposedDate} />
+            </div>
+
         </div>
     );
 };
 
-export default Dashboard;
+export default Create;

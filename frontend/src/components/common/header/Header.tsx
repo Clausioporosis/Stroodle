@@ -1,14 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { List, PersonCircle } from 'react-bootstrap-icons';
-
 import { User } from '../../../models/User';
 import UserService from '../../../services/UserService';
 import UserInitials from '../../shared/UserInitials';
+import { useKeycloak } from '@react-keycloak/web';
+import { useNavigate } from 'react-router-dom';
 
 const Header: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const toggleDropdown = () => setIsOpen(!isOpen);
 
+    const { keycloak } = useKeycloak();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        keycloak.logout({
+        }).then(() => {
+            navigate('/login');
+        }).catch((error) => {
+            console.error("Logout failed", error);
+        });
+    };
 
     // temp logged in user solution until we have a proper login
     const [users, setUsers] = useState<User[]>([]);
@@ -43,7 +55,6 @@ const Header: React.FC = () => {
         }
     }, [prevScrollpos]);
 
-
     return (
         <div id='hide-header' className='app-header hide-header'>
             {/* nasty solution, but now the dropdown gets rendered behind the header while still being useable */}
@@ -51,7 +62,7 @@ const Header: React.FC = () => {
                 <a className='border' href='/dashboard'>Dashboard</a>
                 <a className='border' href='/availability'>Verfügbarkeit</a>
                 <a className='border' href='/profile'>Profil</a>
-                <a className='border' href='/login'>Abmelden</a>
+                <a className='border' onClick={handleLogout}>Abmelden</a>
             </div>
 
             <div className='app-header'>
@@ -61,27 +72,15 @@ const Header: React.FC = () => {
 
                 <div className='end'>
                     <div className='button-container'>
-                        {/*
-                            <select value={''} onChange={e => handleUserChange(e.target.value)}>
-                                <option value="">{currentUser?.firstName}</option>
-                                {users.map(user => (
-                                    <option key={user.id} value={user.id}>{user.firstName}</option>
-                                ))}
-                            </select>
-                            */}
                         <div className='nav-bar'>
                             <a className='border-hover' href='/dashboard'>Dashboard</a>
                             <a className='border-hover' href='/availability'>Verfügbarkeit</a>
                             <a className='border-hover' href='/profile'>Profil</a>
+                            <a className='border-hover' onClick={handleLogout}>Abmelden</a>
                         </div>
-
                         <button className='profile-button'>
                             <PersonCircle className='icon profile-icon' />
-
                         </button>
-                        <div className='nav-bar'>
-                            <a className='border-hover' href='/login'>Abmelden</a>
-                        </div>
                         <div className='nav-drop-down'>
                             <button className='list-button' onClick={toggleDropdown}>
                                 <List className='icon list-icon' />

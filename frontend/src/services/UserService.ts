@@ -31,6 +31,8 @@ const apiClient = axios.create({
 });
 
 class UserService {
+
+
     constructor() {
         (async () => {
             this.createUser(loggedInUserMock);

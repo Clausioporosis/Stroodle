@@ -6,8 +6,6 @@ const keycloakConfig = {
     clientId: 'stroodle-rest-api',
 };
 
-// get api working through swagger first
-
 const keycloak = new Keycloak(keycloakConfig);
 
 export default keycloak;

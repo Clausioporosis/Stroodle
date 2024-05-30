@@ -4,13 +4,29 @@ import './styles/main.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import keycloak from './keycloak';
+import { ReactKeycloakProvider } from '@react-keycloak/web';
+
+const eventLogger = (event: string, error: any) => {
+  console.log('onKeycloakEvent', event, error);
+};
+
+const tokenLogger = (tokens: any) => {
+  console.log('onKeycloakTokens', tokens);
+};
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  <React.StrictMode>
+  <ReactKeycloakProvider
+    authClient={keycloak}
+    onEvent={eventLogger}
+    onTokens={tokenLogger}
+    initOptions={{ onLoad: 'check-sso' }}
+  >
     <App />
-  </React.StrictMode>
+  </ReactKeycloakProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -17,16 +17,16 @@ services:
     networks:
       - stroodle-net
 
-#  react-app:
-#    build: ./frontend
-#    container_name: frontend
-#    ports:
-#      - "3000:3000"
-#    volumes:
-#      - /app/node_modules
-#      - ./frontend:/app
-#    networks:
-#      - stroodle-net
+  react-app:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - /app/node_modules
+      - ./frontend:/app
+    networks:
+      - stroodle-net
 
   mongo:
     image: mongo
