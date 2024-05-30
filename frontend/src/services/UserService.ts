@@ -42,6 +42,25 @@ class UserService {
         }
     }
 
+    async getUserAvailabilityTest(userId: string, token: string): Promise<Availability | undefined> {
+        try {
+            const response = await apiClient.get(`users/${userId}/availability`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            return response.data.map((user: User) => new User(
+                user.id,
+                user.username,
+                user.firstName,
+                user.lastName,
+                user.email
+            ));
+        } catch (error) {
+            console.error(`Error fetching availability of user with id: ${userId}`, error);
+        }
+    }
+
 
 
 
