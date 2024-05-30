@@ -1,42 +1,54 @@
 import { Poll } from '../models/Poll';
+import Keycloak from 'keycloak-js';
 
 import axios from 'axios';
 
 const apiClient = axios.create({
-    baseURL: 'http://localhost:8080/api',
+    baseURL: 'http://localhost:8081/api',
 });
 
 class PollService {
-    constructor() {
-        (async () => {
-            //const searchedPoll = await this.getPollById('')
-            //console.log("Searched poll: ", searchedPoll);
-        })();
+    private keycloak: Keycloak;
+
+    constructor(keycloak: Keycloak) {
+        this.keycloak = keycloak;
     }
 
     async createPoll(poll: Poll): Promise<Poll> {
         try {
-            const response = await apiClient.post('/polls', poll);
+            const response = await apiClient.post('/polls', poll, {
+                headers: {
+                    'Authorization': `Bearer ${this.keycloak.token!}`
+                }
+            });
             return response.data;
         } catch (error) {
-            console.error('Es gab einen Fehler!', error);
+            console.error('Error creating poll!', error);
             return poll;
         }
     }
 
     async getAllPolls(): Promise<Poll[]> {
         try {
-            const response = await apiClient.get('/polls');
+            const response = await apiClient.get('/polls', {
+                headers: {
+                    'Authorization': `Bearer ${this.keycloak.token!}`
+                }
+            });
             return response.data;
         } catch (error) {
-            console.error('Es gab einen Fehler!', error);
+            console.error('Error getting poll!', error);
             return [];
         }
     }
 
     async getPollById(id: string): Promise<Poll | undefined> {
         try {
-            const response = await apiClient.get(`/polls/search/${id}`);
+            const response = await apiClient.get(`/polls/search/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${this.keycloak.token!}`
+                }
+            });
             return response.data;
         } catch (error) {
             console.error('Es gab einen Fehler!', error);
@@ -45,7 +57,11 @@ class PollService {
 
     async putPoll(id: string, poll: Poll): Promise<Poll> {
         try {
-            const response = await apiClient.put<Poll>(`/polls/${id}`, poll);
+            const response = await apiClient.put<Poll>(`/polls/${id}`, poll, {
+                headers: {
+                    'Authorization': `Bearer ${this.keycloak.token!}`
+                }
+            });
             return response.data;
         } catch (error) {
             console.error('Error putting poll', error);
@@ -55,11 +71,15 @@ class PollService {
 
     async deletePollById(id: string): Promise<void> {
         try {
-            await apiClient.delete(`/polls/${id}`);
+            await apiClient.delete(`/polls/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${this.keycloak.token!}`
+                }
+            });
         } catch (error) {
             console.error('Es gab einen Fehler beim Löschen des Polls!', error);
         }
     }
 }
 
-export default new PollService();
+export default PollService;

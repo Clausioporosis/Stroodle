@@ -8,6 +8,8 @@ import { ClockHistory, Hourglass, Pencil, Share, Trash3, Person, GeoAlt } from '
 import { get } from 'http';
 import { useNavigate } from 'react-router-dom';
 
+import { useKeycloak } from '@react-keycloak/web';
+
 interface CardProps {
     useCase: string;
     poll: Poll;
@@ -24,6 +26,10 @@ interface BookedDate {
 const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
     const [bookedDate, setBookedDate] = useState<BookedDate>();
     const [organizerInfo, setOrganizerInfo] = useState<User>();
+
+    const { keycloak } = useKeycloak();
+    const userService = new UserService(keycloak);
+    const pollService = new PollService(keycloak);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -36,7 +42,7 @@ const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
         // Prevent the click event from bubbling up to the card
         event.stopPropagation();
         if (!window.confirm('Möchtest du den Poll wirklich löschen?')) return;
-        PollService?.deletePollById(poll.id!)
+        pollService?.deletePollById(poll.id!)
             .then(() => {
                 console.log('Poll erfolgreich gelöscht!');
                 onPollDelete?.();
@@ -55,7 +61,7 @@ const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
     }
 
     function getOrganizerInfo() {
-        UserService.getUserById(poll.organizerId)
+        userService.getUserById(keycloak.tokenParsed?.sub!)
             .then((organizer) => {
                 setOrganizerInfo(organizer);
             });

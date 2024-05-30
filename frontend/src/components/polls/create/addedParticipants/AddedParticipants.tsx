@@ -4,6 +4,8 @@ import UserService from '../../../../services/UserService';
 import { User } from '../../../../models/User';
 
 import { X, People } from 'react-bootstrap-icons';
+import { useKeycloak } from '@react-keycloak/web';
+
 
 interface ParticipantProps {
     participantsIds: string[];
@@ -13,9 +15,13 @@ interface ParticipantProps {
 const Participant: React.FC<ParticipantProps> = ({ participantsIds, removeSelectedParticipant }) => {
     const [participants, setParticipants] = useState<User[]>([]);
 
+    const { keycloak } = useKeycloak();
+    const userService = new UserService(keycloak);
+
+
     useEffect(() => {
         const fetchParticipants = async () => {
-            const usersPromises = participantsIds.map(id => UserService.getUserById(id));
+            const usersPromises = participantsIds.map(id => userService.getUserById(id));
             const users = (await Promise.all(usersPromises)).filter((user): user is User => user !== undefined);
             setParticipants(users);
         };

@@ -15,28 +15,15 @@ const AvailabilitySettings: React.FC = () => {
     const [userAvailability, setUserAvailability] = useState<Availability>();
     const [pendingAvailabilityEntries, setPendingAvailabilityEntries] = useState<Availability>();
 
-    const { keycloak, initialized } = useKeycloak();
+    const { keycloak } = useKeycloak();
+    const userService = new UserService(keycloak);
 
     useEffect(() => {
-        getAllUsers();
-    }, []);
-
-    async function getAllUsers() {
-        console.log('getAllUsers');
-        const users = await UserService.getAllUsersTest(keycloak.token!);
-        console.log(users);
-    }
-
-
-
-
-    useEffect(() => {
-        //getCurrentAvailability();
+        getCurrentAvailability();
     }, []);
 
     async function getCurrentAvailability() {
-        const currentUser = UserService.getLoggedInUser();
-        const availability = await UserService.getAvailabilityOfUser(currentUser.id);
+        const availability = await userService.getUserAvailability(keycloak.tokenParsed?.sub!);
         setUserAvailability(availability);
     }
 
@@ -55,7 +42,7 @@ const AvailabilitySettings: React.FC = () => {
 
     async function updateAvailability(availability: Availability | undefined) {
         if (availability) {
-            await UserService.putAvailabilitByUser(availability);
+            await userService.setUserAvailability(availability, keycloak.tokenParsed?.sub!);
         }
     }
 

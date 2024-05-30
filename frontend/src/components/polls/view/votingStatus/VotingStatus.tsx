@@ -6,6 +6,9 @@ import { User } from '../../../../models/User';
 import { ProposedDate } from '../../../../models/Poll';
 import { Check2, X } from 'react-bootstrap-icons';
 
+import { useKeycloak } from '@react-keycloak/web';
+import keycloak from '../../../../keycloak';
+
 interface VotingStatusProps {
     setHasEdited: (hasEdited: boolean) => void;
     proposedDates?: ProposedDate[];
@@ -19,13 +22,14 @@ interface VotingStatusProps {
 
 const VotingStatus: React.FC<VotingStatusProps> = ({ setHasEdited, proposedDates, participantIds, isOrganizer, setSelectedDateIndex, selectedDateIndex, votedDates, setVotedDates }) => {
     const [users, setUsers] = useState<{ [key: string]: User }>({});
+    const userService = new UserService(keycloak);
 
     useEffect(() => {
         const fetchUsers = async () => {
             const fetchedUsers: { [key: string]: User } = {};
             for (const id of participantIds || []) {
-                const user = await UserService.getUserById(id);
-                fetchedUsers[id] = user;
+                const user = await userService.getUserById(id);
+                if (user) fetchedUsers[id] = user;
             }
             setUsers(fetchedUsers);
         };

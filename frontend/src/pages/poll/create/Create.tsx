@@ -10,6 +10,8 @@ import SearchBar from '../../../components/polls/create/searchBar/SearchBar';
 import AddedParticipants from '../../../components/polls/create/addedParticipants/AddedParticipants';
 import WeekView from '../../../components/shared/weekView/WeekView';
 
+import { useKeycloak } from '@react-keycloak/web';
+
 const Create: React.FC = () => {
     const navigate = useNavigate();
     const { pollId } = useParams();
@@ -22,12 +24,14 @@ const Create: React.FC = () => {
     const [participantsIds, setParticipantsIds] = useState<string[]>([]);
     const [proposedDates, setProposedDates] = useState<ProposedDate[] | undefined>();
 
+    const { keycloak } = useKeycloak();
+    const pollService = new PollService(keycloak);
+
+
     //create a poll with the given data and navigate to the dashboard afterwards
     const createPoll = () => {
-        const currentUser = UserService.getLoggedInUser();
-
         const newPoll: Poll = {
-            organizerId: currentUser.id,
+            organizerId: keycloak.tokenParsed?.sub!,
             title: title,
             description: description,
             location: location,
@@ -37,7 +41,7 @@ const Create: React.FC = () => {
 
         if (pollId) {
             // If pollId is present, update the existing poll
-            PollService.putPoll(pollId, newPoll).then(() => {
+            pollService.putPoll(pollId, newPoll).then(() => {
                 alert('Umfrage wurde erfolgreich geändert.');
                 navigate('/dashboard');
             })
@@ -46,7 +50,7 @@ const Create: React.FC = () => {
                     console.error('Es gab einen Fehler beim ändern der Umfrage:', error);
                 });
         } else {
-            PollService.createPoll(newPoll)
+            pollService.createPoll(newPoll)
                 .then(() => {
                     alert('Umfrage wurde erfolgreich erstellt.');
                     navigate('/dashboard');
@@ -60,7 +64,7 @@ const Create: React.FC = () => {
 
     useEffect(() => {
         if (pollId) {
-            PollService.getPollById(pollId).then(poll => {
+            pollService.getPollById(pollId).then(poll => {
                 setTitle(poll!.title);
                 setDescription(poll!.description);
                 setLocation(poll!.location);

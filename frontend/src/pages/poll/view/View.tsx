@@ -9,6 +9,8 @@ import { User } from '../../../models/User';
 import VotingStatus from '../../../components/polls/view/votingStatus/VotingStatus';
 import Card from '../../../components/shared/infoCards/card/Card';
 
+import { useKeycloak } from "@react-keycloak/web";
+
 const View: React.FC = () => {
     const scrollRef = useRef<HTMLDivElement>(null);
     const { pollId } = useParams<{ pollId: string }>();
@@ -23,6 +25,9 @@ const View: React.FC = () => {
     const [votedDates, setVotedDates] = useState<number[] | undefined>();
     const [isOrganizer, setIsOrganizer] = useState<boolean>(false);
 
+    const { keycloak } = useKeycloak();
+    const pollService = new PollService(keycloak);
+
     useEffect(() => {
         getPoll();
     }, []);
@@ -36,17 +41,17 @@ const View: React.FC = () => {
     }, [hasEdited, selectedDateIndex, votedDates]);
 
     function getPoll() {
-        PollService.getPollById(pollId!)
+        pollService.getPollById(pollId!)
             .then(poll => {
                 setPoll(poll);
-                setIsOrganizer(poll!.organizerId === UserService.getLoggedInUser().id);
+                setIsOrganizer(poll!.organizerId === keycloak.tokenParsed?.sub!);
                 setSelectedDateIndex(poll?.bookedDateIndex);
                 setIsBooked(poll?.bookedDateIndex === null ? false : true);
 
                 // has to be rewritten in separate function
                 const votedDates: number[] = [];
                 poll?.proposedDates?.forEach((date, index) => {
-                    if (date.voterIds?.includes(UserService.getLoggedInUser().id)) {
+                    if (date.voterIds?.includes(keycloak.tokenParsed?.sub!)) {
                         votedDates.push(index);
                     }
                 });
@@ -63,7 +68,7 @@ const View: React.FC = () => {
         let updatedPoll = { ...poll };
         updatedPoll.bookedDateIndex = selectedDateIndex;
 
-        const userId = UserService.getLoggedInUser().id;
+        const userId = keycloak.tokenParsed?.sub!;
 
         updatedPoll.proposedDates?.forEach((date, index) => {
             if (!date.voterIds) {
@@ -82,7 +87,7 @@ const View: React.FC = () => {
         });
 
         setPoll(updatedPoll);
-        PollService.putPoll(updatedPoll.id || '', updatedPoll);
+        pollService.putPoll(updatedPoll.id || '', updatedPoll);
 
         //temp solution, because card state is not updating
         window.location.reload();

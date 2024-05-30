@@ -22,26 +22,6 @@ const Header: React.FC = () => {
         });
     };
 
-    // temp logged in user solution until we have a proper login
-    const [users, setUsers] = useState<User[]>([]);
-    const [currentUser, setCurrentUser] = useState<User>();
-
-    useEffect(() => {
-        const fetchUsers = async () => {
-            const users = await UserService.getAllUsers();
-            const loggedInUser = UserService.getLoggedInUser();
-            setUsers(users);
-            setCurrentUser(loggedInUser);
-        };
-
-        fetchUsers();
-    }, []);
-
-    const handleUserChange = async (userId: string) => {
-        await UserService.setLoggedInUser(userId);
-        setCurrentUser(UserService.getLoggedInUser());
-    };
-
     let [prevScrollpos, setPrevScrollpos] = useState(window.pageYOffset);
     useEffect(() => {
         window.onscroll = function () {

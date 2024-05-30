@@ -6,6 +6,7 @@ import Header from "../../components/common/header/Header"
 import { Info, PlusSquare } from 'react-bootstrap-icons';
 
 import UserService from '../../services/UserService';
+import keycloak from '../../keycloak';
 import PollService from '../../services/PollService';
 import { Poll } from '../../models/Poll';
 import InfoCards from '../../components/shared/infoCards/InfoCards';
@@ -13,6 +14,9 @@ import InfoCards from '../../components/shared/infoCards/InfoCards';
 const Dashboard: React.FC = () => {
     const [myPolls, setMyPolls] = useState<Poll[]>([]);
     const [runningPolls, setRunningPolls] = useState<Poll[]>([]);
+
+    const pollService = new PollService(keycloak);
+
 
     const navigate = useNavigate();
 
@@ -23,7 +27,7 @@ const Dashboard: React.FC = () => {
 
     async function getMyPolls() {
         // get all polls, till specific api requests are implemented
-        const allPolls = await PollService.getAllPolls();
+        const allPolls = await pollService.getAllPolls();
 
         setMyPolls(allPolls);
     }

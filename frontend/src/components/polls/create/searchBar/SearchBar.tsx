@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import UserService from '../../../../services/UserService';
 import { Search } from 'react-bootstrap-icons';
 import { User } from '../../../../models/User';
+import { useKeycloak } from '@react-keycloak/web';
+
 
 interface SearchBarProps {
     onUserClick: (participantId: string) => void;
@@ -11,11 +13,15 @@ const SearchBar: React.FC<SearchBarProps> = ({ onUserClick }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState<User[]>([]);
 
+    const { keycloak } = useKeycloak();
+    const userService = new UserService(keycloak);
+
     const handleSearchChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
+
         if (event.target.value) {
-            let results = await UserService.searchUsers(event.target.value);
-            results = results.filter(user => user.id !== UserService.getLoggedInUser().id);
+            let results = await userService.searchUsers(event.target.value);
+            results = results.filter(user => user.id !== keycloak.tokenParsed?.sub!);
             results.sort((a, b) => {
                 const firstNameComparison = a.firstName.localeCompare(b.firstName);
                 if (firstNameComparison !== 0) {
