@@ -11,11 +11,21 @@ import PollService from '../../services/PollService';
 import { Poll } from '../../models/Poll';
 import InfoCards from '../../components/shared/infoCards/InfoCards';
 
+import OutlookService from '../../services/OutlookService';
+
 const Dashboard: React.FC = () => {
     const [myPolls, setMyPolls] = useState<Poll[]>([]);
     const [runningPolls, setRunningPolls] = useState<Poll[]>([]);
 
     const pollService = new PollService(keycloak);
+
+
+
+    const outlookService = new OutlookService(keycloak);
+    useEffect(() => {
+        outlookService.getAuthLink();
+    }, []);
+
 
 
     const navigate = useNavigate();

@@ -4,7 +4,7 @@ app:
 
 azure:
   client-id: c0227c75-01a8-4859-afba-58c6e2031967
-  client-secret: #ask
+  client-secret: #https://portal.azure.com/ -> Azure Active Directory -> App registrations -> Stroodle -> Certificates & secrets
   authority: https://login.microsoftonline.com/9fd843f0-d6da-45c8-a7dd-a76889e41055
   redirect-uri: http://localhost:8081/api/outlook/connect
 

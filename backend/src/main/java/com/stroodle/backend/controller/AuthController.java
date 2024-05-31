@@ -1,8 +1,9 @@
 package com.stroodle.backend.controller;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpSession;
@@ -13,7 +14,9 @@ import java.security.NoSuchAlgorithmException;
 import com.stroodle.backend.util.PKCEUtil;
 import java.net.URI;
 
+@CrossOrigin(origins = "${app.origin}")
 @RestController
+@RequestMapping("/api")
 public class AuthController {
 
     @Value("${azure.client-id}")
@@ -25,7 +28,7 @@ public class AuthController {
     @Value("${azure.redirect-uri}")
     private String redirectUri;
 
-    @GetMapping("/auth/link")
+    @GetMapping("/authenticate/azure")
     public String getAuthLink(HttpSession session) throws NoSuchAlgorithmException, URISyntaxException {
         String codeVerifier = PKCEUtil.generateCodeVerifier();
         String codeChallenge = PKCEUtil.generateCodeChallenge(codeVerifier);
@@ -36,16 +39,5 @@ public class AuthController {
                 authority, clientId, redirectUri, codeChallenge));
 
         return uri.toString();
-    }
-
-    @GetMapping("/auth/callback")
-    public String authCallback(@RequestParam("code") String code, HttpSession session) {
-        String codeVerifier = (String) session.getAttribute("codeVerifier");
-
-        // Exchange the authorization code for an access token using the codeVerifier
-        // Here you would make a request to the token endpoint with the code and
-        // codeVerifier
-
-        return "Authorization code received: " + code + "\nCode Verifier: " + codeVerifier;
     }
 }
