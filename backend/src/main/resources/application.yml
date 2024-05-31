@@ -2,6 +2,12 @@ app:
   origin: http://localhost:3000
   #origin: https://stroodle.online
 
+azure:
+  client-id: c0227c75-01a8-4859-afba-58c6e2031967
+  client-secret: #ask
+  authority: https://login.microsoftonline.com/9fd843f0-d6da-45c8-a7dd-a76889e41055
+  redirect-uri: http://localhost:8081/api/outlook/connect
+
 keycloak:
   auth-server-url: https://login.stroodle.online
   realm: Stroodle

@@ -31,7 +31,8 @@ public class SecurityConfig {
                                                                 "/v2/api-docs",
                                                                 "/webjars/**",
                                                                 "/configuration/ui",
-                                                                "/configuration/security")
+                                                                "/configuration/security",
+                                                                "/api/outlook/**")
                                                 .permitAll()
                                                 .anyRequest().authenticated())
 
