@@ -4,7 +4,7 @@ import Keycloak from 'keycloak-js';
 import axios from 'axios';
 
 const apiClient = axios.create({
-    baseURL: 'http://localhost:8081/api',
+    baseURL: process.env.REACT_APP_API_BASE_URL
 });
 
 class PollService {

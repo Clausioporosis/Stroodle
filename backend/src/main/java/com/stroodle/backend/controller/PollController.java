@@ -12,11 +12,8 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RestController;
-
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "${app.origin}")
 @RequestMapping("/api/polls")
 public class PollController {
     @Autowired

@@ -13,7 +13,6 @@ services:
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=https://login.stroodle.online/realms/Stroodle
     depends_on:
       - mongo
-#    restart: unless-stopped
     networks:
       - stroodle-net
 

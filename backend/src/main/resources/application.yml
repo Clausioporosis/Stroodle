@@ -1,3 +1,7 @@
+app:
+  origin: http://localhost:3000
+  #origin: https://stroodle.online
+
 keycloak:
   auth-server-url: https://login.stroodle.online
   realm: Stroodle
