@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import com.stroodle.backend.model.Availability;
 import com.stroodle.backend.service.AvailabilityService;
 
-@CrossOrigin(origins = "${app.origin}")
 @RestController
 @RequestMapping("/api/users/{userId}/availability")
 public class AvailabilityController {

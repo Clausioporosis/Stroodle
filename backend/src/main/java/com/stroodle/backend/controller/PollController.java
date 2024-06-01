@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "${app.origin}")
 @RequestMapping("/api/polls")
 public class PollController {
     @Autowired

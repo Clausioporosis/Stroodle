@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useKeycloak } from '@react-keycloak/web';
 import UserService from '../../services/UserService';
 
+import OutlookService from '../../services/OutlookService';
 
 const AvailabilitySettings: React.FC = () => {
     const [reload, setReload] = useState(false);
@@ -17,6 +18,21 @@ const AvailabilitySettings: React.FC = () => {
 
     const { keycloak } = useKeycloak();
     const userService = new UserService(keycloak);
+
+
+    const outlookService = new OutlookService(keycloak);
+    const handleAuthClick = async () => {
+        try {
+            const outlookService = new OutlookService(keycloak);
+            const authLink = await outlookService.getAuthLink();
+            window.location.href = authLink;
+        } catch (error) {
+            console.error('Error getting auth link:', error);
+        }
+    };
+
+
+
 
     useEffect(() => {
         getCurrentAvailability();
@@ -83,6 +99,7 @@ const AvailabilitySettings: React.FC = () => {
             <div className='tab single-tab'>
                 <h1>Verfügbarkeit angeben
                     <div className='header-button-group'>
+                        <button className="header-button" onClick={handleAuthClick}>Auth</button>
                         <button className="header-button" onClick={() => navigate(-1)}>Zurück</button>
                         <button className="header-button" onClick={handleSave}>Speichern</button>
                     </div>

@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static org.springframework.security.config.Customizer.withDefaults;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
@@ -32,7 +33,7 @@ public class SecurityConfig {
                                                                 "/webjars/**",
                                                                 "/configuration/ui",
                                                                 "/configuration/security",
-                                                                "/api/outlook/**")
+                                                                "/api/authenticate/azure/callback")
                                                 .permitAll()
                                                 .anyRequest().authenticated())
 
@@ -40,7 +41,8 @@ public class SecurityConfig {
                                                 .jwt()
                                                 .jwtAuthenticationConverter(jwtAuthConverter))
                                 .sessionManagement(management -> management
-                                                .sessionCreationPolicy(STATELESS));
+                                                .sessionCreationPolicy(STATELESS))
+                                .cors(withDefaults());
 
                 return http.build();
         }

@@ -12,7 +12,6 @@ import com.stroodle.backend.service.UserService;
 
 import java.util.List;
 
-@CrossOrigin(origins = "${app.origin}")
 @RestController
 @RequestMapping("/api/users")
 public class UserController {

@@ -2,7 +2,8 @@ import Keycloak from 'keycloak-js';
 import axios from 'axios';
 
 const apiClient = axios.create({
-    baseURL: process.env.REACT_APP_API_BASE_URL
+    baseURL: process.env.REACT_APP_API_BASE_URL,
+    withCredentials: true // Ensure cookies are sent
 });
 
 class OutlookService {
@@ -14,12 +15,11 @@ class OutlookService {
 
     public async getAuthLink(): Promise<any> {
         try {
-            const response = await apiClient.get('/auth/link', {
+            const response = await apiClient.get('/authenticate/azure', {
                 headers: {
                     'Authorization': `Bearer ${this.keycloak.token!}`
                 }
             });
-            console.log(response.data);
             return response.data;
         } catch (error) {
             console.error('Error fetching auth link:', error);
