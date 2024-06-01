@@ -23,14 +23,28 @@ const AvailabilitySettings: React.FC = () => {
     const outlookService = new OutlookService(keycloak);
     const handleAuthClick = async () => {
         try {
-            const outlookService = new OutlookService(keycloak);
             const authLink = await outlookService.getAuthLink();
             window.location.href = authLink;
         } catch (error) {
             console.error('Error getting auth link:', error);
         }
     };
-
+    const handleGetEvents = async () => {
+        try {
+            const events = await outlookService.getOutlookEvents();
+            console.log(events);
+        } catch (error) {
+            console.error('Error getting auth link:', error);
+        }
+    };
+    const handleUser = async () => {
+        try {
+            const user = await outlookService.getUser();
+            console.log(user);
+        } catch (error) {
+            console.error('Error getting user:', error);
+        }
+    };
 
 
 
@@ -100,6 +114,8 @@ const AvailabilitySettings: React.FC = () => {
                 <h1>Verfügbarkeit angeben
                     <div className='header-button-group'>
                         <button className="header-button" onClick={handleAuthClick}>Auth</button>
+                        <button className="header-button" onClick={handleGetEvents}>getEvents</button>
+                        <button className="header-button" onClick={handleUser}>getUser</button>
                         <button className="header-button" onClick={() => navigate(-1)}>Zurück</button>
                         <button className="header-button" onClick={handleSave}>Speichern</button>
                     </div>

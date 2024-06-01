@@ -26,6 +26,34 @@ class OutlookService {
             throw error;
         }
     }
+
+    public async getOutlookEvents(): Promise<any> {
+        try {
+            const response = await apiClient.get('/outlook/events', {
+                headers: {
+                    'Authorization': `Bearer ${this.keycloak.token!}`
+                }
+            });
+            return response.data;
+        } catch (error: any) {
+            console.error('Error fetching events:', error.response.data);
+            throw error;
+        }
+    }
+
+    public async getUser(): Promise<any> {
+        try {
+            const response = await apiClient.get('/outlook/profile', {
+                headers: {
+                    'Authorization': `Bearer ${this.keycloak.token!}`
+                }
+            });
+            return response.data;
+        } catch (error: any) {
+            console.error('Error fetching user:', error.response.data);
+            throw error;
+        }
+    }
 }
 
 export default OutlookService;

@@ -37,7 +37,7 @@ public class AzureTokenService {
         tokenRepository.save(token);
     }
 
-    // seems like token dosen't get refreshed
+    // Seems like the token dosent get refreshed when it is expired
     public String getAccessToken(String userId) throws Exception {
         Optional<AzureToken> tokenOpt = tokenRepository.findByUserId(userId);
         if (tokenOpt.isPresent()) {

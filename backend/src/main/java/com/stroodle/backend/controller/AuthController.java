@@ -54,7 +54,6 @@ public class AuthController {
         String codeChallenge = PKCEUtil.generateCodeChallenge(codeVerifier);
         session.setAttribute("codeVerifier", codeVerifier);
 
-        // Get the user ID
         JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext()
                 .getAuthentication();
         String userId = (String) authentication.getToken().getClaims().get("sub");
@@ -64,8 +63,7 @@ public class AuthController {
         logger.info("Code verifier saved in session: {}", codeVerifier);
 
         URI uri = new URI(String.format(
-                // "%s/oauth2/v2.0/authorize?client_id=%s&response_type=code&redirect_uri=%s&response_mode=query&scope=openid%%20profile%%20offline_access%%20https://graph.microsoft.com/.default&code_challenge=%s&code_challenge_method=S256",
-
+                "%s/oauth2/v2.0/authorize?client_id=%s&response_type=code&redirect_uri=%s&response_mode=query&scope=openid%%20profile%%20offline_access%%20https://graph.microsoft.com/.default&code_challenge=%s&code_challenge_method=S256",
                 authority, clientId, redirectUri, codeChallenge));
 
         return uri.toString();
