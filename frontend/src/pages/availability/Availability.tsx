@@ -20,6 +20,8 @@ const AvailabilitySettings: React.FC = () => {
     const userService = new UserService(keycloak);
 
 
+
+    /*
     const outlookService = new OutlookService(keycloak);
     const handleAuthClick = async () => {
         try {
@@ -45,6 +47,7 @@ const AvailabilitySettings: React.FC = () => {
             console.error('Error getting user:', error);
         }
     };
+    */
 
 
 
@@ -113,10 +116,12 @@ const AvailabilitySettings: React.FC = () => {
             <div className='tab single-tab'>
                 <h1>Verfügbarkeit angeben
                     <div className='header-button-group'>
+                        {/*
                         <button className="header-button" onClick={handleAuthClick}>Auth</button>
                         <button className="header-button" onClick={handleGetEvents}>getEvents</button>
                         <button className="header-button" onClick={handleUser}>getUser</button>
                         <button className="header-button" onClick={() => navigate(-1)}>Zurück</button>
+                        */}
                         <button className="header-button" onClick={handleSave}>Speichern</button>
                     </div>
                 </h1>

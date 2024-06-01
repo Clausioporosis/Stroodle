@@ -156,6 +156,12 @@
             <version>1.10.0</version>
         </dependency>
 
+        <!-- iCal4j -->
+        <dependency>
+            <groupId>org.mnode.ical4j</groupId>
+            <artifactId>ical4j</artifactId>
+            <version>3.2.18</version>
+        </dependency>
     </dependencies>
     
     <build>

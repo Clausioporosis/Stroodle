@@ -23,6 +23,9 @@ interface WeekViewProps {
     proposedDates?: ProposedDate[];
     saveProposedDate?: (date: Date) => void;
     removeProposedDate?: (date: string, duration: string) => void;
+
+    icsStatus?: { isStored: boolean, isValid: boolean };
+    icsEvents?: any[];
 }
 
 interface CalendarEvent {
@@ -49,7 +52,9 @@ const WeekView: React.FC<WeekViewProps> = ({
     savePendingAvailabilityEntry,
     removeAvailability,
     removeProposedDate,
-    saveProposedDate }) => {
+    saveProposedDate,
+    icsStatus,
+    icsEvents }) => {
 
     const [calendarApi, setCalendarApi] = useState<any>(null);
     const calendarRef = React.useRef<FullCalendar>(null);
@@ -83,28 +88,62 @@ const WeekView: React.FC<WeekViewProps> = ({
 
     function renderEventContent(eventClickInfo: any) {
         // @ts-ignore
-        const event = eventClickInfo.event; // unreasonable error: 'event' object does exist!
+        const event = eventClickInfo.event; // unreasonable error: 'event' object does exist?!
         return (
             <>
                 {((event.id !== 'expiredTimeHighlight') &&
                     <div className='events-content'>
-                        {(!event.allDay) ? (
-                            <p>
-                                {event.start.toLocaleTimeString().substring(0, 5)} - {event.end.toLocaleTimeString().substring(0, 5)}
-
-                            </p>
+                        {event.id === 'icsEvent' ? (
+                            <p>{event.title}</p>
+                        ) : !event.allDay ? (
+                            <>
+                                <p>
+                                    {event.start.toLocaleTimeString().substring(0, 5)} - {event.end.toLocaleTimeString().substring(0, 5)}
+                                </p>
+                                <button className='event-button' onClick={() => handleEventDelete(event)}>
+                                    <p>x</p>
+                                </button>
+                            </>
                         ) : (
-                            <p>
-                                Ganztägig
-                            </p>
+                            <>
+                                <p>
+                                    Ganztägig
+                                </p>
+                                <button className='event-button' onClick={() => handleEventDelete(event)}>
+                                    <p>x</p>
+                                </button>
+                            </>
                         )}
-                        < button className='event-button' onClick={() => handleEventDelete(event)}>
-                            <p>x</p>
-                        </button >
                     </div>
                 )}
             </>
         );
+    }
+
+
+    // ics functions --------------------------------------------------------------------------------------------------
+
+    useEffect(() => {
+        if (!calendarApi || !icsEvents) return;
+        setTimeout(() => {
+            setIcsEventsToCalendar();
+        }, 0);
+    }, [calendarApi, icsEvents]);
+
+    function setIcsEventsToCalendar() {
+        icsEvents?.map((event: any) => {
+            const newIcsEvent: CalendarEvent = {
+                id: 'icsEvent',
+                title: event.title,
+                start: new Date(event.start),
+                end: new Date(event.end),
+                allDay: event.allDay,
+                display: 'background',
+                color: '#c69555'
+            };
+            console.log('newIcsEvent: ', newIcsEvent);
+            calendarApi.addEvent(newIcsEvent);
+        });
     }
 
     // poll functions --------------------------------------------------------------------------------------------------
@@ -192,7 +231,10 @@ const WeekView: React.FC<WeekViewProps> = ({
     function checkIfProposedDateIsAllowed(start: Date, end: Date, allDay: boolean): boolean {
         const allEvents = calendarApi.getEvents();
         const conflict = allEvents.some((event: any) => {
-            return start < new Date() || event.allDay && allDay && event.start.getDay() === start.getDay();
+            if (event.id === 'icsEvent') {
+                return false;
+            }
+            return start < new Date() || (event.allDay && allDay && event.start.getDay() === start.getDay());
         });
         return conflict;
     }

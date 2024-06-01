@@ -43,7 +43,7 @@ class OutlookService {
 
     public async getUser(): Promise<any> {
         try {
-            const response = await apiClient.get('/outlook/profile', {
+            const response = await apiClient.get('/ics/save', {
                 headers: {
                     'Authorization': `Bearer ${this.keycloak.token!}`
                 }
@@ -51,6 +51,48 @@ class OutlookService {
             return response.data;
         } catch (error: any) {
             console.error('Error fetching user:', error.response.data);
+            throw error;
+        }
+    }
+
+    public async submitIcsUrl(icsUrl: string): Promise<boolean> {
+        try {
+            const response = await apiClient.post(`ics/save`, { url: icsUrl }, {
+                headers: {
+                    'Authorization': `Bearer ${this.keycloak.token!}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error(`Error saving ics url`, error);
+            return false;
+        }
+    }
+
+    public async checkIcsStatus(): Promise<any> {
+        try {
+            const response = await apiClient.get('/ics/status', {
+                headers: {
+                    'Authorization': `Bearer ${this.keycloak.token!}`
+                }
+            });
+            return response.data;
+        } catch (error: any) {
+            console.error('Error checking ics status:', error.response.data);
+            throw error;
+        }
+    }
+
+    public async getIcsEvents(): Promise<any> {
+        try {
+            const response = await apiClient.get('/ics/events', {
+                headers: {
+                    'Authorization': `Bearer ${this.keycloak.token!}`
+                }
+            });
+            return response.data;
+        } catch (error: any) {
+            console.error('Error getting ics event data', error.response.data);
             throw error;
         }
     }
