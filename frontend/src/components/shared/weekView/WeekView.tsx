@@ -1,89 +1,420 @@
-import React, { useState } from 'react';
-import './WeekView.css';
+import React, { useEffect, useState, useRef } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
+
+import { Availability, Weekday, TimePeriod } from '../../../models/User';
+import { ProposedDate } from '../../../models/Poll';
 
 interface WeekViewProps {
-    width: string;
-    visibleRows: number;
+    useCase: string;
+
+    reload?: boolean;
+    userAvailability?: Availability;
+    pendingAvailabilityEntries?: Availability;
+    savePendingAvailabilityEntry?: (day: Weekday, start: string, end: string) => void;
+    removeAvailability?: (isPending: Boolean, day: Weekday, start: string, end: string) => void;
+
+    pollId?: string;
+    duration?: string;
+    proposedDates?: ProposedDate[];
+    saveProposedDate?: (date: Date) => void;
+    removeProposedDate?: (date: string, duration: string) => void;
+
+    icsStatus?: { isStored: boolean, isValid: boolean };
+    icsEvents?: any[];
 }
 
-const WeekView: React.FC<WeekViewProps> = ({ width, visibleRows }) => {
-    /* Weekday and hour arrays */
-    const days = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
-    const hours = Array.from({ length: 24 }, (_, i) => i);
+interface CalendarEvent {
+    id?: string;
+    display?: string;
+    color?: string;
+    title?: string;
+    start?: Date;
+    startTime?: string;
+    end?: Date;
+    endTime?: string;
+    daysOfWeek?: number[];
+    allDay?: boolean;
+}
 
-    /* height for scroll container in additon with weekHeaderHeight, or visibleRows prop wont work as intended */
-    const cellHeight = 30;
-    const weekHeaderHeight = 26;
-    const scrollContainerHeight = `${(visibleRows * cellHeight) + weekHeaderHeight}px`;
+const WeekView: React.FC<WeekViewProps> = ({
+    useCase,
+    reload,
+    duration,
+    userAvailability,
+    pendingAvailabilityEntries,
+    proposedDates,
+    pollId,
+    savePendingAvailabilityEntry,
+    removeAvailability,
+    removeProposedDate,
+    saveProposedDate,
+    icsStatus,
+    icsEvents }) => {
 
-    /* useStates for the selection of multiple cells */
-    const [selectionStartDay, setSelectionDay] = useState<string | null>(null);
-    const [selectionStart, setSelectionStart] = useState<number | null>(null);
-    const [selectionEnd, setSelectionEnd] = useState<number | null>(null);
+    const [calendarApi, setCalendarApi] = useState<any>(null);
+    const calendarRef = React.useRef<FullCalendar>(null);
 
-    const formatMinutesIntoTime = (minutes: number) => {
-        const hours = Math.floor(minutes / 60);
-        const mins = minutes % 60;
-        return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
-    };
+    useEffect(() => {
+        setCalendarApi(calendarRef.current?.getApi());
+    }, []);
 
-    const handleMouseDown = (day: string, hour: number, quarter: number) => {
-        const start = hour * 60 + quarter * 15;
-        setSelectionDay(day);
-        setSelectionStart(start);
-    };
+    function handleCalenderClick(clicktInfo: any) {
+        if (useCase !== 'poll') return;
+        addProposedDate(clicktInfo);
+    }
 
-    const handleMouseUp = (day: string, hour: number, quarter: number) => {
-        if (day !== selectionStartDay) {
-            alert("Selection must end on the same day it started.");
-            return;
+    function handleCalenderSelection(selectInfo: any) {
+        if (useCase === 'availability') {
+            addPendingAvailabilityEntry(selectInfo);
+        } else if (useCase === 'poll') {
+
         }
+        selectInfo.view.calendar.unselect();
+    }
 
-        const end = hour * 60 + quarter * 15;
-        setSelectionEnd(end);
+    function handleEventDelete(event: any) {
+        if (useCase === 'availability') {
+            removeAvailabilityEntry(event);
+        } else if (useCase === 'poll') {
+            deleteProposedDate(event);
+        }
+        event.remove();
+    }
 
-        if (selectionStart === end) {
-            alert(`Clicked on ${day} at ${formatMinutesIntoTime(selectionStart as number)}`);
+    function renderEventContent(eventClickInfo: any) {
+        // @ts-ignore
+        const event = eventClickInfo.event; // unreasonable error: 'event' object does exist?!
+        return (
+            <>
+                {((event.id !== 'expiredTimeHighlight') &&
+                    <div className='events-content'>
+                        {event.id === 'icsEvent' ? (
+                            <p>{event.title}</p>
+                        ) : !event.allDay ? (
+                            <>
+                                <p>
+                                    {event.start.toLocaleTimeString().substring(0, 5)} - {event.end.toLocaleTimeString().substring(0, 5)}
+                                </p>
+                                <button className='event-button' onClick={() => handleEventDelete(event)}>
+                                    <p>x</p>
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <p>
+                                    Ganztägig
+                                </p>
+                                <button className='event-button' onClick={() => handleEventDelete(event)}>
+                                    <p>x</p>
+                                </button>
+                            </>
+                        )}
+                    </div>
+                )}
+            </>
+        );
+    }
+
+
+    // ics functions --------------------------------------------------------------------------------------------------
+
+    useEffect(() => {
+        if (!calendarApi || !icsEvents) return;
+        setTimeout(() => {
+            setIcsEventsToCalendar();
+        }, 0);
+    }, [calendarApi, icsEvents]);
+
+    function setIcsEventsToCalendar() {
+        icsEvents?.map((event: any) => {
+            const newIcsEvent: CalendarEvent = {
+                id: 'icsEvent',
+                title: event.title,
+                start: new Date(event.start),
+                end: new Date(event.end),
+                allDay: event.allDay,
+                display: 'background',
+                color: '#c69555'
+            };
+            console.log('newIcsEvent: ', newIcsEvent);
+            calendarApi.addEvent(newIcsEvent);
+        });
+    }
+
+    // poll functions --------------------------------------------------------------------------------------------------
+
+    const hasPoposedDates = useRef<boolean>(false);
+
+    useEffect(() => {
+        if (!calendarApi || pollId === undefined) return;
+        setTimeout(() => {
+            setProposedDatesToCalendar();
+        }, 0);
+    }, [calendarApi, proposedDates]);
+
+    // add user availability to calendar once calendarApi is available and userAvailability is set
+    function setProposedDatesToCalendar() {
+        if (proposedDates && !hasPoposedDates.current && calendarApi) {
+            proposedDates.map((proposedDate: ProposedDate) => {
+                let start = new Date(proposedDate.date);
+                let end = new Date(proposedDate.date);
+                end.setMinutes(end.getMinutes() + Number(proposedDate.duration));
+                const allDay = proposedDate.duration === 'allDay' ? true : false;
+
+                const newProposedDate: CalendarEvent = {
+                    id: uuidv4(),
+                    start: start,
+                    end: end,
+                    allDay: allDay,
+                    color: '#4C9EBC'
+                };
+                calendarApi.addEvent(newProposedDate);
+                hasPoposedDates.current = true;
+            });
+        }
+    }
+
+    function addProposedDate(clickInfo: any) {
+        let start = new Date(clickInfo.date);
+        let end = new Date(clickInfo.date);
+        const allDay = duration === 'allDay' ? true : false;
+
+        if (allDay) {
+            start.setHours(0, 0, 0, 0);
+            end.setHours(23, 59, 59, 999);
         } else {
-            alert(`Selection from ${selectionStartDay} ${formatMinutesIntoTime(selectionStart as number)} to ${day} ${formatMinutesIntoTime(selectionEnd as number)}`);
+            end.setMinutes(end.getMinutes() + Number(duration));
+        }
+
+        if (checkIfProposedDateIsAllowed(start, end, allDay)) return;
+
+        const newProposedDate: CalendarEvent = {
+            id: uuidv4(),
+            start: start,
+            end: end,
+            allDay: allDay,
+            color: '#4C9EBC'
+        };
+
+        console.log('newProposedDate: ', newProposedDate);
+
+        calendarApi.addEvent(newProposedDate);
+        saveProposedDate?.(start);
+    }
+    function deleteProposedDate(event: any) {
+        let startDate = new Date(event.start);
+        let duration = '';
+
+        if (startDate.getTimezoneOffset() === 0) {
+            startDate.setMinutes(startDate.getMinutes() + startDate.getTimezoneOffset());
+        }
+
+        if (event.allDay) {
+            duration = 'allDay';
+        } else {
+            const endDate = new Date(event.end);
+            const durationInMilliseconds = endDate.getTime() - startDate.getTime();
+            const durationInMinutes = durationInMilliseconds / (1000 * 60);
+            duration = `${durationInMinutes}`;
+        }
+
+        let startDateString = startDate.toISOString().replace('Z', '+00:00');
+        removeProposedDate?.(startDateString, duration);
+    }
+
+    // check if proposed date is allowed (not in the past or overlapping with other allDay events)
+    function checkIfProposedDateIsAllowed(start: Date, end: Date, allDay: boolean): boolean {
+        const allEvents = calendarApi.getEvents();
+        const conflict = allEvents.some((event: any) => {
+            if (event.id === 'icsEvent') {
+                return false;
+            }
+            return start < new Date() || (event.allDay && allDay && event.start.getDay() === start.getDay());
+        });
+        return conflict;
+    }
+
+    // refresh the expired time highlight every 30 seconds
+    useEffect(() => {
+        if (!calendarApi || useCase !== 'poll') return;
+
+        const addHighlightsSafely = () => {
+            setTimeout(() => {
+                addExpiredTimeHighlightToCalenderEvents();
+            }, 0); // delays execution until after the current render cycle to avoid flushSync warnings
+
+        };
+        addHighlightsSafely();
+
+        const intervalId = setInterval(addHighlightsSafely, 30000);
+        return () => clearInterval(intervalId);
+    }, [calendarApi]);
+
+    function addExpiredTimeHighlightToCalenderEvents() {
+        calendarApi.getEventById('expiredTimeHighlight')?.remove();
+        const expiredTimeHighlight = {
+            id: 'expiredTimeHighlight',
+            start: new Date(0),
+            end: new Date(),
+            display: 'background',
+            color: '#303030'
+        };
+        calendarApi.addEvent(expiredTimeHighlight);
+    };
+
+    // availability functions ------------------------------------------------------------------------------------------
+
+    const hasAddedAvailability = useRef<boolean>(false);
+
+    useEffect(() => {
+        if (!calendarApi) return;
+        setTimeout(() => {
+            hasAddedAvailability.current = false;
+            calendarApi.removeAllEvents();
+            setAvailabilityToCalender();
+        }, 0); // delays execution until after the current render cycle to avoid flushSync warnings
+    }, [reload]);
+
+    useEffect(() => {
+        setAvailabilityToCalender();
+    }, [calendarApi, userAvailability]);
+
+    // add user availability to calendar once calendarApi is available and userAvailability is set
+    function setAvailabilityToCalender() {
+        if (userAvailability && !hasAddedAvailability.current && calendarApi) {
+            addAvailabilityToCalendar(userAvailability, false);
+            pendingAvailabilityEntries && addAvailabilityToCalendar(pendingAvailabilityEntries, true);
+            hasAddedAvailability.current = true;
+        }
+    }
+
+    function addAvailabilityToCalendar(availability: Availability, isPending: boolean) {
+        const color = isPending ? 'green' : '#4C9EBC';
+        for (const day in availability) {
+            const weekdayIndex = Object.values(Weekday).indexOf(day as Weekday);
+
+            const timePeriods = availability[day as Weekday];
+            timePeriods?.forEach((time: TimePeriod) => {
+
+                const currentAvailabilityEntry: CalendarEvent = {
+                    id: uuidv4(),
+                    display: 'background',
+                    color: color,
+                    startTime: time.start,
+                    endTime: time.end,
+                    daysOfWeek: [weekdayIndex],
+                    allDay: false
+                };
+                calendarApi.addEvent(currentAvailabilityEntry);
+            });
+        }
+    }
+
+    function addPendingAvailabilityEntry(selectInfo: any) {
+        const startTime = selectInfo.start.toTimeString().split(' ')[0];
+        const endTime = selectInfo.end.toTimeString().split(' ')[0];
+        const weekdayIndex = selectInfo.start.getDay();
+        const weekday = Object.values(Weekday)[weekdayIndex];
+
+        const newAvailabilityEntry: CalendarEvent = {
+            id: uuidv4(),
+            display: 'background',
+            color: 'green',
+            startTime: startTime,
+            endTime: endTime,
+            daysOfWeek: [weekdayIndex],
+            allDay: false
+        };
+
+        calendarApi.addEvent(newAvailabilityEntry);
+        savePendingAvailabilityEntry?.(weekday, startTime, endTime);
+    }
+
+    function removeAvailabilityEntry(event: any) {
+        const isPending = event.backgroundColor === 'green';
+        const weekdayIndex = event.start.getDay();
+        const weekday = Object.values(Weekday)[weekdayIndex];
+        const startTime = event.start.toTimeString().split(' ')[0];
+        const endTime = event.end.toTimeString().split(' ')[0];
+
+        removeAvailability?.(isPending, weekday, startTime, endTime);
+    }
+
+    // set calendar settings based on use case ----------------------------------------------------------------------------
+
+    const [allDaySlot, setAllDaySlot] = useState<boolean>();
+    const [selectable, setSelectable] = useState<boolean>();
+    const [headerToolbar, setHeaderToolbar] = useState<any>();
+
+    useEffect(() => {
+        setCalendarSettings(useCase);
+    }, []);
+
+    function setCalendarSettings(useCase: string) {
+        if (useCase === 'availability') {
+            availabilityViewSettings();
+        } else if (useCase === 'poll') {
+            pollViewSettings();
         }
     };
+
+    function availabilityViewSettings() {
+        setAllDaySlot(false);
+        setSelectable(true);
+        setHeaderToolbar(false);
+    }
+
+    function pollViewSettings() {
+        setAllDaySlot(true);
+        setSelectable(false);
+        setHeaderToolbar({
+            left: 'prev,next,today',
+            center: 'title',
+            right: ''
+        });
+    }
 
     return (
-        <div className="scroll-container" style={{ width, height: scrollContainerHeight }}>
-            <table className="week-view-table">
+        <div className='week-view-component'>
+            <FullCalendar
+                ref={calendarRef}
+                plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                eventContent={renderEventContent}
+                initialView="timeGridWeek"
+                snapDuration="00:05:00"
+                height={'100%'}
+                locale={'de'}
+                firstDay={1}
+                eventTimeFormat={{
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                }}
+                dayHeaderFormat={{
+                    weekday: 'short'
+                }}
+                selectAllow={
+                    // only allow selection of time slots with a duration of at least 30 minutes and on the same day
+                    function (selectInfo) {
+                        let startDay = selectInfo.start.getDay();
+                        let endDay = selectInfo.end.getDay();
+                        let duration = (selectInfo.end.getTime() - selectInfo.start.getTime()) / 1000 / 60;
+                        return startDay === endDay && duration >= 30;
+                    }}
 
-                <thead>
-                    <tr>
-                        <th></th> {/* Extra cell for the hours */}
-                        {days.map((day, index) => (
-                            <th key={index}>{day}</th>
-                        ))}
-                    </tr>
-                </thead>
+                headerToolbar={headerToolbar}
+                allDaySlot={allDaySlot}
+                selectable={selectable}
+                selectOverlap={false}
 
-                <tbody>
-                    {hours.map((hour) => (
-                        <tr key={hour}>
-                            <th>{hour < 10 ? `0${hour}:00` : `${hour}:00`}</th> {/* Display the hour */}
-                            {days.map((day, index) => (
-                                <td
-                                    key={`${index}-${hour}`}>
-                                    {Array(4).fill(0).map((_, quarter) => (
-                                        <div
-                                            className="quarterCell"
-                                            key={quarter}
-                                            onMouseDown={() => handleMouseDown(day, hour, quarter)}
-                                            onMouseUp={() => handleMouseUp(day, hour, quarter)}
-                                        />
-                                    ))}
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
-                </tbody>
-
-            </table>
+                select={handleCalenderSelection}
+                dateClick={handleCalenderClick}
+            />
         </div>
     );
 };

@@ -1,0 +1,49 @@
+app:
+  origin: http://localhost:3000
+  #origin: https://stroodle.online
+
+azure:
+  tenant-id: 9fd843f0-d6da-45c8-a7dd-a76889e41055
+  client-id: 753e9586-53aa-4d57-9279-9b4deab47173
+  client-secret: 
+  authority: https://login.microsoftonline.com/9fd843f0-d6da-45c8-a7dd-a76889e41055
+  redirect-uri: http://localhost:8081/api/authenticate/azure/callback
+  graph:
+    endpoint: https://graph.microsoft.com
+
+keycloak:
+  auth-server-url: https://login.stroodle.online
+  realm: Stroodle
+  resource: stroodle-rest-api
+  credentials:
+    secret: E6rjyoGAO7JO4NRE55KYtTLP7yT9UsBG
+
+spring:
+  devtools:
+    restart:
+      enabled: true
+  data:
+    mongodb:
+      uri: mongodb://mongo:27017/StroodleDatabase
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://login.stroodle.online/realms/Stroodle
+          jwk-set-uri: https://login.stroodle.online/realms/Stroodle/protocol/openid-connect/certs
+
+server:
+  port: 8081
+  servlet:
+    session:
+      timeout: 30m
+      cookie:
+        # http-only: true # Ensures the cookie is not accessible through JavaScript
+        # secure: true # true when using https
+        same-site: lax # Ensures the session cookie is sent during cross-origin redirects, allowing the session to be maintained between the authentication request and the callback.
+
+jwt:
+  auth:
+    converter:
+      resource-id: stroodle-rest-api
+      principle-attribute: preferred_username

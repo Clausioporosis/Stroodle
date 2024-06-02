@@ -1,0 +1,147 @@
+.card {
+    border: red 1px solid;
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    background-color: var(--base-color-2);
+    border-radius: 5px;
+    padding: 10px;
+    width: 100%;
+    border: transparent 1px solid;
+
+    &:hover {
+        border: var(--accent-color) 1px solid;
+    }
+
+    .info-section {
+        display: grid;
+        grid-template-rows: 1fr auto;
+        padding-right: 10px;
+
+        .info-text {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+
+            h2 {
+                margin: 0;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                font-weight: normal;
+            }
+
+            p {
+                display: -webkit-box;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+                hyphens: auto;
+                overflow: hidden;
+                word-wrap: break-word;
+            }
+        }
+
+        .line-clamp-2 {
+            -webkit-line-clamp: 2 !important;
+        }
+
+        .info-plus {
+            min-width: 0;
+
+            .flex {
+                display: flex;
+                gap: 50px;
+            }
+
+            p {
+                margin-top: 5px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+
+
+                .icon {
+                    margin-bottom: -2.5px;
+                    margin-right: 10px;
+                }
+            }
+        }
+    }
+
+    .button-group {
+        margin-left: 5px;
+        display: grid;
+        grid-template-rows: auto auto auto;
+
+        .card-button {
+            border: none;
+            padding: 10px;
+            background-color: transparent;
+            color: white;
+            flex-grow: 1;
+            width: auto;
+            border-bottom: 1px var(--border-color) solid;
+            cursor: pointer;
+
+            &:first-child {
+
+                &:hover {
+                    border-top-right-radius: 7px;
+                    border-top-left-radius: 7px;
+                }
+            }
+
+            &:last-child {
+                border-bottom: none;
+
+                &:hover {
+                    background-color: #ff000055;
+                    border-bottom-right-radius: 7px;
+                    border-bottom-left-radius: 7px;
+                }
+
+                &:active {
+                    background-color: #ff000084;
+                }
+            }
+
+
+            &:hover {
+                background-color: var(--item-color);
+            }
+
+            &:active {
+                background-color: var(--item-active-color);
+                animation: buttonPress 0.2s ease;
+            }
+        }
+
+        .icon {
+            font-size: large;
+        }
+    }
+
+    .state-section {
+        min-width: 100px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        text-align: center;
+        border-left: var(--border-color) 1px solid;
+        padding-left: 10px;
+
+        .date {}
+
+        .state {}
+
+        .time {}
+
+        .first {
+            font-weight: bolder;
+            color: var(--accent-color)
+        }
+
+        .rest {
+            font-weight: bold;
+        }
+    }
+}

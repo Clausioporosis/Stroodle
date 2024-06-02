@@ -1,0 +1,99 @@
+.week-view-component {
+    width: 100%;
+    height: 555px;
+}
+
+.fc {
+    --fc-today-bg-color: transparent;
+    --fc-border-color: var(--text-color);
+    width: 100%;
+
+    .fc-bg-event {
+        opacity: 0.85;
+    }
+
+    .fc-toolbar-title {
+        margin-left: 10px;
+        font-size: large;
+        color: var(--text-color);
+    }
+
+
+}
+
+.fc-toolbar {
+    justify-content: flex-start;
+    margin: 10px 0 15px 0;
+}
+
+.fc {
+    a {
+        padding: 0;
+    }
+}
+
+
+.events-content {
+    padding: 0 3px 0 3px;
+    position: relative;
+    top: -2px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+
+    button {
+        background-color: transparent;
+        border: none;
+        color: var(--text-color);
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}
+
+
+.fc .fc-daygrid-body-natural .fc-daygrid-day-events {
+    margin-bottom: 2px;
+}
+
+.fc .fc-daygrid-body-unbalanced .fc-daygrid-day-events {
+    min-height: 0;
+}
+
+
+
+.fc-button-primary {
+    background-color: var(--item-color) !important;
+    border: none !important;
+    box-shadow: none !important;
+    height: 25px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+
+    span {
+        position: relative;
+        top: -1px;
+    }
+
+    &:disabled {
+        pointer-events: none;
+    }
+
+    &:focus {
+        box-shadow: none;
+    }
+
+    &:hover {
+        background-color: var(--item-hover-color) !important;
+    }
+
+    &:active {
+        background-color: var(--item-active-color) !important;
+        animation: buttonPress 0.2s ease;
+    }
+}
