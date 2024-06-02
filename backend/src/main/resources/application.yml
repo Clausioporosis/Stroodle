@@ -1,6 +1,5 @@
 app:
-  origin: http://localhost:3000
-  #origin: https://stroodle.online
+  origin: https://stroodle.online
 
 azure:
   tenant-id: 9fd843f0-d6da-45c8-a7dd-a76889e41055
