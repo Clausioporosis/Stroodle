@@ -20,7 +20,7 @@ jobs:
 
     - name: Copy files via SCP
       run: |
-        scp -r -o StrictHostKeyChecking=no . debian@193.197.230.60:/home/debian/stroodle
+        scp -r -o StrictHostKeyChecking=no * debian@193.197.230.60:/home/debian/stroodle
 
     - name: Deploy application
       run: |
