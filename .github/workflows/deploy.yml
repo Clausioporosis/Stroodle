@@ -22,16 +22,12 @@ jobs:
       run: |
         ssh -o StrictHostKeyChecking=no debian@193.197.230.60 'mkdir -p /home/debian/stroodle'
 
+    - name: Archive files
+      run: tar -czf deployment.tar.gz .
 
     - name: Copy files via SCP
-      run: |
-        scp -r -o StrictHostKeyChecking=no * debian@193.197.230.60:/home/debian/stroodle
+      run: scp -o StrictHostKeyChecking=no deployment.tar.gz debian@193.197.230.60:/home/debian/stroodle/deployment.tar.gz
 
     - name: Deploy application
       run: |
-        ssh -o StrictHostKeyChecking=no debian@193.197.230.60 << 'EOF'
-          cd /path/to/deploy
-          docker-compose down
-          docker-compose pull
-          docker-compose up -d
-        EOF
+        ssh -o StrictHostKeyChecking=no debian@193.197.230.60 'cd /home/debian/stroodle && tar -xzf deployment.tar.gz && docker-compose down && docker-compose up -d'
