@@ -23,7 +23,8 @@ jobs:
         ssh -o StrictHostKeyChecking=no debian@193.197.230.60 'mkdir -p /home/debian/stroodle'
 
     - name: Archive files
-      run: tar -czf deployment.tar.gz .
+      run: |
+        tar --exclude='.git' --exclude='node_modules' --exclude='*.tar.gz' -czf deployment.tar.gz .
 
     - name: Copy files via SCP
       run: scp -o StrictHostKeyChecking=no deployment.tar.gz debian@193.197.230.60:/home/debian/stroodle/deployment.tar.gz
