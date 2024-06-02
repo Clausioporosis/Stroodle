@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { useKeycloak } from '@react-keycloak/web';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { ReactComponent as Background } from '../../components/assets/background.svg';
+
 
 const Login: React.FC = () => {
     const { keycloak } = useKeycloak();
@@ -21,9 +23,12 @@ const Login: React.FC = () => {
     };
 
     return (
-        <div>
-            <h2>Bitte melden Sie sich an</h2>
-            <button onClick={handleLogin}>Anmelden</button>
+        <div className='login'>
+            <Background className="login-svg" />
+            <div className='login-body'>
+                <img src={process.env.PUBLIC_URL + '/stroodle-logo-white.png'} alt='Logo' className='stroodle-logo' />
+                <button className='header-button' onClick={handleLogin}>Anmelden</button>
+            </div>
         </div>
     );
 };

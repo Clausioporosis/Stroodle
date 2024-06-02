@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { List, PersonCircle } from 'react-bootstrap-icons';
-import { User } from '../../../models/User';
-import UserService from '../../../services/UserService';
-import UserInitials from '../../shared/UserInitials';
 import { useKeycloak } from '@react-keycloak/web';
 import { useNavigate } from 'react-router-dom';
 
@@ -41,7 +38,6 @@ const Header: React.FC = () => {
             <div className={`dropdown-container ${isOpen ? 'visible' : ''}`}>
                 <a className='border' href='/dashboard'>Dashboard</a>
                 <a className='border' href='/availability'>Verfügbarkeit</a>
-                <a className='border' href='/profile'>Profil</a>
                 <a className='border' onClick={handleLogout}>Abmelden</a>
             </div>
 
@@ -55,7 +51,6 @@ const Header: React.FC = () => {
                         <div className='nav-bar'>
                             <a className='border-hover' href='/dashboard'>Dashboard</a>
                             <a className='border-hover' href='/availability'>Verfügbarkeit</a>
-                            <a className='border-hover' href='/profile'>Profil</a>
                             <a className='border-hover' onClick={handleLogout}>Abmelden</a>
                         </div>
                         <button className='profile-button'>
