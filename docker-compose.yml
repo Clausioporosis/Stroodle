@@ -52,16 +52,6 @@ services:
     networks:
       - stroodle-net
 
-  app:
-    image: your-docker-image
-    container_name: my_app_container
-    ports:
-      - "80:80"
-    environment:
-      - ENV_VAR=production
-    networks:
-      - stroodle-net
-
 networks:
   stroodle-net:
     driver: bridge
