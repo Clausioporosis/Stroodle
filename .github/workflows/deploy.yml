@@ -22,13 +22,10 @@ jobs:
       run: |
         ssh -o StrictHostKeyChecking=no debian@193.197.230.60 'mkdir -p /home/debian/stroodle'
 
-    - name: Archive files
-      run: |
-        tar --exclude='.git' --exclude='node_modules' --exclude='*.tar.gz' -czf deployment.tar.gz .
-
     - name: Copy files via SCP
-      run: scp -o StrictHostKeyChecking=no deployment.tar.gz debian@193.197.230.60:/home/debian/stroodle/deployment.tar.gz
+      run: |
+        scp -r -o StrictHostKeyChecking=no $(ls | grep -v '^deployment.yml$') debian@193.197.230.60:/home/debian/stroodle
 
     - name: Deploy application
       run: |
-        ssh -o StrictHostKeyChecking=no debian@193.197.230.60 'cd /home/debian/stroodle && tar -xzf deployment.tar.gz && docker-compose down && docker-compose up -d'
+        ssh -o StrictHostKeyChecking=no debian@193.197.230.60 'cd /home/debian/stroodle && docker-compose down && docker-compose up -d'
