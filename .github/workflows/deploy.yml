@@ -32,6 +32,5 @@ jobs:
         ssh -o StrictHostKeyChecking=no debian@193.197.230.60 << 'EOF'
           cd /home/debian/stroodle
           docker-compose down
-          docker-compose rm -f
-          docker-compose up -d
+          docker-compose up -d --build
         EOF
