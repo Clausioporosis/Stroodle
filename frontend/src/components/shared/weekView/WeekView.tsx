@@ -231,7 +231,7 @@ const WeekView: React.FC<WeekViewProps> = ({
     function checkIfProposedDateIsAllowed(start: Date, end: Date, allDay: boolean): boolean {
         const allEvents = calendarApi.getEvents();
         const conflict = allEvents.some((event: any) => {
-            if (event.id === 'icsEvent') {
+            if (event.id === 'icsEvent' || event.id === 'expiredTimeHighlight') {
                 return false;
             }
             return start < new Date() || (event.allDay && allDay && event.start.getDay() === start.getDay());
@@ -251,8 +251,9 @@ const WeekView: React.FC<WeekViewProps> = ({
         };
         addHighlightsSafely();
 
-        const intervalId = setInterval(addHighlightsSafely, 30000);
-        return () => clearInterval(intervalId);
+        // disabling interval for now, as it causes overdraws ics events
+        //const intervalId = setInterval(addHighlightsSafely, 30000);
+        //return () => clearInterval(intervalId);
     }, [calendarApi]);
 
     function addExpiredTimeHighlightToCalenderEvents() {
