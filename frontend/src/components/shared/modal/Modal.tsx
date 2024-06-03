@@ -38,7 +38,7 @@ const Modal: React.FC<ModalProps> = ({
                 {(title || showCloseButton) && (
                     <header className="modal-header">
                         {title && <h2>{title}</h2>}
-                        {showCloseButton && <button className='header-button' onClick={onCancel}>X</button>}
+                        {showCloseButton && <button className='header-button close' onClick={onCancel}>X</button>}
                     </header>
                 )}
                 <div className="modal-body">
@@ -47,7 +47,14 @@ const Modal: React.FC<ModalProps> = ({
                 {(onConfirm && confirmButtonText) || cancelButtonText ? (
                     <footer className="modal-footer">
                         {cancelButtonText && <button className='header-button' onClick={onCancel}>{cancelButtonText}</button>}
-                        {onConfirm && confirmButtonText && <button className='header-button' onClick={onConfirm}>{confirmButtonText}</button>}
+                        {onConfirm && confirmButtonText && (
+                            <button
+                                className={`header-button ${confirmButtonText === 'Löschen' ? 'delete-button' : ''}`}
+                                onClick={onConfirm}
+                            >
+                                {confirmButtonText}
+                            </button>
+                        )}
                     </footer>
                 ) : null}
             </div>

@@ -786,10 +786,43 @@ a:active {
 }
 .modal-footer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
 }
-.modal-footer button {
-  margin-left: 8px;
+.link-row {
+  display: flex;
+}
+.input-wrapper {
+  position: relative;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.input-wrapper input {
+  width: 100%;
+  margin: 0;
+  padding-right: 30px;
+}
+.input-wrapper .icon {
+  position: absolute;
+  right: 8px;
+  cursor: pointer;
+}
+.green {
+  color: var(--accent-color);
+}
+.header-button.delete-button {
+  background-color: rgba(255, 0, 0, 0.433);
+}
+.header-button.delete-button:hover {
+  background-color: rgba(255, 0, 0, 0.674);
+}
+.header-button.delete-button:active {
+  background-color: rgba(255, 0, 0, 0.433);
+}
+.header-button.close {
+  height: fit-content;
+  background-color: transparent;
 }
 @keyframes fadeIn {
   from {
