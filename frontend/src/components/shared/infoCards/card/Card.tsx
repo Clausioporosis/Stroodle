@@ -1,14 +1,12 @@
-import React, { useEffect, useState, useRef } from 'react';
-
+import React, { useEffect, useState } from 'react';
 import PollService from '../../../../services/PollService';
 import { Poll } from '../../../../models/Poll';
 import UserService from '../../../../services/UserService';
 import { User } from '../../../../models/User';
 import { ClockHistory, Hourglass, Pencil, Share, Trash3, Person, GeoAlt } from 'react-bootstrap-icons';
-import { get } from 'http';
 import { useNavigate } from 'react-router-dom';
-
 import { useKeycloak } from '@react-keycloak/web';
+import Modal from '../../modal/Modal';
 
 interface CardProps {
     useCase: string;
@@ -26,6 +24,12 @@ interface BookedDate {
 const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
     const [bookedDate, setBookedDate] = useState<BookedDate>();
     const [organizerInfo, setOrganizerInfo] = useState<User>();
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [modalTitle, setModalTitle] = useState<string>('');
+    const [modalContent, setModalContent] = useState<React.ReactNode>(null);
+    const [confirmButtonText, setConfirmButtonText] = useState<string | undefined>(undefined);
+    const [showCloseButton, setShowCloseButton] = useState<boolean>(true);
+    const [cancelButtonText, setCancelButtonText] = useState<string | undefined>("Cancel");
 
     const { keycloak } = useKeycloak();
     const userService = new UserService(keycloak);
@@ -37,22 +41,33 @@ const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
         getOrganizerInfo();
     }, []);
 
-    //add a general button handle function
     function handleDeleteClick(event: React.MouseEvent) {
-        // Prevent the click event from bubbling up to the card
         event.stopPropagation();
-        if (!window.confirm('Möchtest du den Poll wirklich löschen?')) return;
-        pollService?.deletePollById(poll.id!)
-            .then(() => {
-                console.log('Poll erfolgreich gelöscht!');
-                onPollDelete?.();
-            })
-            .catch((error) => {
-                console.error('Es gab einen Fehler beim Löschen des Polls!', error);
-            });
+        setModalTitle('Poll löschen');
+        setModalContent(<p>Möchtest du den Poll wirklich löschen?</p>);
+        setConfirmButtonText('Löschen');
+        setCancelButtonText("Cancel");
+        setShowCloseButton(true);
+        setModalOpen(true);
     }
 
-    function handleEditClick() {
+    function handleShareClick(event: React.MouseEvent) {
+        event.stopPropagation();
+        setModalTitle('Umfrage teilen');
+        setModalContent(
+            <div className='link-row'>
+                <input id="shareLink" type="text" value={`${process.env.REACT_APP_BASE_URL}/polls/${poll.id}`} readOnly />
+                <button onClick={handleCopyClick}>Kopieren</button>
+            </div>
+        );
+        setConfirmButtonText(undefined);
+        setCancelButtonText(undefined);
+        setShowCloseButton(true);
+        setModalOpen(true);
+    }
+
+    function handleEditClick(event: React.MouseEvent) {
+        event.stopPropagation();
         navigate(`/polls/edit/${poll.id}`);
     }
 
@@ -85,23 +100,54 @@ const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
         setBookedDate(bookedDateObj);
     }
 
+    const handleConfirm = () => {
+        if (modalTitle === 'Poll löschen') {
+            pollService?.deletePollById(poll.id!)
+                .then(() => {
+                    console.log('Poll erfolgreich gelöscht!');
+                    onPollDelete?.();
+                })
+                .catch((error) => {
+                    console.error('Es gab einen Fehler beim Löschen des Polls!', error);
+                });
+        } else {
+            console.log('Confirmed');
+        }
+        setModalOpen(false);
+    };
+
+    const handleCancel = () => {
+        console.log('Cancelled');
+        setModalOpen(false);
+    };
+
+    const handleCopyClick = () => {
+        const textField = document.getElementById('shareLink') as HTMLInputElement;
+        if (textField) {
+            navigator.clipboard.writeText(textField.value)
+                .then(() => {
+                    alert('Link kopiert!');
+                })
+                .catch(err => {
+                    console.error('Fehler beim Kopieren des Links: ', err);
+                });
+        }
+    };
+
     return (
         <div className='card' onClick={handleCardClick}>
             <div className='info-section'>
                 <div className={`info-text ${useCase === 'runningPolls' ? 'line-clamp-2' : ''}`}>
                     <h2>{poll.title}</h2>
-
                     <p className={`${useCase === 'runningPolls' ? 'line-clamp-2' : ''}`}>
                         {poll.description !== '' ? poll.description : '-'}
                     </p>
-
                 </div>
                 <div className='info-plus'>
                     {useCase === 'myPolls' ? (
                         <p><Hourglass className='icon' />-</p>
                     ) : useCase === 'runningPolls' ? (
                         <>
-
                             <p><GeoAlt className='icon' />{poll.location !== '' ? poll.location : '-'}</p>
                             <div className='flex'>
                                 <p><Person className='icon' />
@@ -120,13 +166,13 @@ const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
 
             {useCase === 'myPolls' && (
                 <div className='button-group'>
-                    <button className='card-button' onClick={(event) => { event.stopPropagation(); event.preventDefault(); handleEditClick(); }}>
+                    <button className='card-button' onClick={handleEditClick}>
                         <Pencil className='icon' />
                     </button>
-                    <button className='card-button' onClick={(event) => { event.stopPropagation(); event.preventDefault(); }}>
+                    <button className='card-button' onClick={handleShareClick}>
                         <Share className='icon' />
                     </button>
-                    <button className='card-button' onClick={(event) => { event.stopPropagation(); event.preventDefault(); handleDeleteClick(event); }}>
+                    <button className='card-button' onClick={handleDeleteClick}>
                         <Trash3 className='icon' />
                     </button>
                 </div>
@@ -146,7 +192,7 @@ const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
                                 {(bookedDate?.duration !== 'ganztägig') ? (
                                     <>
                                         <span className="first">{bookedDate?.time.substring(0, 1)}</span>
-                                        <span className="rest">{bookedDate?.time.substring(1)}  Uhr</span>
+                                        <span className="rest">{bookedDate?.time.substring(1)} Uhr</span>
                                     </>
                                 ) : (
                                     <>
@@ -154,7 +200,6 @@ const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
                                         <span className="rest">{bookedDate?.duration.substring(1)}</span>
                                     </>
                                 )}
-
                             </div>
                         </>
                     ) : (
@@ -166,6 +211,16 @@ const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
                 </div>
             )}
 
+            <Modal
+                isOpen={isModalOpen}
+                title={modalTitle}
+                content={modalContent}
+                onConfirm={handleConfirm}
+                onCancel={handleCancel}
+                confirmButtonText={confirmButtonText}
+                cancelButtonText={cancelButtonText}
+                showCloseButton={showCloseButton}
+            />
         </div>
     );
 };
