@@ -213,6 +213,7 @@ select option:disabled {
   cursor: pointer;
   user-select: none;
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 5px;
 }

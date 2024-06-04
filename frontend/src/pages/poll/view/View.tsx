@@ -3,8 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 import PollService from '../../../services/PollService';
 import { Poll } from '../../../models/Poll';
-import UserService from '../../../services/UserService';
-import { User } from '../../../models/User';
 
 import VotingStatus from '../../../components/polls/view/votingStatus/VotingStatus';
 import Card from '../../../components/shared/infoCards/card/Card';
@@ -153,7 +151,6 @@ const View: React.FC = () => {
                 {isOrganizer ? (
                     <h1>Deine Umfrage
                         <div className='header-button-group'>
-                            <button className="header-button" onClick={() => navigate(-1)}>Zurück</button>
                             {(!isBooked) ? (
                                 <button className="header-button" onClick={handleButtonClick} disabled={!hasEdited}>
                                     {getOrganizerButtonText()}

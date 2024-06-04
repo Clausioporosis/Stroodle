@@ -199,7 +199,7 @@ const WeekView: React.FC<WeekViewProps> = ({
             end.setMinutes(end.getMinutes() + Number(duration));
         }
 
-        if (checkIfProposedDateIsAllowed(start, end, allDay)) return;
+        if (!checkIfProposedDateIsAllowed(start, end, allDay)) return;
 
         const newProposedDate: CalendarEvent = {
             id: uuidv4(),
@@ -208,8 +208,6 @@ const WeekView: React.FC<WeekViewProps> = ({
             allDay: allDay,
             color: '#4C9EBC'
         };
-
-        console.log('newProposedDate: ', newProposedDate);
 
         calendarApi.addEvent(newProposedDate);
         saveProposedDate?.(start);
@@ -238,14 +236,31 @@ const WeekView: React.FC<WeekViewProps> = ({
     // check if proposed date is allowed (not in the past or overlapping with other allDay events)
     function checkIfProposedDateIsAllowed(start: Date, end: Date, allDay: boolean): boolean {
         const allEvents = calendarApi.getEvents();
-        const conflict = allEvents.some((event: any) => {
-            if (event.id === 'icsEvent' || event.id === 'expiredTimeHighlight') {
+        const now = new Date();
+
+        if (allDay) {
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            if (start < today) {
                 return false;
             }
-            return start < new Date() || (event.allDay && allDay && event.start.getDay() === start.getDay());
+        } else {
+            if (start < now) {
+                return false;
+            }
+        }
+
+        const sameDayAllDayEventExists = allEvents.some((event: any) => {
+            const eventStart = new Date(event.start);
+            const eventEnd = new Date(event.end);
+
+            return event.allDay && event.id !== 'icsEvent' && allDay &&
+                (eventStart.toDateString() === start.toDateString() ||
+                    eventEnd.toDateString() === end.toDateString());
         });
-        return conflict;
+
+        return !sameDayAllDayEventExists;
     }
+
 
     // refresh the expired time highlight every 30 seconds
     useEffect(() => {
@@ -396,6 +411,7 @@ const WeekView: React.FC<WeekViewProps> = ({
                 eventContent={renderEventContent}
                 initialView="timeGridWeek"
                 snapDuration="00:05:00"
+                nowIndicator={true}
                 height={'100%'}
                 locale={'de'}
                 firstDay={1}
@@ -423,6 +439,7 @@ const WeekView: React.FC<WeekViewProps> = ({
 
                 select={handleCalenderSelection}
                 dateClick={handleCalenderClick}
+
             />
         </div>
     );
