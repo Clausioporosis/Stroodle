@@ -70,6 +70,14 @@ public class PollService {
         }
         return polls;
     }
+
+    public List<Poll> findPollsByParticipantId(String participantId) {
+        List<Poll> polls = pollRepository.findByParticipantIdsContains(participantId);
+        if (polls.isEmpty()) {
+            throw new ResourceNotFoundException("No polls found for participant with id " + participantId);
+        }
+        return polls;
+    }
     
     // Methoden zur Verwaltung von Umfragen
 }

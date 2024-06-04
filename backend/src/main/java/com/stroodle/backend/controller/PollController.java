@@ -60,11 +60,19 @@ public class PollController {
 
     @GetMapping("/me")
     public ResponseEntity<List<Poll>> getMyPolls() {
-    JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-    String userId = (String) authentication.getToken().getClaims().get("sub");
+        JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        String userId = (String) authentication.getToken().getClaims().get("sub");
 
-    List<Poll> polls = pollService.findPollsByOrganizerId(userId);
-    return ResponseEntity.ok(polls);
+        List<Poll> polls = pollService.findPollsByOrganizerId(userId);
+        return ResponseEntity.ok(polls);
     }
 
+    @GetMapping("/me/invitations")
+    public ResponseEntity<List<Poll>> getMyParticipations() {
+        JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        String userId = (String) authentication.getToken().getClaims().get("sub");
+
+        List<Poll> polls = pollService.findPollsByParticipantId(userId);
+        return ResponseEntity.ok(polls);
+    }
 }
