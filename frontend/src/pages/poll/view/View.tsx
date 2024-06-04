@@ -187,7 +187,7 @@ const View: React.FC = () => {
                             setSelectedDateIndex={setSelectedDateIndex}
                             selectedDateIndex={selectedDateIndex}
                             proposedDates={poll.proposedDates}
-                            participantIds={sortedParticipantIds}
+                            participantIds={isOrganizer ? poll?.participantIds : sortedParticipantIds}
                             isOrganizer={isOrganizer}
                             votedDates={votedDates}
                             setVotedDates={setVotedDates}
