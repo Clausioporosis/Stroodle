@@ -32,12 +32,19 @@
 }
 
 .button-container {
+    position: relative;
     user-select: none;
     align-items: center;
     margin: 0 20px 0 0;
 
     display: flex;
     gap: 20px;
+
+    .user-name {
+        position: relative;
+        left: -5px;
+        font-weight: bold;
+    }
 
     button {
         margin: 0;
@@ -141,5 +148,9 @@ a {
 
     .nav-drop-down {
         display: contents;
+    }
+
+    .user-name {
+        display: none;
     }
 }

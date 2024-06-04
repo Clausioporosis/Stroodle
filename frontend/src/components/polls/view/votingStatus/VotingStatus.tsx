@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import DateCard from '../dateCard/DateCard';
-import UserInitials from '../../../shared//UserInitials';
+import UserInitials from '../../../shared/userInitals/UserInitials';
 import UserService from '../../../../services/UserService';
 import { User } from '../../../../models/User';
 import { ProposedDate } from '../../../../models/Poll';
 import { Check2, X } from 'react-bootstrap-icons';
 
-import { useKeycloak } from '@react-keycloak/web';
 import keycloak from '../../../../keycloak';
 
 interface VotingStatusProps {
@@ -79,7 +78,7 @@ const VotingStatus: React.FC<VotingStatusProps> = ({ setHasEdited, proposedDates
                 <div key={participantId} className="voter-row">
                     <div className="voter-cell first-cell">
                         <div className='first-cell-bg'>
-                            <UserInitials firstName={users[participantId]?.firstName} lastName={users[participantId]?.lastName} />
+                            <UserInitials firstName={users[participantId]?.firstName} lastName={users[participantId]?.lastName} size={30} />
                             {getUserName(participantId)}
                         </div>
                     </div>
