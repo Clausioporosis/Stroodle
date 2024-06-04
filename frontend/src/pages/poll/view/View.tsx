@@ -46,7 +46,6 @@ const View: React.FC = () => {
                 setSelectedDateIndex(poll?.bookedDateIndex);
                 setIsBooked(poll?.bookedDateIndex === null ? false : true);
 
-                // has to be rewritten in separate function
                 const votedDates: number[] = [];
                 poll?.proposedDates?.forEach((date, index) => {
                     if (date.voterIds?.includes(keycloak.tokenParsed?.sub!)) {
@@ -87,7 +86,6 @@ const View: React.FC = () => {
         setPoll(updatedPoll);
         pollService.putPoll(updatedPoll.id || '', updatedPoll);
 
-        //temp solution, because card state is not updating
         window.location.reload();
     }
 
@@ -144,12 +142,15 @@ const View: React.FC = () => {
         return 'Error?';
     }
 
+    const currentUserId = keycloak.tokenParsed?.sub;
+    const sortedParticipantIds = currentUserId ? [currentUserId, ...(poll?.participantIds?.filter(id => id !== currentUserId) || [])] : poll?.participantIds;
+
     return (
         <div className='app-body'>
             <div className='tab single-tab grow-tab'>
 
                 {isOrganizer ? (
-                    <h1>Deine Umfrage
+                    <h1>{isBooked ? 'Termin gebucht' : 'Termin buchen'}
                         <div className='header-button-group'>
                             {(!isBooked) ? (
                                 <button className="header-button" onClick={handleButtonClick} disabled={!hasEdited}>
@@ -161,16 +162,15 @@ const View: React.FC = () => {
                         </div>
                     </h1>
                 ) : (
-                    <h1>Termine Auswählen
+                    <h1> {isBooked ? 'Termin Informationen' : 'Verfügbarkeit auswählen'}
                         <div className='header-button-group'>
-                            <button className="header-button" onClick={() => navigate(-1)}>Zurück</button>
-                            <button className="header-button" onClick={handleButtonClick} disabled={!hasEdited}>Auswahl speichern</button>
+                            {!isBooked && <button className="header-button" onClick={handleButtonClick} disabled={!hasEdited}>Auswahl speichern</button>}
                         </div>
                     </h1>
                 )}
 
 
-                {poll && <Card useCase={'runningPolls'} poll={poll} />}
+                {poll && <Card useCase={'runningPolls'} poll={poll} viewCard={true} />}
 
                 {isOverflowing && (
                     <div className='scroll-buttons'>
@@ -187,7 +187,7 @@ const View: React.FC = () => {
                             setSelectedDateIndex={setSelectedDateIndex}
                             selectedDateIndex={selectedDateIndex}
                             proposedDates={poll.proposedDates}
-                            participantIds={poll.participantIds}
+                            participantIds={sortedParticipantIds}
                             isOrganizer={isOrganizer}
                             votedDates={votedDates}
                             setVotedDates={setVotedDates}

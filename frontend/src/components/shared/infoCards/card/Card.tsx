@@ -11,6 +11,7 @@ import Modal from '../../modal/Modal';
 interface CardProps {
     useCase: string;
     poll: Poll;
+    viewCard?: boolean;
     onPollDelete?: () => void;
 }
 
@@ -21,7 +22,7 @@ interface BookedDate {
     weekday: string;
 }
 
-const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
+const Card: React.FC<CardProps> = ({ poll, useCase, viewCard, onPollDelete }) => {
     const [bookedDate, setBookedDate] = useState<BookedDate>();
     const [organizerInfo, setOrganizerInfo] = useState<User>();
     const [isModalOpen, setModalOpen] = useState(false);
@@ -42,7 +43,7 @@ const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
     }, []);
 
     const getOrganizerInfo = () => {
-        userService.getUserById(keycloak.tokenParsed?.sub!)
+        userService.getUserById(poll.organizerId!)
             .then((organizer) => {
                 setOrganizerInfo(organizer);
             });
@@ -134,7 +135,7 @@ const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
                 <div className="input-wrapper">
                     <input id="shareLink" type="text" value={`${process.env.REACT_APP_BASE_URL}/polls/${poll.id}`} readOnly />
                     {isCopied ?
-                        <ClipboardCheck className='icon green' onClick={handleCopyClick} /> :
+                        <ClipboardCheck className='icon accent' onClick={handleCopyClick} /> :
                         <Clipboard className='icon' onClick={handleCopyClick} />}
                 </div>
             );
@@ -149,7 +150,7 @@ const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
             <div className='info-section'>
                 <div className={`info-text ${useCase === 'runningPolls' ? 'line-clamp-2' : ''}`}>
                     <h2>{poll.title}</h2>
-                    <p className={`${useCase === 'runningPolls' ? 'line-clamp-2' : ''}`}>
+                    <p className={`${useCase === 'runningPolls' ? 'line-clamp-2' : ''} ${viewCard && 'view-card'}`}>
                         {poll.description !== '' ? poll.description : '-'}
                     </p>
                 </div>

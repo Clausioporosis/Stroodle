@@ -167,7 +167,7 @@ textarea {
   font-size: 16px;
   margin-bottom: 6px;
   width: 100%;
-  height: 60px;
+  height: auto;
   padding: 10px;
   border-radius: 5px;
   border: none;
@@ -175,6 +175,7 @@ textarea {
   color: #ddd;
   box-sizing: border-box;
   resize: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 select {
   flex-grow: 0;
@@ -246,6 +247,9 @@ select option:disabled {
   100% {
     transform: scale(1);
   }
+}
+.accent {
+  color: var(--accent-color);
 }
 .app-header {
   position: sticky;
@@ -429,11 +433,14 @@ a:active {
 }
 .card .info-section .info-text p {
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 5;
   -webkit-box-orient: vertical;
   hyphens: auto;
   overflow: hidden;
   word-wrap: break-word;
+}
+.card .info-section .info-text .view-card {
+  display: block;
 }
 .card .info-section .line-clamp-2 {
   -webkit-line-clamp: 2 !important;

@@ -52,7 +52,6 @@ const VotingStatus: React.FC<VotingStatusProps> = ({ setHasEdited, proposedDates
         }
     }
 
-
     return (
         <div className="grid">
 

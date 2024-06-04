@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import PollService from '../../../services/PollService';
@@ -40,6 +40,24 @@ const Create: React.FC = () => {
     const { keycloak } = useKeycloak();
     const pollService = new PollService(keycloak);
     const outlookService = new OutlookService(keycloak);
+
+    const descriptionRef = useRef<HTMLTextAreaElement>(null);
+
+    useEffect(() => {
+        adjustTextareaHeight(descriptionRef.current);
+    }, [description]);
+
+    const adjustTextareaHeight = (textarea: HTMLTextAreaElement | null) => {
+        if (textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = `${textarea.scrollHeight}px`;
+        }
+    };
+
+    const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setDescription(e.target.value);
+        adjustTextareaHeight(e.target);
+    };
 
     useEffect(() => {
         if (pollId) {
@@ -279,7 +297,7 @@ const Create: React.FC = () => {
 
     return (
         <div className='app-body'>
-            <div className='tab'>
+            <div className='tab grow-tab'>
                 <h1>Umfrage erstellen
                     <div className='header-button-group'>
                     </div>
@@ -287,7 +305,13 @@ const Create: React.FC = () => {
                 <h3>Titel</h3>
                 <input type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Was ist der Anlass?" />
                 <h3>Beschreibung</h3>
-                <textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Was muss man wissen?" />
+                <textarea
+                    ref={descriptionRef}
+                    value={description}
+                    onChange={handleDescriptionChange}
+                    placeholder="Was muss man wissen?"
+                    style={{ overflow: 'hidden', resize: 'none' }}
+                />
                 <h3>Ort</h3>
                 <input type="text" value={location} onChange={e => setLocation(e.target.value)} placeholder="Wo wird es statt finden?" />
 

@@ -98,10 +98,10 @@ const WeekView: React.FC<WeekViewProps> = ({
                         ) : !event.allDay ? (
                             <>
                                 <p>
-                                    {event.start.toLocaleTimeString().substring(0, 5)} - {event.end.toLocaleTimeString().substring(0, 5)}
+                                    {event.start.toLocaleTimeString().substring(0, 5)} {/* - {event.end.toLocaleTimeString().substring(0, 5)*/}
                                 </p>
                                 <button className='event-button' onClick={() => handleEventDelete(event)}>
-                                    <p>x</p>
+                                    x
                                 </button>
                             </>
                         ) : (
@@ -110,7 +110,7 @@ const WeekView: React.FC<WeekViewProps> = ({
                                     Ganztägig
                                 </p>
                                 <button className='event-button' onClick={() => handleEventDelete(event)}>
-                                    <p>x</p>
+                                    x
                                 </button>
                             </>
                         )}

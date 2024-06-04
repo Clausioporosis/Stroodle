@@ -62,6 +62,7 @@ public class IcsService {
         } else {
             status.setStored(false);
             status.setValid(false);
+            status.setUrl("");
         }
         return status;
     }
