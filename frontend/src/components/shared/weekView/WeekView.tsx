@@ -6,6 +6,9 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 
+import tippy from 'tippy.js';
+import 'tippy.js/dist/tippy.css';
+
 import { Availability, Weekday, TimePeriod } from '../../../models/User';
 import { ProposedDate } from '../../../models/Poll';
 
@@ -403,6 +406,24 @@ const WeekView: React.FC<WeekViewProps> = ({
         });
     }
 
+    // add tool-tip to events ------------------------------------------------------------------------------------------------
+    const eventDidMount = (info: any) => {
+        const event = info.event;
+        const start = event.start;
+        const end = event.end;
+        let content = '';
+
+        if (event.allDay) return;
+
+        const startTime = start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const endTime = end ? end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+        content = `${startTime} - ${endTime}`;
+
+        tippy(info.el, {
+            content: content,
+        });
+    };
+
     return (
         <div className='week-view-component'>
             <FullCalendar
@@ -439,7 +460,7 @@ const WeekView: React.FC<WeekViewProps> = ({
 
                 select={handleCalenderSelection}
                 dateClick={handleCalenderClick}
-
+                eventDidMount={eventDidMount} // add tippy to events
             />
         </div>
     );

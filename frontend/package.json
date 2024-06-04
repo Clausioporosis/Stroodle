@@ -4,9 +4,9 @@
   "private": true,
   "dependencies": {
     "@fullcalendar/common": "^5.11.5",
-    "@fullcalendar/daygrid": "^6.1.11",
+    "@fullcalendar/daygrid": "^6.1.13",
     "@fullcalendar/interaction": "^6.1.11",
-    "@fullcalendar/react": "^6.1.11",
+    "@fullcalendar/react": "^6.1.13",
     "@fullcalendar/timegrid": "^6.1.11",
     "@react-keycloak/web": "^3.4.0",
     "@testing-library/jest-dom": "^5.17.0",
@@ -25,6 +25,7 @@
     "react-scripts": "5.0.1",
     "react-select": "^5.8.0",
     "react-tooltip": "^5.26.4",
+    "tippy.js": "^6.3.7",
     "typescript": "^4.9.5",
     "uuid": "^9.0.1",
     "web-vitals": "^2.1.4"
