@@ -63,5 +63,13 @@ public class PollService {
         pollRepository.deleteById(id);
     }
 
+    public List<Poll> findPollsByOrganizerId(String organizerId) {
+        List<Poll> polls = pollRepository.findByOrganizerId(organizerId);
+        if (polls.isEmpty()) {
+            throw new ResourceNotFoundException("No polls found for organizer with id " + organizerId);
+        }
+        return polls;
+    }
+    
     // Methoden zur Verwaltung von Umfragen
 }

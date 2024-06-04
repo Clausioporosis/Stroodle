@@ -2,6 +2,8 @@ package com.stroodle.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import com.stroodle.backend.model.Poll;
@@ -55,4 +57,14 @@ public class PollController {
         pollService.deletePoll(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<List<Poll>> getMyPolls() {
+    JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+    String userId = (String) authentication.getToken().getClaims().get("sub");
+
+    List<Poll> polls = pollService.findPollsByOrganizerId(userId);
+    return ResponseEntity.ok(polls);
+    }
+
 }
