@@ -124,11 +124,20 @@ const WeekView: React.FC<WeekViewProps> = ({
     // ics functions --------------------------------------------------------------------------------------------------
 
     useEffect(() => {
-        if (!calendarApi || !icsEvents) return;
+        if (!calendarApi) return;
         setTimeout(() => {
+            removeIcsEvents();
             setIcsEventsToCalendar();
         }, 0);
     }, [calendarApi, icsEvents]);
+
+    function removeIcsEvents() {
+        calendarApi.getEvents().forEach((event: any) => {
+            if (event.id === 'icsEvent') {
+                event.remove();
+            }
+        });
+    }
 
     function setIcsEventsToCalendar() {
         icsEvents?.map((event: any) => {
@@ -141,7 +150,6 @@ const WeekView: React.FC<WeekViewProps> = ({
                 display: 'background',
                 color: '#c69555'
             };
-            console.log('newIcsEvent: ', newIcsEvent);
             calendarApi.addEvent(newIcsEvent);
         });
     }

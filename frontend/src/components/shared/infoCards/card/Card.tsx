@@ -28,7 +28,7 @@ const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
     const [modalTitle, setModalTitle] = useState<string>('');
     const [confirmButtonText, setConfirmButtonText] = useState<string | undefined>(undefined);
     const [showCloseButton, setShowCloseButton] = useState<boolean>(true);
-    const [cancelButtonText, setCancelButtonText] = useState<string | undefined>("Cancel");
+    const [cancelButtonText, setCancelButtonText] = useState<string | undefined>("Abbrechen");
     const [isCopied, setIsCopied] = useState<boolean>(false);
 
     const { keycloak } = useKeycloak();
@@ -111,7 +111,6 @@ const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
     };
 
     const handleCancel = () => {
-        console.log('Cancelled');
         setModalOpen(false);
     };
 

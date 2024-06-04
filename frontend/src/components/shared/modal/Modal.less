@@ -35,8 +35,28 @@
     margin: 0;
 }
 
+.calendar-links {
+    display: flex;
+    justify-content: center;
+
+    a {
+        color: var(--accent-color);
+
+        &:hover {
+            text-decoration: underline;
+        }
+
+        &:active {
+            background-color: transparent;
+        }
+    }
+}
+
 .modal-body {
+    display: flex;
+    flex-direction: column;
     padding: 16px;
+    gap: 10px;
 }
 
 .modal-footer {
@@ -68,8 +88,16 @@
     cursor: pointer;
 }
 
-.green {
+.accent {
     color: var(--accent-color);
+}
+
+.orange {
+    color: #c69555;
+}
+
+.red {
+    color: rgba(255, 0, 0, 0.674);
 }
 
 .header-button.delete-button {

@@ -58,9 +58,10 @@ public class IcsService {
             Ics ics = icsOptional.get();
             status.setStored(true);
             status.setValid(isIcsLinkValid(ics.getUrl()));
+            status.setUrl(ics.getUrl());
         } else {
             status.setStored(false);
-            status.setValid(false); // Wenn nicht gespeichert, ist es auch nicht gültig
+            status.setValid(false);
         }
         return status;
     }
