@@ -420,7 +420,7 @@ const WeekView: React.FC<WeekViewProps> = ({
         const endTime = end ? end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
         content = `${startTime} - ${endTime}`;
 
-        const theme = event.id === 'icsEvent' ? 'icsEvent' : 'proposedDate';
+        const theme = event.id === 'icsEvent' ? 'icsEvent' : event.backgroundColor === 'green' ? 'pendingAvailability' : 'proposedDate';
 
         tippy(info.el, {
             content: content,
