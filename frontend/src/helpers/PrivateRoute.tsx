@@ -7,12 +7,8 @@ interface PrivateRouteProps {
 }
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
-    const { keycloak, initialized } = useKeycloak();
+    const { keycloak } = useKeycloak();
     const location = useLocation();
-
-    if (!initialized) {
-        return <div>Loading...</div>;
-    }
 
     const isLoggedIn = keycloak.authenticated;
     const loginPath = `/login?redirect=${location.pathname}`;

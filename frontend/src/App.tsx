@@ -12,12 +12,14 @@ import Availability from './pages/availability/Availability';
 import CreatePoll from './pages/poll/create/Create';
 import ViewPoll from './pages/poll/view/View';
 
+import SpinningLoader from './components/shared/loading/SpinningLoader';
+
 
 const App: React.FC = () => {
   const { keycloak, initialized } = useKeycloak();
 
   if (!initialized) {
-    return <div>Loading...</div>;
+    return <SpinningLoader />;
   }
 
 

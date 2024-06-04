@@ -6,6 +6,9 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 
+import tippy from 'tippy.js';
+import 'tippy.js/dist/tippy.css';
+
 import { Availability, Weekday, TimePeriod } from '../../../models/User';
 import { ProposedDate } from '../../../models/Poll';
 
@@ -98,10 +101,10 @@ const WeekView: React.FC<WeekViewProps> = ({
                         ) : !event.allDay ? (
                             <>
                                 <p>
-                                    {event.start.toLocaleTimeString().substring(0, 5)} - {event.end.toLocaleTimeString().substring(0, 5)}
+                                    {event.start.toLocaleTimeString().substring(0, 5)} {/* - {event.end.toLocaleTimeString().substring(0, 5)*/}
                                 </p>
                                 <button className='event-button' onClick={() => handleEventDelete(event)}>
-                                    <p>x</p>
+                                    x
                                 </button>
                             </>
                         ) : (
@@ -110,7 +113,7 @@ const WeekView: React.FC<WeekViewProps> = ({
                                     Ganztägig
                                 </p>
                                 <button className='event-button' onClick={() => handleEventDelete(event)}>
-                                    <p>x</p>
+                                    x
                                 </button>
                             </>
                         )}
@@ -124,11 +127,20 @@ const WeekView: React.FC<WeekViewProps> = ({
     // ics functions --------------------------------------------------------------------------------------------------
 
     useEffect(() => {
-        if (!calendarApi || !icsEvents) return;
+        if (!calendarApi) return;
         setTimeout(() => {
+            removeIcsEvents();
             setIcsEventsToCalendar();
         }, 0);
     }, [calendarApi, icsEvents]);
+
+    function removeIcsEvents() {
+        calendarApi.getEvents().forEach((event: any) => {
+            if (event.id === 'icsEvent') {
+                event.remove();
+            }
+        });
+    }
 
     function setIcsEventsToCalendar() {
         icsEvents?.map((event: any) => {
@@ -141,7 +153,6 @@ const WeekView: React.FC<WeekViewProps> = ({
                 display: 'background',
                 color: '#c69555'
             };
-            console.log('newIcsEvent: ', newIcsEvent);
             calendarApi.addEvent(newIcsEvent);
         });
     }
@@ -191,7 +202,7 @@ const WeekView: React.FC<WeekViewProps> = ({
             end.setMinutes(end.getMinutes() + Number(duration));
         }
 
-        if (checkIfProposedDateIsAllowed(start, end, allDay)) return;
+        if (!checkIfProposedDateIsAllowed(start, end, allDay)) return;
 
         const newProposedDate: CalendarEvent = {
             id: uuidv4(),
@@ -200,8 +211,6 @@ const WeekView: React.FC<WeekViewProps> = ({
             allDay: allDay,
             color: '#4C9EBC'
         };
-
-        console.log('newProposedDate: ', newProposedDate);
 
         calendarApi.addEvent(newProposedDate);
         saveProposedDate?.(start);
@@ -230,14 +239,31 @@ const WeekView: React.FC<WeekViewProps> = ({
     // check if proposed date is allowed (not in the past or overlapping with other allDay events)
     function checkIfProposedDateIsAllowed(start: Date, end: Date, allDay: boolean): boolean {
         const allEvents = calendarApi.getEvents();
-        const conflict = allEvents.some((event: any) => {
-            if (event.id === 'icsEvent') {
+        const now = new Date();
+
+        if (allDay) {
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            if (start < today) {
                 return false;
             }
-            return start < new Date() || (event.allDay && allDay && event.start.getDay() === start.getDay());
+        } else {
+            if (start < now) {
+                return false;
+            }
+        }
+
+        const sameDayAllDayEventExists = allEvents.some((event: any) => {
+            const eventStart = new Date(event.start);
+            const eventEnd = new Date(event.end);
+
+            return event.allDay && event.id !== 'icsEvent' && allDay &&
+                (eventStart.toDateString() === start.toDateString() ||
+                    eventEnd.toDateString() === end.toDateString());
         });
-        return conflict;
+
+        return !sameDayAllDayEventExists;
     }
+
 
     // refresh the expired time highlight every 30 seconds
     useEffect(() => {
@@ -251,8 +277,9 @@ const WeekView: React.FC<WeekViewProps> = ({
         };
         addHighlightsSafely();
 
-        const intervalId = setInterval(addHighlightsSafely, 30000);
-        return () => clearInterval(intervalId);
+        // disabling interval for now, as it causes overdraws ics events
+        //const intervalId = setInterval(addHighlightsSafely, 30000);
+        //return () => clearInterval(intervalId);
     }, [calendarApi]);
 
     function addExpiredTimeHighlightToCalenderEvents() {
@@ -379,6 +406,28 @@ const WeekView: React.FC<WeekViewProps> = ({
         });
     }
 
+    // add tool-tip to events ------------------------------------------------------------------------------------------------
+
+    const eventDidMount = (info: any) => {
+        const event = info.event;
+        const start = event.start;
+        const end = event.end;
+        let content = '';
+
+        if (event.allDay || event.id === 'expiredTimeHighlight') return;
+
+        const startTime = start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const endTime = end ? end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+        content = `${startTime} - ${endTime}`;
+
+        const theme = event.id === 'icsEvent' ? 'icsEvent' : 'proposedDate';
+
+        tippy(info.el, {
+            content: content,
+            theme: theme
+        });
+    };
+
     return (
         <div className='week-view-component'>
             <FullCalendar
@@ -387,6 +436,7 @@ const WeekView: React.FC<WeekViewProps> = ({
                 eventContent={renderEventContent}
                 initialView="timeGridWeek"
                 snapDuration="00:05:00"
+                nowIndicator={true}
                 height={'100%'}
                 locale={'de'}
                 firstDay={1}
@@ -414,6 +464,7 @@ const WeekView: React.FC<WeekViewProps> = ({
 
                 select={handleCalenderSelection}
                 dateClick={handleCalenderClick}
+                eventDidMount={eventDidMount} // add tippy to events
             />
         </div>
     );

@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Availability, Weekday, TimePeriod } from '../../models/User';
 
-import HeaderComponent from '../../components/common/header/Header';
 import WeekView from '../../components/shared/weekView/WeekView';
-import { useNavigate } from "react-router-dom";
 
 import { useKeycloak } from '@react-keycloak/web';
 import UserService from '../../services/UserService';
 
-import OutlookService from '../../services/OutlookService';
-
 const AvailabilitySettings: React.FC = () => {
     const [reload, setReload] = useState(false);
-    const navigate = useNavigate();
     const [userAvailability, setUserAvailability] = useState<Availability>();
     const [pendingAvailabilityEntries, setPendingAvailabilityEntries] = useState<Availability>();
 
@@ -120,7 +115,6 @@ const AvailabilitySettings: React.FC = () => {
                         <button className="header-button" onClick={handleAuthClick}>Auth</button>
                         <button className="header-button" onClick={handleGetEvents}>getEvents</button>
                         <button className="header-button" onClick={handleUser}>getUser</button>
-                        <button className="header-button" onClick={() => navigate(-1)}>Zurück</button>
                         */}
                         <button className="header-button" onClick={handleSave}>Speichern</button>
                     </div>

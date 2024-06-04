@@ -199,7 +199,7 @@ textarea {
     font-size: 16px;
     margin-bottom: 6px;
     width: 100%;
-    height: 60px;
+    height: auto;
     padding: 10px;
     border-radius: 5px;
     border: none;
@@ -207,6 +207,10 @@ textarea {
     color: #ddd;
     box-sizing: border-box;
     resize: none;
+
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
 }
 
 select {
@@ -247,6 +251,10 @@ select {
     border-radius: 5px;
     cursor: pointer;
     user-select: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
 
     &:disabled {
         background-color: var(--base-color-2);
@@ -285,4 +293,8 @@ select {
             transform: scale(1);
         }
     }
+}
+
+.accent {
+    color: var(--accent-color);
 }

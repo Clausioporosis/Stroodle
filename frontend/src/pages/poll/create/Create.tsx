@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import UserService from '../../../services/UserService';
-import { User, } from '../../../models/User';
 import PollService from '../../../services/PollService';
 import { Poll, ProposedDate } from '../../../models/Poll';
 
@@ -10,8 +8,13 @@ import SearchBar from '../../../components/polls/create/searchBar/SearchBar';
 import AddedParticipants from '../../../components/polls/create/addedParticipants/AddedParticipants';
 import WeekView from '../../../components/shared/weekView/WeekView';
 
+import { CalendarX, CalendarCheck, CalendarPlus } from 'react-bootstrap-icons';
+
+
 import { useKeycloak } from '@react-keycloak/web';
 import OutlookService from '../../../services/OutlookService';
+
+import Modal from '../../../components/shared/modal/Modal';
 
 const Create: React.FC = () => {
     const navigate = useNavigate();
@@ -24,12 +27,37 @@ const Create: React.FC = () => {
     const [selectedDuration, setSelectedDuration] = useState('15 Minuten');
     const [participantsIds, setParticipantsIds] = useState<string[]>([]);
     const [proposedDates, setProposedDates] = useState<ProposedDate[] | undefined>();
-    const [icsStatus, setIcsStatus] = useState<{ isStored: boolean, isValid: boolean } | undefined>();
+    const [icsStatus, setIcsStatus] = useState<{ isStored: boolean, isValid: boolean, url: string } | undefined>();
     const [icsEvents, setIcsEvents] = useState<any[] | undefined>();
+
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [modalTitle, setModalTitle] = useState<string>('');
+    const [confirmButtonText, setConfirmButtonText] = useState<string | undefined>(undefined);
+    const [showCloseButton, setShowCloseButton] = useState<boolean>(true);
+    const [cancelButtonText, setCancelButtonText] = useState<string | undefined>();
+    const [icsUrl, setIcsUrl] = useState<string>('');
 
     const { keycloak } = useKeycloak();
     const pollService = new PollService(keycloak);
     const outlookService = new OutlookService(keycloak);
+
+    const descriptionRef = useRef<HTMLTextAreaElement>(null);
+
+    useEffect(() => {
+        adjustTextareaHeight(descriptionRef.current);
+    }, [description]);
+
+    const adjustTextareaHeight = (textarea: HTMLTextAreaElement | null) => {
+        if (textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = `${textarea.scrollHeight}px`;
+        }
+    };
+
+    const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setDescription(e.target.value);
+        adjustTextareaHeight(e.target);
+    };
 
     useEffect(() => {
         if (pollId) {
@@ -54,10 +82,11 @@ const Create: React.FC = () => {
         };
 
         if (pollId) {
-            pollService.putPoll(pollId, newPoll).then(() => {
-                alert('Umfrage wurde erfolgreich geändert.');
-                navigate('/dashboard');
-            })
+            console.log('Updating poll:', newPoll);
+            pollService.putPoll(pollId, newPoll)
+                .then(() => {
+                    navigate('/dashboard');
+                })
                 .catch(error => {
                     alert('Es gab einen Fehler beim ändern der Umfrage. Bitte versuchen Sie es erneut.');
                     console.error('Es gab einen Fehler beim ändern der Umfrage:', error);
@@ -65,7 +94,6 @@ const Create: React.FC = () => {
         } else {
             pollService.createPoll(newPoll)
                 .then(() => {
-                    alert('Umfrage wurde erfolgreich erstellt.');
                     navigate('/dashboard');
                 })
                 .catch(error => {
@@ -89,22 +117,6 @@ const Create: React.FC = () => {
         setParticipantsIds(prevParticipantsIds => prevParticipantsIds.filter(participantid => participantid !== removedParticipantId));
     };
 
-    function handleDurationSelect(element: any) {
-        const value = element.target.value;
-        if (value === "custom") {
-            const customDuration = window.prompt("Bitte geben Sie eine benutzerdefinierte Dauer ein:");
-            if (!customDuration) return;
-            setDuration(customDuration);
-            setSelectedDuration(customDuration + ' Minuten');
-        } else if (value === "allDay") {
-            setDuration(value);
-            setSelectedDuration('Ganztägig');
-        } else {
-            setDuration(value);
-            setSelectedDuration(value + ' Minuten');
-        }
-    }
-
     function saveProposedDate(start: Date) {
         const newProposedDate = new ProposedDate(start, duration, []);
         setProposedDates(prevProposedDates => [...prevProposedDates || [], newProposedDate]);
@@ -121,6 +133,143 @@ const Create: React.FC = () => {
         setProposedDates(filteredProposedDates || []);
     }
 
+    function handleDurationSelect(element: any) {
+        const value = element.target.value;
+        if (value === "custom") {
+            handleCustomDurationClick();
+        } else if (value === "allDay") {
+            setDuration(value);
+            setSelectedDuration('Ganztägig');
+        } else {
+            setDuration(value);
+            setSelectedDuration(value + ' Minuten');
+        }
+    }
+    const [customDuration, setCustomDuration] = useState('');
+
+    const handleCustomDurationClick = () => {
+        setModalOpen(true);
+        setModalTitle('Dauer eingeben');
+        setConfirmButtonText('Speichern');
+        setCancelButtonText("Abbrechen");
+        setShowCloseButton(false);
+    };
+
+    const hasErrors = () => {
+        return title === '' || participantsIds.length === 0 || (!proposedDates || proposedDates.length === 0);
+    };
+
+    const handleCreateClick = () => {
+        setModalOpen(true);
+        if (!hasErrors()) {
+            setModalTitle('Umfrage erstellen?');
+            setConfirmButtonText('Erstellen');
+            setCancelButtonText("Abbrechen");
+        } else {
+            setModalTitle('Prüfe deine Eingaben!');
+            setConfirmButtonText(undefined);
+            setCancelButtonText(undefined);
+        }
+        setShowCloseButton(hasErrors());
+    };
+
+    const handleUpdateClick = () => {
+        setModalOpen(true);
+        if (!hasErrors()) {
+            setModalTitle('Umfrage aktualisieren?');
+            setConfirmButtonText('Aktualisieren');
+            setCancelButtonText("Abbrechen");
+        } else {
+            setModalTitle('Prüfe deine Eingaben!');
+            setConfirmButtonText(undefined);
+            setCancelButtonText(undefined);
+        }
+        setShowCloseButton(hasErrors());
+    };
+
+    const renderModalContent = () => {
+        if (modalTitle === 'Dauer eingeben') {
+            return (
+                <input
+                    type="text"
+                    value={customDuration}
+                    onChange={handleCustomDurationChange}
+                    placeholder="Benutzerdefinierte Dauer in Minuten"
+                />
+            );
+        }
+        if (modalTitle === 'Kalender verknüpfen') {
+            return (
+                <>
+                    <p>Veröffentlichen und speichern Sie den ICS-Link Ihres Kalenders, um diesen zu Importieren.</p>
+                    <p className='calendar-links'>
+                        <a className='link' href="https://outlook.live.com/calendar/0/options/calendar/SharedCalendars" target="_blank" rel="noopener noreferrer">Outlook</a>
+                        <a className='link' href="https://calendar.google.com/calendar/u/1/r/settings" target="_blank" rel="noopener noreferrer">Google</a>
+                    </p>
+                    <input
+                        type="text"
+                        value={icsUrl}
+                        onChange={handleIcsChange}
+                        placeholder="ICS-Link eingeben"
+                    />
+                    {!icsStatus?.isValid && icsStatus?.url !== '' && <span className='red'><CalendarX className='icon red' />{" ICS-Link ist nicht gültig"}</span>}
+                </>
+            );
+        }
+        if (modalTitle === 'Prüfe deine Eingaben!') {
+            return (
+                <>
+                    {title === '' && <p className='red'>Titel darf nicht leer sein</p>}
+                    {participantsIds.length === 0 && <p className='red'>Es muss mindestens einen Teilnehmer geben</p>}
+                    {(!proposedDates || proposedDates.length === 0) && <p className='red'>Es muss mindestens 1 Termin ausgewählt sein</p>}
+                </>
+            );
+        }
+        return null;
+    };
+
+    const handleIcsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setIcsUrl(event.target.value);
+    };
+
+    const handleCustomDurationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setCustomDuration(event.target.value);
+    };
+
+    const handleConfirm = () => {
+        if (modalTitle === 'Dauer eingeben') {
+            setDuration(customDuration);
+            setSelectedDuration(customDuration + ' Minuten');
+        }
+        if (modalTitle === 'Kalender verknüpfen') {
+            outlookService.submitIcsUrl(icsUrl)
+                .then(() => {
+                    setIcsEvents(undefined);
+                    checkIcsStatus();
+                })
+                .catch(error => {
+                    console.error('Error saving ICS URL:', error);
+                });
+        }
+        if (modalTitle === 'Umfrage erstellen?' || modalTitle === 'Umfrage aktualisieren?') {
+            createPoll();
+        }
+        setModalOpen(false);
+    };
+
+    const handleCancel = () => {
+        setModalOpen(false);
+    };
+
+
+    const handleIcsButtonClick = () => {
+        setModalOpen(true);
+        setModalTitle('Kalender verknüpfen');
+        setConfirmButtonText('Speichern');
+        setCancelButtonText("Abbrechen");
+        setShowCloseButton(false);
+    };
+
     useEffect(() => {
         checkIcsStatus();
     }, []);
@@ -128,11 +277,12 @@ const Create: React.FC = () => {
     function checkIcsStatus() {
         outlookService.checkIcsStatus()
             .then(status => {
-                setIcsStatus({ isStored: status.stored, isValid: status.valid });
+                setIcsUrl(status.url);
+                setIcsStatus({ isStored: status.stored, isValid: status.valid, url: status.url });
+                console.log('ICS status:', status);
                 if (status.stored && status.valid) {
                     outlookService.getIcsEvents()
                         .then(events => {
-                            console.log('ICS events:', events);
                             setIcsEvents(events);
                         })
                         .catch(error => {
@@ -145,40 +295,28 @@ const Create: React.FC = () => {
             });
     }
 
-    const handleIcsButtonClick = () => {
-        if (icsStatus) {
-            if (!icsStatus.isStored || !icsStatus.isValid) {
-                const icsUrl = window.prompt('Bitte geben Sie die URL des ICS-Links ein:');
-                if (icsUrl) {
-                    outlookService.submitIcsUrl(icsUrl)
-                        .then(() => {
-                            checkIcsStatus();
-                        })
-                        .catch(error => {
-                            console.error('Error saving ICS URL:', error);
-                        });
-                }
-            }
-        }
-    };
-
     return (
         <div className='app-body'>
-            <div className='tab'>
+            <div className='tab grow-tab'>
                 <h1>Umfrage erstellen
                     <div className='header-button-group'>
-                        <button className="header-button" onClick={() => navigate(-1)}>Zurück</button>
                     </div>
                 </h1>
                 <h3>Titel</h3>
                 <input type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Was ist der Anlass?" />
                 <h3>Beschreibung</h3>
-                <textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Was muss man wissen?" />
+                <textarea
+                    ref={descriptionRef}
+                    value={description}
+                    onChange={handleDescriptionChange}
+                    placeholder="Was muss man wissen?"
+                    style={{ overflow: 'hidden', resize: 'none' }}
+                />
                 <h3>Ort</h3>
                 <input type="text" value={location} onChange={e => setLocation(e.target.value)} placeholder="Wo wird es statt finden?" />
 
                 <h3>Teilnehmer</h3>
-                <SearchBar onUserClick={addParticipant} />
+                <SearchBar onUserClick={addParticipant} participantsIds={participantsIds} />
                 <AddedParticipants participantsIds={participantsIds} removeSelectedParticipant={removeParticipant} />
             </div>
 
@@ -187,10 +325,21 @@ const Create: React.FC = () => {
                     <div className='header-button-group'>
 
                         <button className="header-button" onClick={handleIcsButtonClick}>
-                            {icsStatus ? (icsStatus.isStored ? (icsStatus.isValid ? 'ics gespeichert' : 'ics ungültig') : 'ics url speichern') : 'laden...'}
+                            {icsStatus ?
+                                (icsStatus.isStored && icsStatus.url !== '' ?
+                                    (icsStatus.isValid ?
+                                        <><CalendarCheck className='icon orange' /> Kalender</>
+                                        :
+                                        <><CalendarX className='icon red' /> Kalender</>)
+                                    :
+                                    <><CalendarPlus className='icon' /> Kalender</>)
+                                :
+                                'laden...'}
                         </button>
+                        {pollId ? <button className="header-button" onClick={handleUpdateClick}>Aktualisieren</button>
+                            :
+                            <button className="header-button" onClick={handleCreateClick}>Erstellen</button>}
 
-                        <button className="header-button" onClick={createPoll}>Erstellen</button>
                     </div>
                 </h1>
 
@@ -206,7 +355,7 @@ const Create: React.FC = () => {
                     <option value="30">30 Minuten</option>
                     <option value="45">45 Minuten</option>
                     <option value="allDay">Ganztägig</option>
-                    <option value="custom">Individuell</option>
+                    <option value="custom">Benutzerdefiniert</option>
                 </select>
                 <WeekView
                     useCase='poll'
@@ -218,6 +367,17 @@ const Create: React.FC = () => {
                     icsStatus={icsStatus}
                     icsEvents={icsEvents} />
             </div>
+
+            <Modal
+                isOpen={isModalOpen}
+                title={modalTitle}
+                content={renderModalContent()}
+                onConfirm={handleConfirm}
+                onCancel={handleCancel}
+                confirmButtonText={confirmButtonText}
+                cancelButtonText={cancelButtonText}
+                showCloseButton={showCloseButton}
+            />
         </div>
     );
 };

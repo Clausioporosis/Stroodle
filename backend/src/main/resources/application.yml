@@ -14,8 +14,6 @@ keycloak:
   auth-server-url: https://login.stroodle.online
   realm: Stroodle
   resource: stroodle-rest-api
-  credentials:
-    secret: E6rjyoGAO7JO4NRE55KYtTLP7yT9UsBG
 
 spring:
   devtools:

@@ -6,4 +6,5 @@ import lombok.Data;
 public class IcsStatusDto {
     private boolean isStored;
     private boolean isValid;
+    private String url;
 }
