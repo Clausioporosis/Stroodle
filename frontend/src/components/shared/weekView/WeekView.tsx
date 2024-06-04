@@ -407,20 +407,24 @@ const WeekView: React.FC<WeekViewProps> = ({
     }
 
     // add tool-tip to events ------------------------------------------------------------------------------------------------
+
     const eventDidMount = (info: any) => {
         const event = info.event;
         const start = event.start;
         const end = event.end;
         let content = '';
 
-        if (event.allDay) return;
+        if (event.allDay || event.id === 'expiredTimeHighlight') return;
 
         const startTime = start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         const endTime = end ? end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
         content = `${startTime} - ${endTime}`;
 
+        const theme = event.id === 'icsEvent' ? 'icsEvent' : 'proposedDate';
+
         tippy(info.el, {
             content: content,
+            theme: theme
         });
     };
 
