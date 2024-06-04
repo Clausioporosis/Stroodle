@@ -981,12 +981,22 @@ p {
 .tab {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   padding: 15px;
   background-color: transparent;
   border-radius: 3px;
   border: var(--border-color) 1px solid;
   grid-column: span 5;
   height: 600px;
+}
+.no-data-text {
+  text-align: center;
+  font-size: 18px;
+  color: #555;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
 }
 .single-tab {
   grid-column-start: 3;
@@ -1002,9 +1012,6 @@ p {
 }
 .event-tab {
   grid-column: span 4;
-}
-.test {
-  border: red 1px dotted;
 }
 @media (max-width: 1400px) {
   .tab {

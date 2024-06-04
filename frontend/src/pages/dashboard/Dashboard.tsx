@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from 'react';
-
 import { useNavigate } from 'react-router-dom';
-import Header from "../../components/common/header/Header"
-
-import { Info, PlusSquare } from 'react-bootstrap-icons';
-
-import UserService from '../../services/UserService';
+import { PlusSquare } from 'react-bootstrap-icons';
 import keycloak from '../../keycloak';
 import PollService from '../../services/PollService';
 import { Poll } from '../../models/Poll';
@@ -16,19 +11,21 @@ const Dashboard: React.FC = () => {
     const [runningPolls, setRunningPolls] = useState<Poll[]>([]);
 
     const pollService = new PollService(keycloak);
-
     const navigate = useNavigate();
 
     useEffect(() => {
-
         getMyPolls();
+        getRunningPolls();
     }, []);
 
     async function getMyPolls() {
-        // get all polls, till specific api requests are implemented
         const allPolls = await pollService.getAllPolls();
-
         setMyPolls(allPolls);
+    }
+
+    async function getRunningPolls() {
+        const allPolls = await pollService.getAllPolls();
+        setRunningPolls(allPolls);
     }
 
     const handleCreateClick = () => {
@@ -38,7 +35,6 @@ const Dashboard: React.FC = () => {
     return (
         <div className="app-body">
             <div className='tab my-poll-tab'>
-
                 <h1 className="created-polls-tab-header">
                     Meine Umfragen
                     <div className='header-button-group'>
@@ -48,17 +44,23 @@ const Dashboard: React.FC = () => {
                         </div>
                     </div>
                 </h1>
-
-                < InfoCards useCase={'myPolls'} pollData={myPolls} onPollDelete={getMyPolls} />
+                {myPolls.length === 0 ? (
+                    <p className="no-data-text">Keine Umfragen vorhanden</p>
+                ) : (
+                    <InfoCards useCase={'myPolls'} pollData={myPolls} onPollDelete={getMyPolls} />
+                )}
             </div>
 
             <div className='tab event-tab'>
                 <h1 className="created-polls-tab-header">
                     Events
                 </h1>
-                < InfoCards useCase={'runningPolls'} pollData={myPolls} />
+                {runningPolls.length === 0 ? (
+                    <p className="no-data-text">Keine Events vorhanden</p>
+                ) : (
+                    <InfoCards useCase={'runningPolls'} pollData={runningPolls} />
+                )}
             </div>
-
         </div>
     );
 };
