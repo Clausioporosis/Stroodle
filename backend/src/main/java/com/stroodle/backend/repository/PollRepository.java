@@ -9,4 +9,6 @@ import com.stroodle.backend.model.Poll;
 @Repository
 public interface PollRepository extends MongoRepository<Poll, String> {
     List<Poll> findByTitle(String title);
+    List<Poll> findByOrganizerId(String organizerId);
+    List<Poll> findByParticipantIdsContains(String participantId);
 }
