@@ -861,8 +861,8 @@ a:active {
   list-style: none;
   transition: background-color 0.3s ease;
 }
-.search-bar-component .result-list li span {
-  color: #161616;
+.search-bar-component .result-list li .user {
+  font-weight: bolder;
 }
 .search-bar-component .result-list .list-item:hover {
   background-color: #6b6b6b;

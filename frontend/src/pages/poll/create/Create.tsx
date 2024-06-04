@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import UserService from '../../../services/UserService';
-import { User, } from '../../../models/User';
 import PollService from '../../../services/PollService';
 import { Poll, ProposedDate } from '../../../models/Poll';
 
@@ -167,7 +165,6 @@ const Create: React.FC = () => {
             <div className='tab'>
                 <h1>Umfrage erstellen
                     <div className='header-button-group'>
-                        <button className="header-button" onClick={() => navigate(-1)}>Zurück</button>
                     </div>
                 </h1>
                 <h3>Titel</h3>
@@ -178,7 +175,7 @@ const Create: React.FC = () => {
                 <input type="text" value={location} onChange={e => setLocation(e.target.value)} placeholder="Wo wird es statt finden?" />
 
                 <h3>Teilnehmer</h3>
-                <SearchBar onUserClick={addParticipant} />
+                <SearchBar onUserClick={addParticipant} participantsIds={participantsIds} />
                 <AddedParticipants participantsIds={participantsIds} removeSelectedParticipant={removeParticipant} />
             </div>
 
