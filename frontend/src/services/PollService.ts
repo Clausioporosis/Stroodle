@@ -80,6 +80,34 @@ class PollService {
             console.error('Es gab einen Fehler beim Löschen des Polls!', error);
         }
     }
+
+    async getMyPolls(): Promise<Poll[]> {
+        try {
+            const response = await apiClient.get(`/polls/me`, {
+                headers: {
+                    'Authorization': `Bearer ${this.keycloak.token!}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Es gab einen Fehler!', error);
+            return [];
+        }
+    }
+
+    async getInvitedPolls(): Promise<Poll[]> {
+        try {
+            const response = await apiClient.get(`/polls/me/invitations`, {
+                headers: {
+                    'Authorization': `Bearer ${this.keycloak.token!}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Es gab einen Fehler!', error);
+            return [];
+        }
+    }
 }
 
 export default PollService;

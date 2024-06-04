@@ -155,7 +155,7 @@ const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
                 </div>
                 <div className='info-plus'>
                     {useCase === 'myPolls' ? (
-                        <p><Hourglass className='icon' />-</p>
+                        <>{/*<p><Hourglass className='icon' />-</p>*/}</>
                     ) : useCase === 'runningPolls' ? (
                         <>
                             <p><GeoAlt className='icon' />{poll.location !== '' ? poll.location : '-'}</p>
@@ -166,7 +166,7 @@ const Card: React.FC<CardProps> = ({ poll, useCase, onPollDelete }) => {
                                 {poll.bookedDateIndex !== null ? (
                                     <p><ClockHistory className='icon' />{bookedDate?.duration}</p>
                                 ) : (
-                                    <p><Hourglass className='icon' />-</p>
+                                    <>{/*<p><Hourglass className='icon' />-</p>*/}</>
                                 )}
                             </div>
                         </>
