@@ -31,13 +31,7 @@ const Header: React.FC = () => {
     }, [keycloak]);
 
     const confirmLogout = () => {
-        keycloak.logout()
-            .then(() => {
-                navigate('/login');
-            })
-            .catch((error) => {
-                console.error("Logout failed", error);
-            });
+        keycloak.logout();
         setModalOpen(false);
     };
 
