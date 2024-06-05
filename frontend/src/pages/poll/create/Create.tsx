@@ -9,16 +9,18 @@ import AddedParticipants from '../../../components/polls/create/addedParticipant
 import WeekView from '../../../components/shared/weekView/WeekView';
 
 import { CalendarX, CalendarCheck, CalendarPlus } from 'react-bootstrap-icons';
-
-
 import { useKeycloak } from '@react-keycloak/web';
 import OutlookService from '../../../services/OutlookService';
-
 import Modal from '../../../components/shared/modal/Modal';
 
 const Create: React.FC = () => {
     const navigate = useNavigate();
     const { pollId } = useParams();
+    const { keycloak } = useKeycloak();
+    const pollService = new PollService(keycloak);
+    const outlookService = new OutlookService(keycloak);
+
+    const descriptionRef = useRef<HTMLTextAreaElement>(null);
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -36,16 +38,21 @@ const Create: React.FC = () => {
     const [showCloseButton, setShowCloseButton] = useState<boolean>(true);
     const [cancelButtonText, setCancelButtonText] = useState<string | undefined>();
     const [icsUrl, setIcsUrl] = useState<string>('');
-
-    const { keycloak } = useKeycloak();
-    const pollService = new PollService(keycloak);
-    const outlookService = new OutlookService(keycloak);
-
-    const descriptionRef = useRef<HTMLTextAreaElement>(null);
+    const [customDuration, setCustomDuration] = useState('');
 
     useEffect(() => {
         adjustTextareaHeight(descriptionRef.current);
     }, [description]);
+
+    useEffect(() => {
+        if (pollId) {
+            loadPoll(pollId);
+        }
+    }, [pollId]);
+
+    useEffect(() => {
+        checkIcsStatus();
+    }, []);
 
     const adjustTextareaHeight = (textarea: HTMLTextAreaElement | null) => {
         if (textarea) {
@@ -59,82 +66,70 @@ const Create: React.FC = () => {
         adjustTextareaHeight(e.target);
     };
 
-    useEffect(() => {
-        if (pollId) {
-            pollService.getPollById(pollId).then(poll => {
-                setTitle(poll!.title);
-                setDescription(poll!.description);
-                setLocation(poll!.location);
-                setParticipantsIds(poll!.participantIds);
-                setProposedDates(poll!.proposedDates);
-            });
+    const loadPoll = async (id: string) => {
+        try {
+            const poll = await pollService.getPollById(id);
+            if (poll) {
+                setTitle(poll.title);
+                setDescription(poll.description);
+                setLocation(poll.location);
+                setParticipantsIds(poll.participantIds);
+                setProposedDates(poll.proposedDates);
+            }
+        } catch (error) {
+            console.error('Error loading poll:', error);
         }
-    }, [pollId]);
+    };
 
-    const createPoll = () => {
+    const createPoll = async () => {
         const newPoll: Poll = {
             organizerId: keycloak.tokenParsed?.sub!,
-            title: title,
-            description: description,
-            location: location,
+            title,
+            description,
+            location,
             participantIds: participantsIds,
             proposedDates: sortProposedDates(proposedDates || [])
         };
 
-        if (pollId) {
-            console.log('Updating poll:', newPoll);
-            pollService.putPoll(pollId, newPoll)
-                .then(() => {
-                    navigate('/dashboard');
-                })
-                .catch(error => {
-                    alert('Es gab einen Fehler beim ändern der Umfrage. Bitte versuchen Sie es erneut.');
-                    console.error('Es gab einen Fehler beim ändern der Umfrage:', error);
-                });
-        } else {
-            pollService.createPoll(newPoll)
-                .then(() => {
-                    navigate('/dashboard');
-                })
-                .catch(error => {
-                    alert('Es gab einen Fehler beim erstellen der Umfrage. Bitte versuchen Sie es erneut.');
-                    console.error('Es gab einen Fehler beim erstellen der Umfrage:', error);
-                });
+        try {
+            if (pollId) {
+                await pollService.putPoll(pollId, newPoll);
+            } else {
+                await pollService.createPoll(newPoll);
+            }
+            navigate('/dashboard');
+        } catch (error) {
+            alert('Es gab einen Fehler beim Speichern der Umfrage. Bitte versuchen Sie es erneut.');
+            console.error('Error saving poll:', error);
         }
     };
 
-    // add a participant to the list
     const addParticipant = (addedParticipantId: string) => {
-        if (!participantsIds.some(participantId => participantId === addedParticipantId)) {
-            setParticipantsIds(prevParticipantsIds => [...prevParticipantsIds, addedParticipantId]);
-        } else {
-            alert('Dieser Teilnehmer existiert bereits in der Liste.');
+        if (!participantsIds.includes(addedParticipantId)) {
+            setParticipantsIds(prev => [...prev, addedParticipantId]);
         }
     };
 
-    // remove a participant from the list
     const removeParticipant = (removedParticipantId: string) => {
-        setParticipantsIds(prevParticipantsIds => prevParticipantsIds.filter(participantid => participantid !== removedParticipantId));
+        setParticipantsIds(prev => prev.filter(id => id !== removedParticipantId));
     };
 
-    function saveProposedDate(start: Date) {
+    const saveProposedDate = (start: Date) => {
         const newProposedDate = new ProposedDate(start, duration, []);
-        setProposedDates(prevProposedDates => [...prevProposedDates || [], newProposedDate]);
-    }
-
-    const sortProposedDates = (proposedDates: ProposedDate[]): ProposedDate[] => {
-        return proposedDates.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        setProposedDates(prev => [...prev || [], newProposedDate]);
     };
 
-    function removeProposedDate(date: string, duration: string) {
-        const filteredProposedDates = proposedDates?.filter(proposedDate => {
-            return !(new Date(date).toISOString() === new Date(proposedDate.date).toISOString() && duration === proposedDate.duration);
-        });
-        setProposedDates(filteredProposedDates || []);
-    }
+    const sortProposedDates = (dates: ProposedDate[]): ProposedDate[] => {
+        return dates.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    };
 
-    function handleDurationSelect(element: any) {
-        const value = element.target.value;
+    const removeProposedDate = (date: string, duration: string) => {
+        const filteredDates = proposedDates?.filter(d => !(new Date(date).toISOString() === new Date(d.date).toISOString() && duration === d.duration));
+        setProposedDates(filteredDates || []);
+    };
+
+    const handleDurationSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const value = e.target.value;
         if (value === "custom") {
             handleCustomDurationClick();
         } else if (value === "allDay") {
@@ -144,8 +139,7 @@ const Create: React.FC = () => {
             setDuration(value);
             setSelectedDuration(value + ' Minuten');
         }
-    }
-    const [customDuration, setCustomDuration] = useState('');
+    };
 
     const handleCustomDurationClick = () => {
         setModalOpen(true);
@@ -156,12 +150,17 @@ const Create: React.FC = () => {
     };
 
     const hasErrors = () => {
-        return title === '' || participantsIds.length === 0 || (!proposedDates || proposedDates.length === 0);
+        const errors: string[] = [];
+        if (title === '') errors.push('Titel darf nicht leer sein');
+        if (participantsIds.length === 0) errors.push('Es muss mindestens einen Teilnehmer geben');
+        if (!proposedDates || proposedDates.length === 0) errors.push('Es muss mindestens 1 Termin ausgewählt sein');
+        return errors;
     };
 
     const handleCreateClick = () => {
         setModalOpen(true);
-        if (!hasErrors()) {
+        const errors = hasErrors();
+        if (errors.length === 0) {
             setModalTitle('Umfrage erstellen?');
             setConfirmButtonText('Erstellen');
             setCancelButtonText("Abbrechen");
@@ -170,12 +169,13 @@ const Create: React.FC = () => {
             setConfirmButtonText(undefined);
             setCancelButtonText(undefined);
         }
-        setShowCloseButton(hasErrors());
+        setShowCloseButton(errors.length > 0);
     };
 
     const handleUpdateClick = () => {
         setModalOpen(true);
-        if (!hasErrors()) {
+        const errors = hasErrors();
+        if (errors.length === 0) {
             setModalTitle('Umfrage aktualisieren?');
             setConfirmButtonText('Aktualisieren');
             setCancelButtonText("Abbrechen");
@@ -184,7 +184,7 @@ const Create: React.FC = () => {
             setConfirmButtonText(undefined);
             setCancelButtonText(undefined);
         }
-        setShowCloseButton(hasErrors());
+        setShowCloseButton(errors.length > 0);
     };
 
     const renderModalContent = () => {
@@ -217,11 +217,12 @@ const Create: React.FC = () => {
             );
         }
         if (modalTitle === 'Prüfe deine Eingaben!') {
+            const errors = hasErrors();
             return (
                 <>
-                    {title === '' && <p className='red'>Titel darf nicht leer sein</p>}
-                    {participantsIds.length === 0 && <p className='red'>Es muss mindestens einen Teilnehmer geben</p>}
-                    {(!proposedDates || proposedDates.length === 0) && <p className='red'>Es muss mindestens 1 Termin ausgewählt sein</p>}
+                    {errors.map((error, index) => (
+                        <p key={index} className='red'>{error}</p>
+                    ))}
                 </>
             );
         }
@@ -261,7 +262,6 @@ const Create: React.FC = () => {
         setModalOpen(false);
     };
 
-
     const handleIcsButtonClick = () => {
         setModalOpen(true);
         setModalTitle('Kalender verknüpfen');
@@ -270,30 +270,20 @@ const Create: React.FC = () => {
         setShowCloseButton(false);
     };
 
-    useEffect(() => {
-        checkIcsStatus();
-    }, []);
-
-    function checkIcsStatus() {
-        outlookService.checkIcsStatus()
-            .then(status => {
-                setIcsUrl(status.url);
-                setIcsStatus({ isStored: status.stored, isValid: status.valid, url: status.url });
-                console.log('ICS status:', status);
-                if (status.stored && status.valid) {
-                    outlookService.getIcsEvents()
-                        .then(events => {
-                            setIcsEvents(events);
-                        })
-                        .catch(error => {
-                            console.error('Error fetching ICS events:', error);
-                        });
-                }
-            })
-            .catch(error => {
-                console.error('Error checking ICS status:', error);
-            });
-    }
+    const checkIcsStatus = async () => {
+        try {
+            const status = await outlookService.checkIcsStatus();
+            setIcsUrl(status.url);
+            setIcsStatus({ isStored: status.stored, isValid: status.valid, url: status.url });
+            console.log('ICS status:', status);
+            if (status.stored && status.valid) {
+                const events = await outlookService.getIcsEvents();
+                setIcsEvents(events);
+            }
+        } catch (error) {
+            console.error('Error checking ICS status:', error);
+        }
+    };
 
     return (
         <div className='app-body'>
@@ -310,7 +300,6 @@ const Create: React.FC = () => {
                     value={description}
                     onChange={handleDescriptionChange}
                     placeholder="Was muss man wissen?"
-                    style={{ overflow: 'hidden', resize: 'none' }}
                 />
                 <h3>Ort</h3>
                 <input type="text" value={location} onChange={e => setLocation(e.target.value)} placeholder="Wo wird es statt finden?" />
