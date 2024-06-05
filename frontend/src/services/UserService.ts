@@ -1,8 +1,8 @@
 import { User, Availability } from '../models/User';
 import Keycloak from 'keycloak-js';
-import axios from 'axios';
+import axios, { AxiosInstance, AxiosResponse } from 'axios';
 
-const apiClient = axios.create({
+const apiClient: AxiosInstance = axios.create({
     baseURL: process.env.REACT_APP_API_BASE_URL
 });
 
@@ -13,93 +13,88 @@ class UserService {
         this.keycloak = keycloak;
     }
 
-    async getAllUsers(): Promise<User[]> {
+    private getAuthHeader(): { Authorization: string } {
+        return { 'Authorization': `Bearer ${this.keycloak.token!}` };
+    }
+
+    private async handleRequest<T>(request: Promise<AxiosResponse<T>>): Promise<T> {
         try {
-            const response = await apiClient.get('/users', {
-                headers: {
-                    'Authorization': `Bearer ${this.keycloak.token!}`
-                }
-            });
-            return response.data.map((user: User) => new User(
-                user.id,
-                user.username,
-                user.firstName,
-                user.lastName,
-                user.email
-            ));
-        } catch (error) {
-            console.error('Error fetching all users', error);
-            return [];
+            const response = await request;
+            return response.data;
+        } catch (error: any) {
+            const errorMessage = error.response?.data || error.message;
+            const statusCode = error.response?.status;
+
+            console.error('API request error:', errorMessage);
+
+            if (statusCode === 404) {
+                // If the server returns a 404 status, interpret it as no data found and return an empty array or undefined
+                return [] as unknown as T;
+            }
+
+            throw error;
         }
     }
 
-    async getUserById(id: string): Promise<User | undefined> {
+    public async getAllUsers(): Promise<User[]> {
+        const response = await this.handleRequest(apiClient.get('/users', {
+            headers: this.getAuthHeader()
+        }));
+        return response.map((user: User) => new User(
+            user.id,
+            user.username,
+            user.firstName,
+            user.lastName,
+            user.email
+        ));
+    }
+
+    public async getUserById(id: string): Promise<User | undefined> {
+        const response = await this.handleRequest(apiClient.get(`/users/${id}`, {
+            headers: this.getAuthHeader()
+        }));
+        return new User(
+            response.id,
+            response.username,
+            response.firstName,
+            response.lastName,
+            response.email
+        );
+    }
+
+    public async getUserAvailability(userId: string): Promise<Availability | undefined> {
         try {
-            const response = await apiClient.get(`/users/${id}`, {
-                headers: {
-                    'Authorization': `Bearer ${this.keycloak.token!}`
-                }
-            });
-            return new User(
-                response.data.id,
-                response.data.username,
-                response.data.firstName,
-                response.data.lastName,
-                response.data.email
-            );
-        } catch (error) {
-            console.error(`Error fetching user with id: ${id}`, error);
+            const response = await this.handleRequest(apiClient.get(`users/${userId}/availability`, {
+                headers: this.getAuthHeader()
+            }));
+            return response.availability as Availability;
+        } catch (error: any) {
+            if (error.response?.status === 404) {
+                return undefined; // No availability data found
+            }
+            throw error;
         }
     }
 
-    async getUserAvailability(userId: string): Promise<Availability | undefined> {
-        try {
-            const response = await apiClient.get(`users/${userId}/availability`, {
-                headers: {
-                    'Authorization': `Bearer ${this.keycloak.token!}`
-                }
-            });
-            return response.data.availability as Availability;
-        } catch (error) {
-            console.error(`Error fetching availability of user with id: ${userId}`, error);
-        }
+    public async setUserAvailability(availability: Availability, userId: string): Promise<boolean> {
+        const response = await this.handleRequest(apiClient.post(`users/${userId}/availability`, { userId, availability }, {
+            headers: this.getAuthHeader()
+        }));
+        return response.status === 200;
     }
 
-    async setUserAvailability(availability: Availability, userId: string) {
-        try {
-            const response = await apiClient.post(`users/${userId}/availability`, { userId, availability }, {
-                headers: {
-                    'Authorization': `Bearer ${this.keycloak.token!}`
-                }
-            });
-            return response.status === 200;
-        } catch (error) {
-            console.error(`Error setting availability of user with id: ${userId}`, error);
-        }
-    }
-
-    // email search not working, check backend
-    async searchUsers(query: string): Promise<User[]> {
-        try {
-            const response = await apiClient.get(`/users/search`, {
-                params: {
-                    query: query
-                },
-                headers: {
-                    'Authorization': `Bearer ${this.keycloak.token!}`
-                }
-            });
-            return response.data.map((user: User) => new User(
-                user.id,
-                user.username,
-                user.firstName,
-                user.lastName,
-                user.email
-            ));
-        } catch (error) {
-            console.error(`Error searching users with query: ${query}`, error);
-            return [];
-        }
+    public async searchUsers(query: string): Promise<User[]> {
+        const response = await this.handleRequest(apiClient.get(`/users/search`, {
+            params: { query },
+            headers: this.getAuthHeader()
+        }));
+        return response.map((user: User) => new User(
+            user.id,
+            user.username,
+            user.firstName,
+            user.lastName,
+            user.email
+        ));
     }
 }
 

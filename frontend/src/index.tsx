@@ -18,6 +18,7 @@ const tokenLogger = (tokens: any) => {
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <ReactKeycloakProvider
     authClient={keycloak}

@@ -28,41 +28,30 @@ public class IcsController {
     @Autowired
     private IcsService icsService;
 
-    @PostMapping("/save")
-    public ResponseEntity<Ics> saveIcsLink(@RequestBody Ics icsLink) {
+    private String getUserIdFromToken() {
         JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext()
                 .getAuthentication();
-        String userId = (String) authentication.getToken().getClaims().get("sub");
+        return (String) authentication.getToken().getClaims().get("sub");
+    }
 
+    @PostMapping("/save")
+    public ResponseEntity<Ics> saveIcsLink(@RequestBody Ics icsLink) {
+        String userId = getUserIdFromToken();
         Ics savedLink = icsService.saveIcsLink(userId, icsLink.getUrl());
         return new ResponseEntity<>(savedLink, HttpStatus.CREATED);
     }
 
     @GetMapping("/events")
-    public ResponseEntity<List<CalendarEventDto>> getCalendarEvents() {
-        JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext()
-                .getAuthentication();
-        String userId = (String) authentication.getToken().getClaims().get("sub");
-
-        try {
-            System.out.println("Controller: " + userId);
-            List<CalendarEventDto> events = icsService.getCalendarEvents(userId);
-            return ResponseEntity.ok(events);
-        } catch (IOException | ParserException | ParseException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).build();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(400).body(null);
-        }
+    public ResponseEntity<List<CalendarEventDto>> getCalendarEvents()
+            throws IOException, ParserException, ParseException {
+        String userId = getUserIdFromToken();
+        List<CalendarEventDto> events = icsService.getCalendarEvents(userId);
+        return ResponseEntity.ok(events);
     }
 
     @GetMapping("/status")
     public ResponseEntity<IcsStatusDto> checkIcsStatus() {
-        JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext()
-                .getAuthentication();
-        String userId = (String) authentication.getToken().getClaims().get("sub");
-
+        String userId = getUserIdFromToken();
         IcsStatusDto status = icsService.getIcsStatus(userId);
         return ResponseEntity.ok(status);
     }
