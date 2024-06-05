@@ -36,8 +36,6 @@ server:
     session:
       timeout: 30m
       cookie:
-        # http-only: true # Ensures the cookie is not accessible through JavaScript
-        # secure: true # true when using https
         same-site: lax # Ensures the session cookie is sent during cross-origin redirects, allowing the session to be maintained between the authentication request and the callback.
 
 jwt:
