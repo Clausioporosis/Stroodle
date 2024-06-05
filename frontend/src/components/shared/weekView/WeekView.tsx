@@ -473,12 +473,14 @@ const WeekView: React.FC<WeekViewProps> = ({
 
                 headerToolbar={headerToolbar}
                 nowIndicator={nowIndicator}
+                nowIndicator={nowIndicator}
                 allDaySlot={allDaySlot}
                 selectable={selectable}
                 selectOverlap={false}
 
                 select={handleCalenderSelection}
                 dateClick={handleCalenderClick}
+                eventDidMount={eventDidMount}
                 eventDidMount={eventDidMount}
             />
         </div>
