@@ -374,6 +374,7 @@ const WeekView: React.FC<WeekViewProps> = ({
 
     // set calendar settings based on use case ----------------------------------------------------------------------------
 
+    const [nowIndicator, setNowIndicator] = useState<boolean>();
     const [allDaySlot, setAllDaySlot] = useState<boolean>();
     const [selectable, setSelectable] = useState<boolean>();
     const [headerToolbar, setHeaderToolbar] = useState<any>();
@@ -391,12 +392,14 @@ const WeekView: React.FC<WeekViewProps> = ({
     };
 
     function availabilityViewSettings() {
+        setNowIndicator(false);
         setAllDaySlot(false);
         setSelectable(true);
         setHeaderToolbar(false);
     }
 
     function pollViewSettings() {
+        setNowIndicator(true);
         setAllDaySlot(true);
         setSelectable(false);
         setHeaderToolbar({
@@ -436,7 +439,6 @@ const WeekView: React.FC<WeekViewProps> = ({
                 eventContent={renderEventContent}
                 initialView="timeGridWeek"
                 snapDuration="00:05:00"
-                nowIndicator={true}
                 height={'100%'}
                 locale={'de'}
                 firstDay={1}
@@ -458,13 +460,14 @@ const WeekView: React.FC<WeekViewProps> = ({
                     }}
 
                 headerToolbar={headerToolbar}
+                nowIndicator={nowIndicator}
                 allDaySlot={allDaySlot}
                 selectable={selectable}
                 selectOverlap={false}
 
                 select={handleCalenderSelection}
                 dateClick={handleCalenderClick}
-                eventDidMount={eventDidMount} // add tippy to events
+                eventDidMount={eventDidMount}
             />
         </div>
     );
