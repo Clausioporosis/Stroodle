@@ -62,7 +62,7 @@ const Header: React.FC = () => {
 
             <div className='app-header'>
                 <div className='start'>
-                    <img src={process.env.PUBLIC_URL + '/stroodle-logo-white.png'} alt='Logo' className='stroodle-logo' />
+                    <img src={process.env.PUBLIC_URL + '/stroodle-logo-white.png'} alt='Logo' className='stroodle-logo' onClick={() => navigate('/dashboard')} />
                 </div>
 
                 <div className='end'>

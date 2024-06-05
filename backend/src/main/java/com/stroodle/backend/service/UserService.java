@@ -54,7 +54,7 @@ public class UserService {
 
     public List<UserDto> searchUsers(String query) {
         Keycloak keycloak = keycloakConfig.keycloak();
-        List<UserRepresentation> users = keycloak.realm(realm).users().search(query);
+        List<UserRepresentation> users = keycloak.realm(realm).users().search(query, 0, Integer.MAX_VALUE);
         return users.stream()
                 .map(user -> {
                     UserDto dto = new UserDto();
