@@ -1,9 +1,9 @@
 import Keycloak from 'keycloak-js';
-import axios from 'axios';
+import axios, { AxiosInstance, AxiosResponse } from 'axios';
 
-const apiClient = axios.create({
+const apiClient: AxiosInstance = axios.create({
     baseURL: process.env.REACT_APP_API_BASE_URL,
-    withCredentials: true // Ensure cookies are sent
+    withCredentials: true
 });
 
 class OutlookService {
@@ -13,88 +13,60 @@ class OutlookService {
         this.keycloak = keycloak;
     }
 
-    public async getAuthLink(): Promise<any> {
+    private getAuthHeader(): { Authorization: string } {
+        return { 'Authorization': `Bearer ${this.keycloak.token!}` };
+    }
+
+    private async handleRequest<T>(request: Promise<AxiosResponse<T>>): Promise<T> {
         try {
-            const response = await apiClient.get('/authenticate/azure', {
-                headers: {
-                    'Authorization': `Bearer ${this.keycloak.token!}`
-                }
-            });
+            const response = await request;
             return response.data;
-        } catch (error) {
-            console.error('Error fetching auth link:', error);
+        } catch (error: any) {
+            console.error('API request error:', error.response?.data || error.message);
             throw error;
         }
+    }
+
+    public async getAuthLink(): Promise<any> {
+        return this.handleRequest(apiClient.get('/authenticate/azure', {
+            headers: this.getAuthHeader()
+        }));
     }
 
     public async getOutlookEvents(): Promise<any> {
-        try {
-            const response = await apiClient.get('/outlook/events', {
-                headers: {
-                    'Authorization': `Bearer ${this.keycloak.token!}`
-                }
-            });
-            return response.data;
-        } catch (error: any) {
-            console.error('Error fetching events:', error.response.data);
-            throw error;
-        }
+        return this.handleRequest(apiClient.get('/outlook/events', {
+            headers: this.getAuthHeader()
+        }));
     }
 
     public async getUser(): Promise<any> {
-        try {
-            const response = await apiClient.get('/ics/save', {
-                headers: {
-                    'Authorization': `Bearer ${this.keycloak.token!}`
-                }
-            });
-            return response.data;
-        } catch (error: any) {
-            console.error('Error fetching user:', error.response.data);
-            throw error;
-        }
+        return this.handleRequest(apiClient.get('/ics/save', {
+            headers: this.getAuthHeader()
+        }));
     }
 
     public async submitIcsUrl(icsUrl: string): Promise<boolean> {
         try {
-            const response = await apiClient.post(`ics/save`, { url: icsUrl }, {
-                headers: {
-                    'Authorization': `Bearer ${this.keycloak.token!}`
-                }
-            });
-            return response.data;
+            const response = await this.handleRequest(apiClient.post('/ics/save', { url: icsUrl }, {
+                headers: this.getAuthHeader()
+            }));
+            return response;
         } catch (error) {
-            console.error(`Error saving ics url`, error);
+            console.error('Error saving ics url:', error);
             return false;
         }
     }
 
     public async checkIcsStatus(): Promise<any> {
-        try {
-            const response = await apiClient.get('/ics/status', {
-                headers: {
-                    'Authorization': `Bearer ${this.keycloak.token!}`
-                }
-            });
-            return response.data;
-        } catch (error: any) {
-            console.error('Error checking ics status:', error.response.data);
-            throw error;
-        }
+        return this.handleRequest(apiClient.get('/ics/status', {
+            headers: this.getAuthHeader()
+        }));
     }
 
     public async getIcsEvents(): Promise<any> {
-        try {
-            const response = await apiClient.get('/ics/events', {
-                headers: {
-                    'Authorization': `Bearer ${this.keycloak.token!}`
-                }
-            });
-            return response.data;
-        } catch (error: any) {
-            console.error('Error getting ics event data', error.response.data);
-            throw error;
-        }
+        return this.handleRequest(apiClient.get('/ics/events', {
+            headers: this.getAuthHeader()
+        }));
     }
 }
 
