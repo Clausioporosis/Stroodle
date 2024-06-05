@@ -1,11 +1,11 @@
 app:
-  origin: http://localhost:3000
-  #origin: https://stroodle.online
+  origins: "http://localhost:3000,https://www.stroodle.online,https://stroodle.online"
+
 
 azure:
   tenant-id: 9fd843f0-d6da-45c8-a7dd-a76889e41055
   client-id: 753e9586-53aa-4d57-9279-9b4deab47173
-  client-secret: 
+  client-secret: #retrieving events not possible either way :(
   authority: https://login.microsoftonline.com/9fd843f0-d6da-45c8-a7dd-a76889e41055
   redirect-uri: http://localhost:8081/api/authenticate/azure/callback
   graph:

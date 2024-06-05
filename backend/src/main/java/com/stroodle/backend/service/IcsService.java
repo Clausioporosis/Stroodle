@@ -66,7 +66,6 @@ public class IcsService {
                 status.setUrl(ics.getUrl());
             }
         }
-
         return status;
     }
 
@@ -76,6 +75,7 @@ public class IcsService {
 
         URL url = new URL(ics.getUrl());
         URLConnection connection = url.openConnection();
+        // input stream schließen !!!
         InputStream inputStream = connection.getInputStream();
 
         CalendarBuilder builder = new CalendarBuilder();

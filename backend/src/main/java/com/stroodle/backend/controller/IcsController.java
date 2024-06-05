@@ -55,4 +55,5 @@ public class IcsController {
         IcsStatusDto status = icsService.getIcsStatus(userId);
         return ResponseEntity.ok(status);
     }
+
 }
