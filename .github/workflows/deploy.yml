@@ -1,0 +1,39 @@
+name: Deploy to Debian Server
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Create deployment directory on remote server
+      run: |
+        ssh -o StrictHostKeyChecking=no debian@193.197.230.60 'mkdir -p /home/debian/stroodle'
+    - name: Copy files via SCP
+      run: |
+        scp -r -o StrictHostKeyChecking=no $(ls | grep -v '^deployment.yml$') debian@193.197.230.60:/home/debian/stroodle
+    - name: Clean up Docker system on remote server
+      run: |
+        ssh -o StrictHostKeyChecking=no debian@193.197.230.60 << 'EOF'
+          docker system prune -f
+        EOF
+    - name: Deploy application
+      run: |
+        ssh -o StrictHostKeyChecking=no debian@193.197.230.60 << 'EOF'
+          cd /home/debian/stroodle
+          docker-compose down
+          docker-compose up -d --build
+        EOF
