@@ -42,17 +42,25 @@ const View: React.FC = () => {
         pollService.getPollById(pollId!)
             .then(poll => {
                 setPoll(poll);
-                setIsOrganizer(poll!.organizerId === keycloak.tokenParsed?.sub!);
+                const currentUserId = keycloak.tokenParsed?.sub!;
+                const isOrganizer = poll!.organizerId === currentUserId;
+                setIsOrganizer(isOrganizer);
                 setSelectedDateIndex(poll?.bookedDateIndex);
-                setIsBooked(poll?.bookedDateIndex === null ? false : true);
+                setIsBooked(poll?.bookedDateIndex !== null);
 
                 const votedDates: number[] = [];
                 poll?.proposedDates?.forEach((date, index) => {
-                    if (date.voterIds?.includes(keycloak.tokenParsed?.sub!)) {
+                    if (date.voterIds?.includes(currentUserId)) {
                         votedDates.push(index);
                     }
                 });
                 setVotedDates(votedDates);
+
+                if (!poll!.participantIds.includes(currentUserId) && !isOrganizer) {
+                    poll!.participantIds.push(currentUserId);
+                    setPoll({ ...poll! });
+                    pollService.putPoll(poll!.id || '', poll!);
+                }
             })
             .catch(error => {
                 console.error('Es gab einen Fehler beim Abrufen des Polls!', error);
