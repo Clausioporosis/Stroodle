@@ -3,7 +3,7 @@ import axios, { AxiosInstance, AxiosResponse } from 'axios';
 
 const apiClient: AxiosInstance = axios.create({
     baseURL: process.env.REACT_APP_API_BASE_URL,
-    withCredentials: true // Ensure cookies are sent
+    withCredentials: true
 });
 
 class OutlookService {

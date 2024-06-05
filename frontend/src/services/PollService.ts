@@ -28,7 +28,7 @@ class PollService {
             console.error('API request error:', errorMessage);
 
             if (statusCode === 404) {
-                // Return an empty array if the server returns a 404 status
+                // interpret 404 as no data found
                 return [] as unknown as T;
             }
             throw error;

@@ -28,7 +28,7 @@ class UserService {
             console.error('API request error:', errorMessage);
 
             if (statusCode === 404) {
-                // If the server returns a 404 status, interpret it as no data found and return an empty array or undefined
+                // interpret 404 as no data found
                 return [] as unknown as T;
             }
 
@@ -70,7 +70,7 @@ class UserService {
             return response.availability as Availability;
         } catch (error: any) {
             if (error.response?.status === 404) {
-                return undefined; // No availability data found
+                return undefined;
             }
             throw error;
         }
