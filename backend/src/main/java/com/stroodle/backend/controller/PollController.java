@@ -32,14 +32,14 @@ public class PollController {
         return ResponseEntity.ok(polls);
     }
 
-    @GetMapping("/search/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Poll> getPollById(@PathVariable String id) {
         Optional<Poll> poll = pollService.getPollById(id);
         return poll.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/search/title")
+    @GetMapping("/title")
     public ResponseEntity<List<Poll>> findByTitle(@RequestParam String title) {
         List<Poll> polls = pollService.getPollByTitle(title);
         return ResponseEntity.ok(polls);
