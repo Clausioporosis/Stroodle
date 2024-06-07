@@ -444,12 +444,14 @@ a:active {
   white-space: pre-wrap;
 }
 .card .info-section .info-text .view-card {
-  display: block;
+  display: block !important;
+  padding-top: 5px;
 }
 .card .info-section .line-clamp-2 {
   -webkit-line-clamp: 2 !important;
 }
 .card .info-section .info-plus {
+  margin: 5px 0 0 0;
   min-width: 0;
 }
 .card .info-section .info-plus .flex {
