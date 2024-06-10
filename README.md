@@ -35,9 +35,8 @@
         - [Outlook API](#outlook-api)
         - [Email API](#email-api)
     - [API Testing](#api-testing)
-        - [Authentication](#authentication)
+        - [Obtaining JWT Token](#obtaining-jwt-token)
         - [Swagger](#swagger)
-        - [Insomnia](#insomnia)
 6. [Database Schema](#database-schema)
     - [ER Diagram](#er-diagram)
     - [Table Descriptions](#table-descriptions)
@@ -296,34 +295,46 @@ If you need to run the Application locally for any reason (e.g., for debugging p
 **Endpoint: `/api/users`**
 - **Method:** `GET`
 - **Description:** Get all users.
-- **Response Body:** will be added later
+- **[Response Body:](#user-response-body)**
 
 **Endpoint: `/api/users/{id}`**
 - **Method:** `GET`
 - **Description:** Get user by ID.
-- **Response Body:** will be added later
+- **[Response Body:](#user-response-body)**
 
 **Endpoint: `/api/users/search?query={query}`**
 - **Method:** `GET`
-- **Description:** Search users by keyword.
-- **Response Body:** will be added later
+- **Description:** Search users by query.
+- **[Response Body:](#user-response-body)**
+
+#### **User Response Body**
+
+```json
+  {
+    "id": "string",
+    "username": "string",
+    "firstName": "string",
+    "lastName": "string",
+    "email": "string"
+  }
+```
 
 #### Poll API
 
 **Endpoint: `/api/polls`**
 - **Method:** `GET`
 - **Description:** Retrieve a list of polls.
-- **Response Body:** will be added later
+- **[Response Body:](#poll-response-body)**
 
 **Endpoint: `/api/polls`**
 - **Method:** `POST`
 - **Description:** Create a new poll.
-- **Request Body:** will be added later
+- **[Response Body:](#poll-response-body)**
 
 **Endpoint: `/api/polls/{id}`**
 - **Method:** `PUT`
 - **Description:** Update a poll.
-- **Request Body:** will be added later
+- **[Response Body:](#poll-response-body)**
 
 **Endpoint: `/api/polls/{id}`**
 - **Method:** `DELETE`
@@ -332,88 +343,148 @@ If you need to run the Application locally for any reason (e.g., for debugging p
 **Endpoint: `/api/polls/search/{id}`**
 - **Method:** `GET`
 - **Description:** Search polls by ID.
-- **Response Body:** will be added later
+- **[Response Body:](#poll-response-body)**
 
 **Endpoint: `/api/polls/search/title`**
 - **Method:** `GET`
 - **Description:** Search polls by title.
-- **Response Body:** will be added later
+- **[Response Body:](#poll-response-body)**
 
 **Endpoint: `/api/polls/me`**
 - **Method:** `GET`
 - **Description:** Retrieve polls created by the authenticated user.
-- **Response Body:** will be added later
+- **[Response Body:](#poll-response-body)**
 
 **Endpoint: `/api/polls/me/invitations`**
 - **Method:** `GET`
 - **Description:** Retrieve poll invitations for the authenticated user.
-- **Response Body:** will be added later
+- **[Response Body:](#poll-response-body)**
+
+#### **Poll Response Body**
+
+```json
+{
+  "id": "string",
+  "organizerId": "string",
+  "title": "string",
+  "description": "string",
+  "location": "string",
+  "duration": "string",
+  "participantIds": [
+    "string"
+  ],
+  "proposedDates": [
+    {
+      "date": "2024-06-10T23:21:31.327Z",
+      "duration": "string",
+      "voterIds": [
+        "string"
+      ]
+    }
+  ],
+  "bookedDateIndex": 0
+}
+```
 
 #### Availability API
 
 **Endpoint: `/api/users/{userId}/availability`**
 - **Method:** `GET`
 - **Description:** Retrieve availability for a specific user.
-- **Response Body:** will be added later
+- **[Response Body:](#availability-response-body)**
 
 **Endpoint: `/api/users/{userId}/availability`**
 - **Method:** `POST`
-- **Description:** Set availability for a specific user.
-- **Request Body:** will be added later
+- **Description:** Set availability for a specific user. Weekday can only vary from MONDAY to SUNDAY.
+- **[Response Body:](#availability-response-body)**
+
+#### **Availability Response Body**
+
+```json
+{
+  "userId": "string",
+  "availability": {
+    "MONDAY": [
+      {
+        "start": "HH:MM:SS",
+        "end": "HH:MM:SS"
+      }
+    ]
+  }
+}
+```
 
 #### ICS API
 
 **Endpoint: `/api/ics/save`**
 - **Method:** `POST`
 - **Description:** Save ICS calendar information.
-- **Request Body:** will be added later
+- **Request Body:**
+```json
+{
+  "userId": "string",
+  "url": "string"
+}
+```
 
 **Endpoint: `/api/ics/status`**
 - **Method:** `GET`
-- **Description:** Get the status of ICS calendar synchronization.
-- **Response Body:** will be added later
+- **Description:** Get ICS url status of current user.
+- **Response Body:**
+```json
+{
+  "url": "string",
+  "valid": true,
+  "stored": true
+}
+```
 
 **Endpoint: `/api/ics/events`**
 - **Method:** `GET`
 - **Description:** Retrieve events from the ICS calendar.
 - **Response Body:** will be added later
+```json
+  {
+    "title": "string",
+    "start": "2024-06-10T23:20:43.285Z",
+    "end": "2024-06-10T23:20:43.285Z",
+    "allDay": true
+  }
+```
 
 #### Auth API
 
 **Endpoint: `/api/authenticate/azure`**
 - **Method:** `GET`
-- **Description:** 
-- **Response Body:** will be added later
+- **Description:** Generates the Azure authentication link for the user to log in with their Microsoft account. 
 
-- **Endpoint: `api/authenticate/azure/callback?code={access-code}`**
+**Endpoint: `api/authenticate/azure/callback?code={authorization-code}`**
 - **Method:** `GET`
-- **Description:** 
-- **Response Body:** will be added later
+- **Description:** This endpoint processes the authorization code received from Azure and exchanges it for an access token.
 
 #### Outlook API
 
 **Endpoint: `/api/outlook/profile`**
 - **Method:** `GET`
 - **Description:** Retrieve profile data from authenticated Microsoft user.
-- **Response Body:** will be added later
+- **Response Body:** string
 
-- **Endpoint: `api/outlook/events`**
+**Endpoint: `api/outlook/events`**
 - **Method:** `GET`
 - **Description:** Retrieve event data from authenticated Microsoft user. Currently not working [LINK FAQ!]
-- **Response Body:** will be added later
 
 #### Email API
 
 - **Endpoint: `api/email/send`**
 - **Method:** `GET`
 - **Description:** [MISSING DESCRIPTION!]
-- **Response Body:** will be added later
+- **Response Body:** string
 
 ### API Testing
 
-#### Authentication
+#### Obtaining JWT Token
 
-- You can obtain the JWT token using Insomnia with the following details:
+- You can obtain the JWT token using [Insomnia](https://insomnia.rest/) with the following details:
    - **POST** request to: `https://your-keycloak-domain/realms/your-realm/protocol/openid-connect/token`
    - **Form (URL Encoded):**
      - `grant_type`    `password`
