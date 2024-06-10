@@ -16,6 +16,12 @@ keycloak:
   realm: Stroodle
   resource: stroodle-rest-api
 
+jwt:
+  auth:
+    converter:
+      resource-id: stroodle-rest-api
+      principle-attribute: preferred_username
+
 spring:
   devtools:
     restart:
@@ -37,9 +43,3 @@ server:
       timeout: 30m
       cookie:
         same-site: lax # Ensures the session cookie is sent during cross-origin redirects, allowing the session to be maintained between the authentication request and the callback.
-
-jwt:
-  auth:
-    converter:
-      resource-id: stroodle-rest-api
-      principle-attribute: preferred_username
