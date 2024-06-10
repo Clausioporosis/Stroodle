@@ -1,50 +1,35 @@
-# Terminplanung
+# Stroodle
+#### The Scheduling Web App
 
-## Postman URLs
-User anlegen:
-http://localhost:8080/api/users
-
-JSON Format:
-```json
-{
-    "id": "123",
-    "name": "Max Mustermann",
-    "email": "max@example.com"
-}
-```
-
-Alle User ausgeben:
-http://localhost:8080/api/users
-
-User mit ID suchen:
-http://localhost:8080/api/users/search/123
-
-User mit Email suchen:
-http://localhost:8080/api/users/search/email?email=max@example.com
-
-User mit Name suchen:
-http://localhost:8080/api/users/search/name?name=Max Mustermann
-
-Poll anlegen:
-http://localhost:8080/api/polls
-
-JSON Format:
-```json
-{
-	"id": "123",
-	"title": "Example",
-	"description": "new poll"
-}
-```
-
-Alle Polls ausgeben:
-http://localhost:8080/api/polls
-
-Poll mit ID suchen:
-http://localhost:8080/api/polls/search/123
-
-Poll mit Titel suchen:
-http://localhost:8080/api/polls/search/title?title=Beispiel
-
-Poll mit Beschreibung suchen:
-http://localhost:8080/api/polls/search/description?description=Beschreibung
+## Table of Contents
+1. [Project Overview](#project-overview)
+    - [Introduction](#introduction)
+    - [Key Features](#key-features)
+2. [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+    - [Running the Application](#running-the-application)
+3. [Configuration](#configuration)
+    - [Environment Variables](#environment-variables)
+    - [Configuration Files](#configuration-files)
+4. [API Documentation](#api-documentation)
+    - [Authentication](#authentication)
+    - [Endpoints Overview](#endpoints-overview)
+        - [User Endpoints](#user-endpoints)
+        - [Event Endpoints](#event-endpoints)
+        - [Scheduling Endpoints](#scheduling-endpoints)
+    - [Request and Response Examples](#request-and-response-examples)
+5. [Database Schema](#database-schema)
+    - [ER Diagram](#er-diagram)
+    - [Table Descriptions](#table-descriptions)
+6. [Docker Setup](#docker-setup)
+    - [Docker Compose](#docker-compose)
+    - [Building and Running with Docker](#building-and-running-with-docker)
+7. [Testing](#testing)
+    - [Running Unit Tests](#running-unit-tests)
+    - [Running Integration Tests](#running-integration-tests)
+8. [CI/CD Pipeline](#cicd-pipeline)
+    - [Overview](#overview)
+    - [Configuration](#configuration-1)
+9. [License](#license)
+    - [License Information](#license-information)
