@@ -130,3 +130,47 @@ The organizer view provides an overview of all participants, their voting status
 ![Booked Meeting View](assets/stroodle_view_booked_meeting.jpeg)
 
 Once a meeting is booked, both the organizer and participants can view the poll information. However, the organizer has the option to edit the final day of the meeting or reopen the whole poll, which is indicated by the edit button in the top left corner.
+
+## Technology Stack
+
+### Backend
+
+#### Spring Boot
+- **Spring Boot:** A framework that simplifies the development of stand-alone, production-grade Spring-based applications. Chosen for its ease of configuration and rapid development capabilities, making it ideal for building robust backend services quickly.
+
+#### Dependencies
+- **Lombok:** Reduces boilerplate code by providing annotations for common tasks like getters, setters, and constructors. This enhances code readability and maintainability.
+- **SpringDoc OpenAPI:** Automates the generation of API documentation using OpenAPI 3.0 specifications. This ensures that the API documentation is always up-to-date with the latest code changes.
+- **Spring Security:** Provides comprehensive security services for enterprise applications, essential for handling authentication and authorization in a secure manner.
+- **OAuth2 Resource Server:** Secures the backend using OAuth2 and JWT tokens, facilitating robust and scalable authentication.
+- **MongoDB Starter:** Integrates MongoDB with Spring Boot, offering a seamless way to interact with the database.
+- **Validation Starter:** Ensures data integrity by validating input data, which is crucial for maintaining application stability and security.
+- **DevTools:** Enhances the development experience with features like automatic restarts and live reloads, speeding up the development process.
+- **Keycloak:** An open-source identity and access management solution, chosen for its comprehensive features and ease of integration.
+- **MSAL4J:** A library for authenticating users with Microsoft identity platforms, used to support integration with Microsoft services.
+- **iCal4j:** A library for parsing and creating iCalendar data, enabling calendar integration features in the application.
+
+### Frontend
+
+#### React TypeScript
+- **React:** A JavaScript library for building user interfaces, chosen for its component-based architecture which promotes reusability and modularity.
+- **TypeScript:** Adds static typing to JavaScript, helping to catch errors early during development and improving code quality and maintainability.
+
+#### Dependencies
+- **FullCalendar:** A JavaScript calendar library for creating interactive and customizable calendar views.
+- **@react-keycloak/web:** Integrates Keycloak with React for authentication, providing a seamless and secure login experience.
+- **React Bootstrap Icons:** Provides Bootstrap icons for React components, ensuring a responsive and consistent UI design.
+- **React Router DOM:** Enables dynamic routing in a web application, allowing for navigation between different views and components.
+- **Axios:** A promise-based HTTP client for making requests to the backend, chosen for its simplicity and ease of use.
+- **Tippy.js:** A lightweight and extensible tooltip library, used to create interactive and visually appealing tooltips.
+- **uuid:** A library for generating unique identifiers, ensuring the uniqueness of keys in the application.
+
+### Database
+
+#### MongoDB
+- **MongoDB:** A NoSQL database known for its flexibility and scalability. It stores data in flexible, JSON-like documents, making it easy to iterate and update your schema. Chosen for its ability to handle large volumes of unstructured data efficiently.
+
+### Database
+
+#### MongoDB
+- **MongoDB:** A NoSQL database known for its flexibility and scalability. It stores data in flexible, JSON-like documents, making it easy to iterate and update your schema.
