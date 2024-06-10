@@ -139,16 +139,16 @@ Once a meeting is booked, both the organizer and participants can view the poll 
 - **Spring Boot:** A framework that simplifies the development of stand-alone, production-grade Spring-based applications. Chosen for its ease of configuration and rapid development capabilities, making it ideal for building robust backend services quickly.
 
 #### Dependencies
-- **Lombok:** Reduces boilerplate code by providing annotations for common tasks like getters, setters, and constructors. This enhances code readability and maintainability.
-- **SpringDoc OpenAPI:** Automates the generation of API documentation using OpenAPI 3.0 specifications. This ensures that the API documentation is always up-to-date with the latest code changes.
-- **Spring Security:** Provides comprehensive security services for enterprise applications, essential for handling authentication and authorization in a secure manner.
-- **OAuth2 Resource Server:** Secures the backend using OAuth2 and JWT tokens, facilitating robust and scalable authentication.
-- **MongoDB Starter:** Integrates MongoDB with Spring Boot, offering a seamless way to interact with the database.
-- **Validation Starter:** Ensures data integrity by validating input data, which is crucial for maintaining application stability and security.
-- **DevTools:** Enhances the development experience with features like automatic restarts and live reloads, speeding up the development process.
-- **Keycloak:** An open-source identity and access management solution, chosen for its comprehensive features and ease of integration.
-- **MSAL4J:** A library for authenticating users with Microsoft identity platforms, used to support integration with Microsoft services.
-- **iCal4j:** A library for parsing and creating iCalendar data, enabling calendar integration features in the application.
+- **Lombok:** A Java library that helps to reduce boilerplate code by providing annotations for common tasks like getters, setters, and constructors.
+- **SpringDoc OpenAPI:** A library that automates the generation of API documentation using OpenAPI 3.0 specifications.
+- **Spring Security:** Provides comprehensive security services for J2EE-based enterprise software applications.
+- **OAuth2 Resource Server:** Secures the backend using OAuth2 and JWT tokens.
+- **MongoDB Starter:** Integration with MongoDB for data storage.
+- **Validation Starter:** Used for validating data in your Spring Boot application.
+- **DevTools:** Provides features for improving the development experience such as automatic restarts.
+- **Keycloak:** An open-source identity and access management solution for modern applications and services.
+- **MSAL4J:** A Java library for authenticating users with Microsoft identity platforms.
+- **iCal4j:** A library for parsing and creating iCalendar data.
 
 ### Frontend
 
@@ -158,12 +158,11 @@ Once a meeting is booked, both the organizer and participants can view the poll 
 
 #### Dependencies
 - **FullCalendar:** A JavaScript calendar library for creating interactive and customizable calendar views.
-- **@react-keycloak/web:** Integrates Keycloak with React for authentication, providing a seamless and secure login experience.
-- **React Bootstrap Icons:** Provides Bootstrap icons for React components, ensuring a responsive and consistent UI design.
-- **React Router DOM:** Enables dynamic routing in a web application, allowing for navigation between different views and components.
-- **Axios:** A promise-based HTTP client for making requests to the backend, chosen for its simplicity and ease of use.
-- **Tippy.js:** A lightweight and extensible tooltip library, used to create interactive and visually appealing tooltips.
-- **uuid:** A library for generating unique identifiers, ensuring the uniqueness of keys in the application.
+- **@react-keycloak/web:** Integrates Keycloak with React for authentication.
+- **React Bootstrap:** Provides Bootstrap components for React.
+- **React Router DOM:** Enables dynamic routing in a web application.
+- **Tippy.js:** A lightweight and extensible tooltip library.
+- **uuid:** A library for generating unique identifiers.
 
 ### Database
 
