@@ -167,9 +167,110 @@ Once a meeting is booked, both the organizer and participants can view the poll 
 ### Database
 
 #### MongoDB
-- **MongoDB:** A NoSQL database known for its flexibility and scalability. It stores data in flexible, JSON-like documents, making it easy to iterate and update your schema. Chosen for its ability to handle large volumes of unstructured data efficiently.
+- **MongoDB**: A NoSQL database known for its flexibility and scalability. It stores data in flexible, JSON-like documents, making it easy to iterate and update your schema. MongoDB was chosen for this project to explore its capabilities and to gain hands-on experience with its features.
 
-### Database
 
-#### MongoDB
-- **MongoDB:** A NoSQL database known for its flexibility and scalability. It stores data in flexible, JSON-like documents, making it easy to iterate and update your schema.
+## Getting Started
+
+### Prerequisites
+
+Before you can set up and run Stroodle, make sure you have the following software installed on your system:
+
+- **Docker**: Ensure you have Docker installed. You can download it from [here](https://www.docker.com/get-started).
+- **Docker Compose**: Docker Compose is typically included with Docker Desktop installations. Ensure it is installed and available on your command line.
+- **Keycloak**: Stroodle relies on Keycloak for authentication. You can use the existing Keycloak instance at `login.stroodle.online` (open for sign-ups) or set up your own Keycloak instance.
+- **MongoDB**: If you plan to run the backend locally without Docker, you will need MongoDB installed and running.
+
+### Installation
+
+Follow these steps to set up the Stroodle application using Docker:
+
+1. **Clone the Repository**:
+   ```sh
+   git clone https://github.com/yourusername/stroodle.git
+   cd stroodle
+   git checkout develop
+   ```
+
+### Running the Application
+
+#### Running with Docker
+
+1. **Build and Start the Docker Containers**:
+   - Ensure you are in the root directory of the project:
+     ```sh
+     cd stroodle
+     ```
+   - Run Docker Compose to build and start all services:
+     ```sh
+     docker-compose up --build
+     ```
+   - This command will build the Docker images and start the containers for the backend, frontend, and database services.
+
+2. **Access the Application**:
+   - Once the containers are up and running, you can access the application by navigating to `http://localhost:3000` in your web browser.
+
+#### Keycloak Configuration
+
+- **Using Existing Keycloak Instance**: The default configuration uses the Keycloak instance at `login.stroodle.online`. You can sign up and use this instance for development and testing.
+- **Setting Up Your Own Keycloak Instance**:
+  1. Set up a local Keycloak instance. You can follow the Keycloak [getting started guide](https://www.keycloak.org/getting-started) for instructions.
+  2. Ensure your `application.yml` is configured to connect to your keycloak instance:
+     ```yaml
+     keycloak:
+       auth-server-url: https://your.server.url
+       realm: your-realm-name
+       resource: your-client-id
+     ``` 
+
+### Optional: Running the Application Locally
+
+If you need to run the Application locally for any reason (e.g., for debugging purposes), follow these steps. Note that this setup might require additional configuration and is provided for advanced users:
+
+1. **Install Java Development Kit (JDK) 17**:
+   - Ensure that you have JDK 17 installed. You can download it from [here](https://www.oracle.com/java/technologies/javase-jdk17-downloads.html).
+
+2. **Install Maven**:
+   - Ensure you have Apache Maven installed (or use the included Maven Wrapper). You can download it from [here](https://maven.apache.org/download.cgi).
+
+3. **Install and Start MongoDB**:
+   - Ensure you have MongoDB installed. You can download it from [here](https://www.mongodb.com/try/download/community).
+   - Start MongoDB on your local machine. The default configuration usually runs MongoDB on `mongodb://localhost:27017`.
+
+4. **Start the Backend**:
+   - Navigate to the backend directory:
+     ```sh
+     cd backend
+     ```
+   - Ensure your `application.yml` is configured to connect to your local MongoDB instance:
+     ```yaml
+     spring:
+       data:
+         mongodb:
+           uri: mongodb://localhost:27017/stroodle
+     ```
+   - Run the backend application using Maven:
+     ```sh
+     mvn spring-boot:run
+     ```
+   - Note: This might require additional configuration and dependencies to be set up correctly.
+
+5. **Start the Frontend**:
+   - Open a new terminal and navigate to the frontend directory:
+     ```sh
+     cd frontend
+     ```
+   - Install the frontend dependencies:
+     ```sh
+     npm install
+     ```
+   - Start the frontend application using npm:
+     ```sh
+     npm start
+     ```
+
+6. **Access the Application**:
+   - Once both the backend and frontend are running, you can access the application by navigating to `http://localhost:3000` in your web browser.
+
+By emphasizing the Docker setup, you ensure that all developers can quickly and reliably set up the project environment. The optional section for running the backend locally provides additional flexibility for those who need it, while clearly indicating that this is not the primary or recommended setup.
+
