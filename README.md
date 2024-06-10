@@ -471,13 +471,13 @@ If you need to run the Application locally for any reason (e.g., for debugging p
 
 **Endpoint: `api/outlook/events`**
 - **Method:** `GET`
-- **Description:** Retrieve event data from authenticated Microsoft user. Currently not working [LINK FAQ!]
+- **Description:** Retrieve event data from authenticated Microsoft user. Currently not working (Thank you Microsoft) [LINK FAQ!]
 
 #### Email API
 
 - **Endpoint: `api/email/send`**
 - **Method:** `GET`
-- **Description:** [MISSING DESCRIPTION!]
+- **Description:** [MISSING DESCRIPTION! NOT WORKING!]
 - **Response Body:** string
 
 ### API Testing
@@ -497,4 +497,3 @@ From here, you can continue using Insomnia to test the API endpoints by includin
 #### Swagger
 
 Stroodle's API documentation and testing interface is provided via Swagger. You can access the Swagger UI at `/swagger-ui.html` once the application is running. After obtaining the JWT token, click the "Authorize" button at the top right corner and paste the token to be able to use the API.
-
