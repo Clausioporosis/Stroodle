@@ -43,3 +43,6 @@ jwt:
     converter:
       resource-id: stroodle-rest-api
       principle-attribute: preferred_username
+
+email:
+  default-recipient: your.email@example.com
