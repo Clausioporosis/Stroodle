@@ -25,44 +25,46 @@
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
     - [Running the Application](#running-the-application)
-5. [Configuration](#configuration)
-    - [Environment Variables](#environment-variables)
-    - [Configuration Files](#configuration-files)
-6. [API Documentation](#api-documentation)
-    - [Authentication](#authentication)
-        - [Keycloak Integration](#keycloak-integration)
-    - [Endpoints Overview](#endpoints-overview)
-        - [User Endpoints](#user-endpoints)
-        - [Event Endpoints](#event-endpoints)
-        - [Scheduling Endpoints](#scheduling-endpoints)
-    - [Request and Response Examples](#request-and-response-examples)
-7. [Database Schema](#database-schema)
+5. [API Documentation](#api-documentation)
+    - [API Overview](#api-overview)
+        - [User API](#user-api)
+        - [Poll API](#poll-api)
+        - [Availability API](#availability-api)
+        - [ICS API](#ics-api)
+        - [Auth API](#auth-api)
+        - [Outlook API](#outlook-api)
+        - [Email API](#email-api)
+    - [API Testing](#api-testing)
+        - [Authentication](#authentication)
+        - [Swagger](#swagger)
+        - [Insomnia](#insomnia)
+6. [Database Schema](#database-schema)
     - [ER Diagram](#er-diagram)
     - [Table Descriptions](#table-descriptions)
-8. [Docker Setup](#docker-setup)
+7. [Docker Setup](#docker-setup)
     - [Docker Compose](#docker-compose)
     - [Building and Running with Docker](#building-and-running-with-docker)
-9. [Testing](#testing)
+8. [Testing](#testing)
     - [Frontend Testing](#frontend-testing)
         - [Manual Testing](#manual-testing)
     - [Backend Testing](#backend-testing)
         - [Unit Tests](#unit-tests)
         - [Integration Tests](#integration-tests)
-10. [CI/CD Pipeline](#cicd-pipeline)
+9. [CI/CD Pipeline](#cicd-pipeline)
     - [Overview](#overview)
     - [Configuration](#configuration-1)
-11. [Deployment](#deployment)
+10. [Deployment](#deployment)
     - [Deployment Process](#deployment-process)
     - [Server Configuration](#server-configuration)
     - [Domain Configuration](#domain-configuration)
     - [Hosting Provider](#hosting-provider)
-12. [Contributing](#contributing)
+11. [Contributing](#contributing)
     - [Contribution Guidelines](#contribution-guidelines)
     - [Code of Conduct](#code-of-conduct)
-13. [FAQ](#faq)
+12. [FAQ](#faq)
     - [Common Issues](#common-issues)
     - [Troubleshooting](#troubleshooting)
-14. [License](#license)
+13. [License](#license)
     - [License Information](#license-information)
 
 
@@ -218,9 +220,22 @@ Follow these steps to set up the Stroodle application using Docker:
   2. Ensure your `application.yml` is configured to connect to your keycloak instance:
      ```yaml
      keycloak:
-       auth-server-url: https://your.server.url
-       realm: your-realm-name
+       auth-server-url: https://your-keycloak-domain
+       realm: your-realm
        resource: your-client-id
+
+     spring:
+       security:
+         oauth2:
+           resourceserver:
+             jwt:
+               issuer-uri: https://your-keycloak-domain/realms/your-realm
+               jwk-set-uri: https://your-keycloak-domain/realms/your-realm/protocol/openid-connect/certs
+
+     auth:
+       converter:
+         resource-id: your-realm-name
+         principle-attribute: preferred_username
      ``` 
 
 ### Optional: Running the Application Locally
@@ -272,5 +287,143 @@ If you need to run the Application locally for any reason (e.g., for debugging p
 6. **Access the Application**:
    - Once both the backend and frontend are running, you can access the application by navigating to `http://localhost:3000` in your web browser.
 
-By emphasizing the Docker setup, you ensure that all developers can quickly and reliably set up the project environment. The optional section for running the backend locally provides additional flexibility for those who need it, while clearly indicating that this is not the primary or recommended setup.
+## API Documentation
+
+### API Overview
+
+#### User API
+
+**Endpoint: `/api/users`**
+- **Method:** `GET`
+- **Description:** Get all users.
+- **Response Body:** will be added later
+
+**Endpoint: `/api/users/{id}`**
+- **Method:** `GET`
+- **Description:** Get user by ID.
+- **Response Body:** will be added later
+
+**Endpoint: `/api/users/search?query={query}`**
+- **Method:** `GET`
+- **Description:** Search users by keyword.
+- **Response Body:** will be added later
+
+#### Poll API
+
+**Endpoint: `/api/polls`**
+- **Method:** `GET`
+- **Description:** Retrieve a list of polls.
+- **Response Body:** will be added later
+
+**Endpoint: `/api/polls`**
+- **Method:** `POST`
+- **Description:** Create a new poll.
+- **Request Body:** will be added later
+
+**Endpoint: `/api/polls/{id}`**
+- **Method:** `PUT`
+- **Description:** Update a poll.
+- **Request Body:** will be added later
+
+**Endpoint: `/api/polls/{id}`**
+- **Method:** `DELETE`
+- **Description:** Delete a poll.
+
+**Endpoint: `/api/polls/search/{id}`**
+- **Method:** `GET`
+- **Description:** Search polls by ID.
+- **Response Body:** will be added later
+
+**Endpoint: `/api/polls/search/title`**
+- **Method:** `GET`
+- **Description:** Search polls by title.
+- **Response Body:** will be added later
+
+**Endpoint: `/api/polls/me`**
+- **Method:** `GET`
+- **Description:** Retrieve polls created by the authenticated user.
+- **Response Body:** will be added later
+
+**Endpoint: `/api/polls/me/invitations`**
+- **Method:** `GET`
+- **Description:** Retrieve poll invitations for the authenticated user.
+- **Response Body:** will be added later
+
+#### Availability API
+
+**Endpoint: `/api/users/{userId}/availability`**
+- **Method:** `GET`
+- **Description:** Retrieve availability for a specific user.
+- **Response Body:** will be added later
+
+**Endpoint: `/api/users/{userId}/availability`**
+- **Method:** `POST`
+- **Description:** Set availability for a specific user.
+- **Request Body:** will be added later
+
+#### ICS API
+
+**Endpoint: `/api/ics/save`**
+- **Method:** `POST`
+- **Description:** Save ICS calendar information.
+- **Request Body:** will be added later
+
+**Endpoint: `/api/ics/status`**
+- **Method:** `GET`
+- **Description:** Get the status of ICS calendar synchronization.
+- **Response Body:** will be added later
+
+**Endpoint: `/api/ics/events`**
+- **Method:** `GET`
+- **Description:** Retrieve events from the ICS calendar.
+- **Response Body:** will be added later
+
+#### Auth API
+
+**Endpoint: `/api/authenticate/azure`**
+- **Method:** `GET`
+- **Description:** 
+- **Response Body:** will be added later
+
+- **Endpoint: `api/authenticate/azure/callback?code={access-code}`**
+- **Method:** `GET`
+- **Description:** 
+- **Response Body:** will be added later
+
+#### Outlook API
+
+**Endpoint: `/api/outlook/profile`**
+- **Method:** `GET`
+- **Description:** Retrieve profile data from authenticated Microsoft user.
+- **Response Body:** will be added later
+
+- **Endpoint: `api/outlook/events`**
+- **Method:** `GET`
+- **Description:** Retrieve event data from authenticated Microsoft user. Currently not working [LINK FAQ!]
+- **Response Body:** will be added later
+
+#### Email API
+
+- **Endpoint: `api/email/send`**
+- **Method:** `GET`
+- **Description:** [MISSING DESCRIPTION!]
+- **Response Body:** will be added later
+
+### API Testing
+
+#### Authentication
+
+- You can obtain the JWT token using Insomnia with the following details:
+   - **POST** request to: `https://your-keycloak-domain/realms/your-realm/protocol/openid-connect/token`
+   - **Form (URL Encoded):**
+     - `grant_type`    `password`
+     - `client_id`     `your-client-id`
+     - `username`      `your-username`
+     - `password`      `your-password`
+       
+From here, you can continue using Insomnia to test the API endpoints by including an `Authorization` header with the value `Bearer {access_token}`. Alternatively, follow the instructions below to use Swagger:
+
+#### Swagger
+
+Stroodle's API documentation and testing interface is provided via Swagger. You can access the Swagger UI at `/swagger-ui.html` once the application is running. After obtaining the JWT token, click the "Authorize" button at the top right corner and paste the token to be able to use the API.
 
