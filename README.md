@@ -310,13 +310,13 @@ If you need to run the Application locally for any reason (e.g., for debugging p
 #### **User Response Body**
 
 ```json
-  {
-    "id": "string",
-    "username": "string",
-    "firstName": "string",
-    "lastName": "string",
-    "email": "string"
-  }
+{
+  "id": "string",
+  "username": "string",
+  "firstName": "string",
+  "lastName": "string",
+  "email": "string"
+}
 ```
 
 #### Poll API
