@@ -95,25 +95,25 @@ By providing a clear view of everyone's availability and integrating with person
 
 ![Login](assets/stroodle_login.jpeg)
 
-When you open Stroodle, you'll see the login screen. Here, you can either log in with your existing account or sign up for a new account. The login screen requires your username or email and password. There is also an option to stay logged in.
+When you open Stroodle, you'll see the login screen where you can either log in with your existing account or sign up for a new account.
 
 ### Dashboard
 
 ![Dashboard](assets/stroodle_dashboard.jpeg)
 
-The dashboard provides an overview of your organized polls on the left and the polls you are invited to on the right. Each poll card displays the most important information, including the title, description, and status (booked or open). You can edit, share (copy link), and delete your polls using the corresponding buttons on each card.
+The dashboard provides an overview of your organized polls on the left and the polls you are invited to on the right. Each poll card displays the most important information, including the title and description for your polls, and the organizer, location, and meeting duration for the polls you are invited to. You can edit, share, and delete your polls using the corresponding buttons on each poll you have created.
 
 ### Availability
 
 ![Availability](assets/stroodle_availability.jpeg)
 
-In the availability view, you can set and edit your availability. The weekly view allows you to mark time slots from Monday to Sunday. Blue slots indicate already set availability, while green slots indicate pending changes that need to be saved. Use the "Save" button to confirm your availability.
+When clicking on Availability in the navigation bar, the availability view will open where you can edit it to mark time slots from Monday to Sunday. Blue slots indicate already set availability, while green slots indicate pending changes that need to be saved. Use the "Save" button to confirm your new availability time slots.
 
 ### Poll Creation
 
 ![Poll Creation](assets/stroodle_poll_edit.jpeg)
 
-When creating a poll, you can add a title, description, and location. Participants can be added via the search bar. You can also integrate your ICS calendar link using the button above the week view. There is an option to select multiple preset meeting durations (15 minutes, 30 minutes, custom, all day) to facilitate scheduling.
+When creating a poll, you can add a title, description, and location. Participants can be added via the search bar. You can also integrate your ICS calendar link using the button above the week view. There is an option to select multiple preset meeting durations (15, **25**, 30, 45 minutes, all day an custom) to simplify scheduling.
 
 ### Participant View
 
@@ -129,4 +129,4 @@ The organizer view provides an overview of all participants, their voting status
 
 ![Booked Meeting View](assets/stroodle_view_booked_meeting.jpeg)
 
-Once a meeting is booked, both the organizer and participants can view the poll information. However, the organizer has the option to edit the final day of the meeting, which is indicated by the edit button in the top left corner (visible only to the organizer).
+Once a meeting is booked, both the organizer and participants can view the poll information. However, the organizer has the option to edit the final day of the meeting or reopen the whole poll, which is indicated by the edit button in the top left corner.
