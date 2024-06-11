@@ -536,8 +536,8 @@ The `Availability` collection represents the availability of users. Each availab
 
 **Fields:**
 - `userId` (str): ID of the user.
-- `availability` (arr): Array of availability slots for each weekday.
-  - `WEEKDAY` (arr): Array of time slots for the weekday.
+- `availability` (arr): Array of availability slots for each weekday (enum: MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY).
+  - `WEEKDAY` (arr): Array of time slots for each weekday.
     - `start` (date): Start time of the availability slot.
     - `end` (date): End time of the availability slot.
 
@@ -558,4 +558,9 @@ The `AzureToken` collection stores the Azure access tokens for users, used for a
 - `accessToken` (str): Azure access token.
 - `expiresAt` (date): Expiry date of the access token.
 
-
+7. [Docker Setup](#docker-setup)
+    - [Introduction](#introduction)
+    - [Docker Compose](#[docker-compose)
+    - [Dockerfiles](#dockerfiles)
+    - [Running the Application with Docker](#running-with-docker)
+    - [Common Docker Commands](#common-docker-commands)
