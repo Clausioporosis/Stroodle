@@ -179,7 +179,7 @@ Once a meeting is booked, both the organizer and participants can view the poll 
 #### MongoDB
 - **MongoDB**: A NoSQL database known for its flexibility and scalability. It stores data in flexible, JSON-like documents, making it easy to iterate and update your schema. MongoDB was chosen for this project to explore its capabilities and to gain hands-on experience with its features.
 
-## Getting Started
+## Getting Started  <a name="getting-started"></a> <img src="assets/stroodle-logo-basic.png" width="25px" align="right">
 
 ### Prerequisites
 
@@ -294,7 +294,7 @@ If you need to run the Application locally for any reason (e.g., for debugging p
 6. **Access the Application**:
    - Once both the backend and frontend are running, you can access the application by navigating to `http://localhost:3000` in your web browser.
 
-## API Documentation
+## API Documentation  <a name="api-documentation"></a> <img src="assets/stroodle-logo-basic.png" width="25px" align="right">
 
 ### API Overview
 
@@ -506,8 +506,8 @@ From here, you can continue using Insomnia to test the API endpoints by includin
 
 Stroodle's API documentation and testing interface is provided via Swagger. You can access the Swagger UI at `/swagger-ui.html` once the application is running. After obtaining the JWT token, click the "Authorize" button at the top right corner and paste the token to be able to use the API.
 
-## Database Schema
-
+## Database Schema <a name="database-schema"></a> <img src="assets/stroodle-logo-basic.png" width="25px" align="right">
+ 
 ### ER Diagram
 
 ![MongoDB Schema](assets/stroodle_mongoDB_schema.png)
@@ -922,7 +922,7 @@ The instructions for running the application with Docker have already been detai
   docker-compose logs
   ```
 
-## Testing
+## Testing  <a name="testing"></a> <img src="assets/stroodle-logo-basic.png" width="25px" align="right">
 
 ### Frontend Testing
 
@@ -944,7 +944,7 @@ The instructions for running the application with Docker have already been detai
 
 [MISSING TEXT! DO WE EVEN BOTHER WITH THIS?]
 
-## Deployment
+## Deployment  <a name="deployment"></a> <img src="assets/stroodle-logo-basic.png" width="25px" align="right">
 
 ### Providers
 
@@ -1191,7 +1191,7 @@ To create a symbolic link between the configuration files and /etc/nginx/sites-e
   sudo ln -s /etc/nginx/conf.d/login.stroodle.conf /etc/nginx/sites-enabled/
    ```
 
-## CI/CD Pipeline
+## CI/CD Pipeline  <a name="cicd-pipeline"></a> <img src="assets/stroodle-logo-basic.png" width="25px" align="right">
 
 ### Overview
 The CI/CD pipeline is set up to streamline the process of deploying changes to the Debian server. This ensures that the application is continuously deployed with the latest changes from the main branch. The CI is not yet set up, but the CD is fully operational.
