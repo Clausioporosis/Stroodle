@@ -1,4 +1,4 @@
-package com.stroodle.backend;
+package com.stroodle.backend.controller;
 
 import com.stroodle.backend.config.SecurityConfig;
 
@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.stroodle.backend.controller.UserController;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -37,7 +36,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 
 @WebMvcTest(UserController.class)
 @Import(SecurityConfig.class)
@@ -56,7 +54,7 @@ public class UserControllerTest {
     private UserController userController;
 
     @BeforeEach
-    void setUp() { 
+    void setUp() {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .apply(springSecurity())
@@ -68,7 +66,9 @@ public class UserControllerTest {
                 .header("alg", "none")
                 .claim("sub", "userId123")
                 .build();
-        return new JwtAuthenticationToken(jwt, Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"))); // einen Token erstellen zur Authentifizierung.
+        return new JwtAuthenticationToken(jwt, Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"))); // einen Token
+                                                                                                        // erstellen zur
+                                                                                                        // Authentifizierung.
     }
 
     @Test
@@ -109,7 +109,8 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testGetUserById() throws Exception { // wenn eine ID angegeben wird, wird ein einzelner Benutzer zurückgegeben
+    public void testGetUserById() throws Exception { // wenn eine ID angegeben wird, wird ein einzelner Benutzer
+                                                     // zurückgegeben
         JwtAuthenticationToken auth = getMockJwtAuthenticationToken();
         SecurityContextHolder.getContext().setAuthentication(auth);
 
@@ -134,7 +135,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testSearchUsers() throws Exception { // Suchanfrage an /api/users/search senden 
+    public void testSearchUsers() throws Exception { // Suchanfrage an /api/users/search senden
         JwtAuthenticationToken auth = getMockJwtAuthenticationToken();
         SecurityContextHolder.getContext().setAuthentication(auth);
 
