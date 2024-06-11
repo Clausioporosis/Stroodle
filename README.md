@@ -46,7 +46,7 @@
        - [AzureToken](#azuretoken)
 7. [Docker Setup](#docker-setup)
     - [Introduction](#introduction)
-    - [Docker Compose](#[docker-compose)
+    - [Docker Compose](#docker-compose)
     - [Dockerfiles](#dockerfiles)
     - [Running the Application with Docker](#running-the-application-with-docker)
     - [Common Docker Commands](#common-docker-commands)
@@ -171,12 +171,12 @@ Once a meeting is booked, both the organizer and participants can view the poll 
 - **React Router DOM:** Enables dynamic routing in a web application.
 - **Tippy.js:** A lightweight and extensible tooltip library.
 - **uuid:** A library for generating unique identifiers.
+- **Less:** A CSS pre-processor that extends the CSS language, adding features that allow variables, mixins, functions, and many other techniques to make CSS more maintainable and extendable. It was used to streamline the styling process and enhance the maintainability of the stylesheets.
 
 ### Database
 
 #### MongoDB
 - **MongoDB**: A NoSQL database known for its flexibility and scalability. It stores data in flexible, JSON-like documents, making it easy to iterate and update your schema. MongoDB was chosen for this project to explore its capabilities and to gain hands-on experience with its features.
-
 
 ## Getting Started
 
