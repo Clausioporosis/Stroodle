@@ -242,7 +242,7 @@ Follow these steps to set up the Stroodle application using Docker:
 If you need to run the Application locally for any reason (e.g., for debugging purposes), follow these steps. Note that this setup might require additional configuration and is provided for advanced users:
 
 1. **Install Java Development Kit (JDK) 17**:
-   - Ensure that you have JDK 17 installed. You can download it from [here](https://www.oracle.com/java/technologies/javase-jdk17-downloads.html).
+   - Ensure that you have JDK 17 installed. You can download it from [here](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html).
 
 2. **Install Maven**:
    - Ensure you have Apache Maven installed (or use the included Maven Wrapper). You can download it from [here](https://maven.apache.org/download.cgi).
@@ -484,7 +484,7 @@ If you need to run the Application locally for any reason (e.g., for debugging p
 
 #### Obtaining JWT Token
 
-- You can obtain the JWT token using [Insomnia](https://insomnia.rest/) with the following details:
+- You can obtain the JWT token using [Insomnia](https://insomnia.rest/download) with the following details:
    - **POST** request to: `https://your-keycloak-domain/realms/your-realm/protocol/openid-connect/token`
    - **Form (URL Encoded):**
      - `grant_type`    `password`
