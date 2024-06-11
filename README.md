@@ -97,7 +97,7 @@ The primary purpose of Stroodle is to simplify the process of scheduling meeting
 
 By providing a clear view of everyone's availability and integrating with personal calendars, Stroodle ensures that scheduling conflicts are minimized and meetings are set at the most convenient times for all participants.
 
-## Interface and Usage
+## Interface and Usage <a name="interface-and-usage"></a> <img src="assets/stroodle-logo-basic.png" width="25px" align="right">
 
 ### Login
 
@@ -139,7 +139,7 @@ The organizer view provides an overview of all participants, their voting status
 
 Once a meeting is booked, both the organizer and participants can view the poll information. However, the organizer has the option to edit the final day of the meeting or reopen the whole poll, which is indicated by the edit button in the top left corner.
 
-## Technology Stack
+## Technology Stack <a name="technology-stack"></a> <img src="assets/stroodle-logo-basic.png" width="25px" align="right">
 
 ### Backend
 
