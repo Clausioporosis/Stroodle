@@ -1,3 +1,16 @@
+Readme TODO:
+- fix spelling an check for consistency (add lines with errors below)
+   - [   ]
+- write [Testing](#testing) section
+- explain CD deploy.yml in more detail, and set up CI pipeline
+
+
+#
+#
+#
+#
+
+
 <picture>
   <source srcset="assets/stroodle-logo-white.png" media="(prefers-color-scheme: dark)">
   <img src="assets/stroodle-logo.png" alt="Stroodle Logo">
@@ -7,11 +20,7 @@
   <b>The Scheduling Solution for Teams and Individuals</b>
 </p>
 
-Readme TODO:
-- fix spelling an check for consistency (add lines with errors below)
-   - [   ]
-- write [Testing](#testing) section
-- explain CD deploy.yml in more detail, and set up CI pipeline
+---
 
 Welcome to the documentation for the Stroodle scheduler. This document will guide you through the various aspects of the project, including its overview, interface usage, technologies used, and several other aspects. Use the Table of Contents below to navigate to different sections.
 
