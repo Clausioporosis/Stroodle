@@ -45,8 +45,11 @@
        - [ICS](#ics)
        - [AzureToken](#azuretoken)
 7. [Docker Setup](#docker-setup)
-    - [Docker Compose](#docker-compose)
-    - [Building and Running with Docker](#building-and-running-with-docker)
+    - [Introduction](#introduction)
+    - [Docker Compose](#[docker-compose)
+    - [Dockerfiles](#dockerfiles)
+    - [Running the Application with Docker](#running-the-application-with-docker)
+    - [Common Docker Commands](#common-docker-commands)
 8. [Testing](#testing)
     - [Frontend Testing](#frontend-testing)
         - [Manual Testing](#manual-testing)
@@ -558,9 +561,139 @@ The `AzureToken` collection stores the Azure access tokens for users, used for a
 - `accessToken` (str): Azure access token.
 - `expiresAt` (date): Expiry date of the access token.
 
-7. [Docker Setup](#docker-setup)
-    - [Introduction](#introduction)
-    - [Docker Compose](#[docker-compose)
-    - [Dockerfiles](#dockerfiles)
-    - [Running the Application with Docker](#running-with-docker)
-    - [Common Docker Commands](#common-docker-commands)
+## Docker Setup
+
+### Introduction
+
+Docker is used in this project to create a consistent and isolated environment for running the application. By using Docker, we can ensure that all necessary dependencies and configurations are bundled together, making it easier to set up and run the application across different machines and environments.
+
+### Docker Compose
+
+Docker Compose is used to define and manage multi-container Docker applications. With Docker Compose, we can define services (backend, frontend, database, and nginx) in a single file and manage them together.
+
+#### Generalized Docker Compose File
+
+```yaml
+version: 'version'
+
+services:
+  service-name:
+    build:
+      context: . # Path to the directory containing the Dockerfile
+      dockerfile: Dockerfile # Name of the Dockerfile
+    container_name: container-name # Name of the container
+    ports:
+      - "host-port:container-port" # Maps host port to container port
+    volumes:
+      - "host-path:container-path" # Mounts host directory to container directory
+    environment:
+      - ENV_VAR_NAME=value # Sets environment variables
+    depends_on:
+      - other-service # Ensures other-service starts before this service
+    networks:
+      - net-name # Specifies the network this service connects to
+
+networks:
+  net-name:
+    driver: bridge # Network driver to use
+
+volumes:
+  data-name:
+    driver: local # Volume driver to use
+```
+
+**Explanation:**
+
+- **version:** Specifies the version of the Docker Compose file format. Using '3.8' is common, though it's noted that Docker Compose v2 automatically uses the latest version.
+- **services:** Defines the different services (containers) to be run by Docker Compose.
+  - **service-name:** Placeholder for the name of your service.
+    - **build:** Configuration for building the Docker image.
+       - **context:** Path to the directory containing the Dockerfile and application code. The dot (.) represents the current directory.
+       - **dockerfile:** Specifies the Dockerfile to use for building the image. Default is 'Dockerfile'.
+    - **container_name:** Sets a custom name for the container, making it easier to identify in Docker commands.
+    - **ports:** Maps a port on the host to a port in the container.
+    - **volumes:** Mounts a directory or file from the host to the container. This is useful for persisting data or live updates during development.
+    - **environment:** Sets environment variables for the container. Each variable is defined in the format `ENV_VAR_NAME=value`.
+    - **depends_on:** Specifies dependencies between services. Docker Compose will start the dependencies before the dependent service.
+    - **networks:** Connects the service to one or more custom networks. Each network must be defined under the networks section.
+- **networks:** Defines custom networks for Docker services to communicate with each other.
+  - **net-name:** Placeholder for the name of the network.
+    - **driver:** Specifies the network driver to use. The `bridge` driver creates a private internal network on the host.
+- **volumes:** Defines named volumes for persistent data storage.
+   - **data-name:** Placeholder for the name of the volume.
+      - **driver:** Specifies the volume driver to use. The `local` driver creates a volume on the host machine.
+
+By understanding this generalized template, you can apply these concepts to your specific Docker Compose configuration. This template helps clarify the purpose and functionality of each part of the Docker Compose setup, making it easier to configure and understand complex multi-service applications.
+
+#### Full Docker Compose File
+
+For the complete setup, here is the full `docker-compose.yml` file used in this project:
+
+```yaml
+services:
+  springboot-app:
+    build:
+      context: ./backend
+    container_name: backend
+    ports:
+      - 8081:8081
+    volumes:
+      - ./backend:/api-app
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/StroodleDatabase
+      - SPRING_PROFILES_ACTIVE=default
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=https://login.stroodle.online/realms/Stroodle
+    depends_on:
+      - mongo
+    networks:
+      - stroodle-net
+
+  react-app:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - /app/node_modules
+      - ./frontend:/app
+    networks:
+      - stroodle-net
+
+  mongo:
+    image: mongo
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - stroodle-net
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/certs:/etc/nginx/certs
+    depends_on:
+      - springboot-app
+      - react-app
+    networks:
+      - stroodle-net
+
+networks:
+  stroodle-net:
+    driver: bridge
+
+volumes:
+  mongo-data:
+```
+
+### Dockerfiles
+
+### Running the Application with Docker
+
+### Common Docker Commands
