@@ -56,14 +56,17 @@
     - [Backend Testing](#backend-testing)
         - [Unit Tests](#unit-tests)
         - [Integration Tests](#integration-tests)
-9. [CI/CD Pipeline](#cicd-pipeline)
+9. [Deployment](#deployment)
+    - [Providers](#providers)
+       - [bwCloud](#bwcloud)
+       - [IONOS](#ionos)
+    - [Setup](#setup)
+       - [Cloud VM's](#cloud-vms)
+       - [Proxy](#proxy)
+10. [CI/CD Pipeline](#cicd-pipeline)
     - [Overview](#overview)
-    - [Configuration](#configuration-1)
-10. [Deployment](#deployment)
-    - [Deployment Process](#deployment-process)
-    - [Server Configuration](#server-configuration)
-    - [Domain Configuration](#domain-configuration)
-    - [Hosting Provider](#hosting-provider)
+    - [Continuous Deployment](#continuous-deployment)
+    - [Continuous Integration](#continuous-integration)
 11. [Contributing](#contributing)
     - [Contribution Guidelines](#contribution-guidelines)
     - [Code of Conduct](#code-of-conduct)
@@ -850,5 +853,365 @@ The instructions for running the application with Docker have already been detai
   ```sh
   docker-compose logs
   ```
+
+## Testing
+
+### Frontend Testing
+
+[MISSING TEXT!]
+
+#### Manual Testing
+
+[MISSING TEXT!]
+
+### Backend Testing
+
+[MISSING TEXT!]
+
+#### Unit Tests
+
+[MISSING TEXT!]
+
+#### Integration Tests
+
+[MISSING TEXT! DO WE EVEN BOTHER WITH THIS?]
+
+## CI/CD Pipeline
+
+### Overview
+The CI/CD pipeline is set up to streamline the process of deploying changes to the Debian server. This ensures that the application is continuously deployed with the latest changes from the main branch. The CI is not yet set up, but the CD is fully operational.
+
+### Continuous Deployment
+The Continuous Deployment (CD) is already set up and configured to deploy changes to a Debian server whenever there is a push to the main branch.
+
+#### Deployment Workflow (.github/workflows/deploy.yml)
+
+```yaml
+name: Deploy to Debian Server
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Create deployment directory on remote server
+      run: |
+        ssh -o StrictHostKeyChecking=no debian@193.197.230.60 'mkdir -p /home/debian/stroodle'
+    - name: Copy files via SCP
+      run: |
+        scp -r -o StrictHostKeyChecking=no $(ls | grep -v '^deployment.yml$') debian@193.197.230.60:/home/debian/stroodle
+    - name: Clean up Docker system on remote server
+      run: |
+        ssh -o StrictHostKeyChecking=no debian@193.197.230.60 << 'EOF'
+          docker system prune -f
+        EOF
+    - name: Deploy application
+      run: |
+        ssh -o StrictHostKeyChecking=no debian@193.197.230.60 << 'EOF'
+          cd /home/debian/stroodle
+          docker-compose down
+          docker-compose up -d --build
+        EOF
+```
+
+#### Setup Steps
+1. **Create SSH key without a passphrase:**
+   ```sh
+   ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+   ```
+   
+2. **Add the public key to the Debian server:**
+   - Use WinSCP or another method to copy the public key to the server.
+   - Append the public key to the authorized_keys file:
+     ```sh
+     cat public_key.pub >> ~/.ssh/authorized_keys
+     ```
+
+3. **Set permissions (if necessary):**
+   ```sh
+   chmod 600 ~/.ssh/authorized_keys
+   ```
+
+4. **Add `SSH_PRIVATE_KEY` to GitHub repository secrets:**
+   - The value should be the content of the private key file generated in step 1 (the file without the .pub extension).
+
+5. **Write the deploy.yml file in the .github/workflows directory of the repository.**
+
+6. **Add the user 'debian' to the docker group to prevent deployment failures:**
+   ```sh
+   sudo usermod -aG docker debian
+   ```
+
+### Continuous Integration
+The Continuous Integration (CI) pipeline is not yet set up. Once set up, it will include steps to automatically test and validate changes before deployment.
+
+9. [Deployment](#deployment)
+    - [Providers](#providers)
+       - [bwCloud](#bwcloud)
+       - [IONOS](#ionos)
+    - [Setup](#setup)
+       - [Cloud VM's](#cloud-vms)
+       - [Proxy](#proxy)
+
+## Deployment
+
+### Providers
+
+#### bwCloud
+
+BWCloud is a cloud service provider that offers scalable virtual machines and cloud resources for various applications. It is specifically designed for educational and research purposes and is managed by several universities in the Baden-Württemberg region of Germany. For our project, we requested additional resources beyond the free tier to ensure the performance and reliability of our application, as the default allocation was insufficient for our needs.
+
+#### IONOS
+
+IONOS is a web hosting and domain registration service. It offers various solutions for domain management, website hosting, and email services. For Stroodle, we used IONOS to acquire the domain "stroodle.online" and set up a subdomain "login.stroodle.online" for Keycloak authentication services.
+
+### Setup
+
+#### Cloud VM's
+
+**SSH and Port Setup:**
+BWCloud provides detailed instructions on how to set up SSH access and configure necessary ports on their [official page](https://www.bw-cloud.org/en/bwcloud_scope/use).
+
+**Access via SSH:**
+To access the Debian 10 instance via SSH tools like [Putty](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html) and [WinSCP](https://winscp.net/eng/download.php) can be used.
+To connect to said debain machines, use the right IP address and username (debian) of the instance and provide the private key file `private_ssh_key.ppk` you set up for bwCloud.
+
+**Installing Docker and Docker Compose:**
+
+- Update your package list and install Docker:
+   ```sh
+   sudo apt-get update
+   sudo apt-get install apt-transport-https ca-certificates curl gnupg2 software-properties-common
+   curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+   sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
+   sudo apt-get update --allow-releaseinfo-change
+   sudo apt-get install docker-ce docker-ce-cli containerd.io
+   ```
+   
+- Install Docker Compose:
+   ```sh
+   sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+   sudo chmod +x /usr/local/bin/docker-compose
+   ```
+   
+#### Proxy
+
+**DNS Records Setup in IONOS:**
+
+Ensure the DNS records for stroodle.online and login.stroodle.online are correctly configured to point to their respective BWCloud instance IPs.
+
+**Obtaining SSL Certificates:**
+
+Install Certbot and obtain SSL certificates for the domains:
+
+   ```sh
+   sudo apt install certbot python3-certbot-nginx
+   sudo certbot certonly --nginx -d <domain.name>
+   ```
+
+The obtained certificates `chain.pem`, `fullchain.pem` and `privkey.pem` will be placed into the ./nginx/certs folder.
+
+**Nginx Configuration Files:**
+
+**Generalized Nginx Configuration:**
+   ```nginx
+   server {
+    listen 80;
+    server_name example.com www.example.com;
+
+    location / {
+        proxy_pass http://service:port;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /api/ {
+        proxy_pass http://api-service:api-port;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location ~ /.well-known/acme-challenge {
+        alias /var/www/certbot/.well-known/acme-challenge/;
+        allow all;
+    }
+
+    # Redirect HTTP to HTTPS
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name example.com www.example.com;
+
+    ssl_certificate /etc/nginx/certs/fullchain.pem;
+    ssl_certificate_key /etc/nginx/certs/privkey.pem;
+    ssl_trusted_certificate /etc/nginx/certs/chain.pem;
+
+    location / {
+        proxy_pass http://service:port;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /api/ {
+        proxy_pass http://api-service:api-port;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+   ```
+
+**Explanation:**
+
+- **server_name:** Specifies the domain names for which this server block is responsible.
+- **location /:** Forwards all traffic to the main service.
+- **location /api/:** Forwards all API traffic to the API service.
+- **proxy_pass:** Forwards requests to the specified service and port.
+- **proxy_set_header:** Sets headers to preserve the original request information.
+- **location ~ /.well-known/acme-challenge:** Serves ACME challenge files for Certbot.
+- **return 301 https://$host$request_uri:** Redirects all HTTP requests to HTTPS.
+- **ssl_certificate:** Specifies the path to the SSL certificate.
+- **ssl_certificate_key:** Specifies the path to the SSL certificate key.
+- **ssl_trusted_certificate:** Specifies the path to the trusted SSL certificate.
+
+**Full Nginx Configuration Files:**
+
+For the complete setup, here are the full Nginx configuration files used for this project:
+
+`stroodle.conf`
+
+   ```nginx
+server {
+    listen 80;
+    server_name stroodle.online www.stroodle.online;
+
+    location / {
+        proxy_pass http://frontend:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /api/ {
+        proxy_pass http://backend:8081;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location ~ /.well-known/acme-challenge {
+        alias /var/www/certbot/.well-known/acme-challenge/;
+        allow all;
+    }
+
+    # Redirect HTTP to HTTPS
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name stroodle.online www.stroodle.online;
+
+    ssl_certificate /etc/nginx/certs/fullchain.pem;
+    ssl_certificate_key /etc/nginx/certs/privkey.pem;
+    ssl_trusted_certificate /etc/nginx/certs/chain.pem;
+
+    location / {
+        proxy_pass http://frontend:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /api/ {
+        proxy_pass http://backend:8081;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+   ```
+
+`login.stroodle.conf`
+
+   ```nginx
+server {
+    listen 80;
+    server_name login.stroodle.online www.login.stroodle.online;
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl;
+    server_name login.stroodle.online www.login.stroodle.online;
+
+    ssl_certificate /etc/nginx/certs/fullchain.pem;
+    ssl_certificate_key /etc/nginx/certs/privkey.pem;
+    ssl_trusted_certificate /etc/nginx/certs/chain.pem;
+
+    location / {
+        proxy_pass http://keycloak:8080;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+   ```
+
+**Docker Compose Configuration for Nginx:**
+
+   ```yaml
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/certs:/etc/nginx/certs
+   ```
+
+**Creating Symbolic Links:**
+
+To create a symbolic link between the configuration files and /etc/nginx/sites-enabled, use:
+
+   ```sh
+  sudo ln -s /etc/nginx/conf.d/stroodle.conf /etc/nginx/sites-enabled/
+  sudo ln -s /etc/nginx/conf.d/login.stroodle.conf /etc/nginx/sites-enabled/
+   ```
 
 
