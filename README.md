@@ -1,4 +1,6 @@
-# Stroodle
+<p align="center">
+  <img src="assets/stroodle-logo.png" alt="Stroodle Logo" width="200"/>
+</p>
 #### The Scheduling Solution for Teams and Individuals
 
 ## Table of Contents
