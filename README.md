@@ -702,9 +702,6 @@ Dockerfiles are used to build Docker images for the different services in your a
 # Base image
 FROM base-image
 
-# Maintainer information
-LABEL maintainer="email@example.com"
-
 # Working directory
 WORKDIR /app
 
@@ -724,8 +721,7 @@ CMD ["commands", "to", "run", "application"]
 **Explanation:**
 
 - **FROM:** Specifies the base image to use for the Docker image. This is typically a lightweight OS image or an image containing a runtime environment (e.g., `node`, `openjdk`).
-- **LABEL:** Adds metadata to the image, such as maintainer information.
-- **WORKDIR:** Sets the working directory inside the container. All subsequent commands will be run from this directory.
+- **WORKDIR:** Sets the working directory inside the container. All following commands will be run from this directory.
 - **COPY:** Copies files from the host machine to the container.
 - **RUN:** Executes commands to install dependencies or perform other setup tasks.
 - **EXPOSE:** Informs Docker that the container listens on the specified network port at runtime.
@@ -745,7 +741,8 @@ EXPOSE 8080
 RUN mkdir /api-app
 WORKDIR /api-app
 
-# Install app dependencies and ensure that all required dependencies are downloaded and cached during the image build process. This allows the application to start faster and ensures that it can run offline without needing to download dependencies again.
+# Install and ensure that all required app dependencies are downloaded and cached during the image build process.
+# This allows the application to start faster and ensures that it can run offline without needing to download them again.
 COPY pom.xml ./
 RUN mvn dependency:go-offline
 
