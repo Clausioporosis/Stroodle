@@ -75,7 +75,7 @@
     - [Continuous Integration](#continuous-integration)
 
 
-## Project Overview
+## Project Overview <img src="assets/stroodle-logo-basic.png" width="25px" align="right">
 
 ### Introduction
 
