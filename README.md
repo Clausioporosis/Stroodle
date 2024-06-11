@@ -5,7 +5,7 @@ Readme TODO:
 - config section for application yml and why certain settings were used
 - explain CD deploy.yml in more detail, and set up CI pipeline
 - integrate mailhog into the documentation where it should be mentioned
-- mention MongoCompass?
+- mention MongoCompass and how to access mongodb in cloud vm
 - add section at the end for missing features, bugs, future enahncements
 - Licensing information? MIT?
 - add contribution guidelines
