@@ -5,20 +5,27 @@ import org.springframework.web.bind.annotation.*;
 import com.stroodle.backend.model.Availability;
 import com.stroodle.backend.service.AvailabilityService;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/users/{userId}/availability")
+@RequestMapping("/api/users")
 public class AvailabilityController {
 
     @Autowired
     private AvailabilityService availabilityService;
 
-    @PostMapping
+    @PostMapping("/{userId}/availability")
     public void setAvailability(@PathVariable String userId, @RequestBody Availability availability) {
         availabilityService.setAvailability(userId, availability);
     }
 
-    @GetMapping
+    @GetMapping("/{userId}/availability")
     public Availability getAvailability(@PathVariable String userId) {
         return availabilityService.getAvailability(userId);
+    }
+
+    @PostMapping("/merge")
+    public Availability mergeAvailabilities(@RequestBody List<String> userIds) {
+        return availabilityService.mergeAvailabilities(userIds);
     }
 }
