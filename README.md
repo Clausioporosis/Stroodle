@@ -2,6 +2,7 @@ Readme TODO:
 - fix spelling an check for consistency (add lines with errors below)
    - [   ]
 - write [Testing](#testing) section
+- config section for application yml and why certain settings were used
 - explain CD deploy.yml in more detail, and set up CI pipeline
 
 
