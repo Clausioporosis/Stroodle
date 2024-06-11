@@ -67,14 +67,6 @@
     - [Overview](#overview)
     - [Continuous Deployment](#continuous-deployment)
     - [Continuous Integration](#continuous-integration)
-11. [Contributing](#contributing)
-    - [Contribution Guidelines](#contribution-guidelines)
-    - [Code of Conduct](#code-of-conduct)
-12. [FAQ](#faq)
-    - [Common Issues](#common-issues)
-    - [Troubleshooting](#troubleshooting)
-13. [License](#license)
-    - [License Information](#license-information)
 
 
 ## Project Overview
@@ -1213,5 +1205,3 @@ To create a symbolic link between the configuration files and /etc/nginx/sites-e
   sudo ln -s /etc/nginx/conf.d/stroodle.conf /etc/nginx/sites-enabled/
   sudo ln -s /etc/nginx/conf.d/login.stroodle.conf /etc/nginx/sites-enabled/
    ```
-
-
