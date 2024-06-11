@@ -215,7 +215,7 @@ Follow these steps to set up the Stroodle application using Docker:
 
 - **Using Existing Keycloak Instance**: The default configuration uses the Keycloak instance at `login.stroodle.online`. You can sign up and use this instance for development and testing.
 - **Setting Up Your Own Keycloak Instance**:
-  1. Set up a local Keycloak instance. You can follow the Keycloak [getting started guide](https://www.keycloak.org/getting-started) for instructions.
+  1. Set up a local Keycloak instance. You can follow the Keycloak [getting started guide](https://www.keycloak.org/guides#getting-started) for instructions.
   2. Ensure your `application.yml` is configured to connect to your keycloak instance:
      ```yaml
      keycloak:
