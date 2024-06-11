@@ -788,9 +788,70 @@ CMD npm start & less-watch-compiler src/styles src/styles main.less
 
 ### Running the Application with Docker
 
-The instructions for running the application with Docker have already been detailed in the Getting Started section under [Running the Application](#running-with-docker). Please refer to that section for the complete setup and steps.
+The instructions for running the application with Docker have already been detailed in the Getting Started section under [Running with Docker](#running-with-docker). Please refer to that section for the complete setup and steps.
 
 ### Common Docker Commands
 
-Here are some common Docker commands that you might find useful for managing your Docker environment:
+- **Build an image**
+  ```sh
+  docker build -t <image_name> .
+  ```
+
+- **Run a container**
+  ```sh
+  docker run -d --name <container_name> <image_name>
+  ```
+
+- **Stop a container**
+  ```sh
+  docker stop <container_name>
+  ```
+
+- **Remove a container**
+  ```sh
+  docker rm <container_name>
+  ```
+
+- **List all containers**
+  ```sh
+  docker ps -a
+  ```
+
+- **List all images**
+  ```sh
+  docker images
+  ```
+
+- **Remove an image**
+  ```sh
+  docker rmi <image_name>
+  ```
+
+**Docker Compose Commands:**
+
+- **Start services defined in docker-compose.yml**
+  ```sh
+  docker-compose up
+  ```
+
+- **Stop services**
+  ```sh
+  docker-compose down
+  ```
+
+- **Build or rebuild services**
+  ```sh
+  docker-compose build
+  ```
+
+- **List containers**
+  ```sh
+  docker-compose ps
+  ```
+
+- **View output from containers**
+  ```sh
+  docker-compose logs
+  ```
+
 
