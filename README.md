@@ -1,5 +1,5 @@
 # Stroodle
-#### The Scheduling Web App
+#### The Scheduling Solution for Teams and Individuals
 
 ## Table of Contents
 1. [Project Overview](#project-overview)
