@@ -29,9 +29,6 @@ public class PollService {
 
     public List<Poll> getAllPolls() {
         List<Poll> polls = pollRepository.findAll();
-        if (polls.isEmpty()) {
-            throw new ResourceNotFoundException("No polls found.");
-        }
         return polls;
     }
 
@@ -65,17 +62,11 @@ public class PollService {
 
     public List<Poll> findPollsByOrganizerId(String organizerId) {
         List<Poll> polls = pollRepository.findByOrganizerId(organizerId);
-        if (polls.isEmpty()) {
-            throw new ResourceNotFoundException("No polls found for organizer with id " + organizerId);
-        }
         return polls;
     }
 
     public List<Poll> findPollsByParticipantId(String participantId) {
         List<Poll> polls = pollRepository.findByParticipantIdsContains(participantId);
-        if (polls.isEmpty()) {
-            throw new ResourceNotFoundException("No polls found for participant with id " + participantId);
-        }
         return polls;
     }
     
