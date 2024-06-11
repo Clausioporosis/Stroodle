@@ -74,8 +74,8 @@
     - [Continuous Deployment](#continuous-deployment)
     - [Continuous Integration](#continuous-integration)
 
-<a name="project-overview"></a>
 ## Project Overview <img src="assets/stroodle-logo-basic.png" width="25px" align="right">
+<a name="project-overview"></a>
 
 ### Introduction
 
