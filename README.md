@@ -7,6 +7,12 @@
   <b>The Scheduling Solution for Teams and Individuals</b>
 </p>
 
+Readme TODO:
+- fix spelling an check for consistency (add lines with errors below)
+   - [   ]
+- write [Testing](#testing) section
+- explain CD deploy.yml in more detail, and set up CI pipeline
+
 ## Table of Contents <img src="assets/stroodle-logo-basic.png" width="25px" align="right">
 1. [Project Overview](#project-overview)
     - [Introduction](#introduction)
