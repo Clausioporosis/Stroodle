@@ -26,7 +26,7 @@ Readme TODO:
 
 ---
 
-Welcome to the documentation for Stroodle!The Table of Contents will guide you through the various sections of our project, from an overview and key features to detailed instructions on usage, technology stack, API documentation, database schema, and deployment. 
+Welcome to the Stroodle documentation! The Table of Contents will guide you through the various sections of our project, from an overview and key features to detailed instructions on usage, technology stack, API documentation, database schema, and deployment. 
 
 ## Table of Contents <img src="assets/stroodle-logo-basic.png" width="25px" align="right">
 1. [Project Overview](#project-overview)
