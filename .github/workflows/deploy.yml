@@ -22,14 +22,19 @@ jobs:
     - name: Create deployment directory on remote server
       run: |
         ssh -o StrictHostKeyChecking=no debian@193.197.230.60 'mkdir -p /home/debian/stroodle'
+
     - name: Copy files via SCP
       run: |
         scp -r -o StrictHostKeyChecking=no $(ls | grep -v '^deployment.yml$') debian@193.197.230.60:/home/debian/stroodle
+
     - name: Clean up Docker system on remote server
       run: |
         ssh -o StrictHostKeyChecking=no debian@193.197.230.60 << 'EOF'
-          docker system prune -f
+          docker container prune -f
+          docker image prune -f
+          docker network prune -f
         EOF
+
     - name: Deploy application
       run: |
         ssh -o StrictHostKeyChecking=no debian@193.197.230.60 << 'EOF'
