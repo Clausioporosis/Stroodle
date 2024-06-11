@@ -40,6 +40,10 @@
 6. [Database Schema](#database-schema)
     - [ER Diagram](#er-diagram)
     - [Table Descriptions](#table-descriptions)
+       - [Poll](#poll)
+       - [Availability](#availability)
+       - [ICS](#ics)
+       - [AzureToken](#azuretoken)
 7. [Docker Setup](#docker-setup)
     - [Docker Compose](#docker-compose)
     - [Building and Running with Docker](#building-and-running-with-docker)
@@ -505,3 +509,53 @@ Stroodle's API documentation and testing interface is provided via Swagger. You 
 ![MongoDB Schema](assets/stroodle_mongoDB_schema.png)
 
 ### Table Descriptions
+
+#### Poll
+
+The `Poll` collection represents the polls created by users for scheduling purposes. Each poll contains information about the organizer, title, description, location, duration, participants, proposed dates, and the booked date index.
+
+**Fields:**
+  - `id` (str): Unique identifier for the poll.
+  - `organizerId` (str): ID of the user who created the poll.
+  - `title` (str): Title of the poll.
+  - `description` (str): Description of the poll.
+  - `location` (str): Location where the event will take place.
+  - `duration` (str): Duration of the event.
+  - `participantIds` (arr): Array of participant IDs.
+    - `userId` (str): ID of a participant.
+  - `proposedDates` (arr): Array of proposed dates for the poll.
+    - `date` (date): Proposed date.
+    - `duration` (str): Duration of the proposed event.
+    - `voterIds` (arr): Array of IDs of participants who voted for this date.
+    - `userId` (str): ID of a voter.
+  - `bookedDateIndex` (num): Index of the booked date in the proposedDates array.
+
+#### Availability
+
+The `Availability` collection represents the availability of users. Each availability document contains the user ID and an array of availability slots for each weekday.
+
+**Fields:**
+- `userId` (str): ID of the user.
+- `availability` (arr): Array of availability slots for each weekday.
+  - `WEEKDAY` (arr): Array of time slots for the weekday.
+    - `start` (date): Start time of the availability slot.
+    - `end` (date): End time of the availability slot.
+
+#### ICS
+
+The `ICS` collection stores the ICS (iCalendar) URLs for users to synchronize their calendars.
+
+**Fields:**
+- `userId` (str): ID of the user.
+- `url` (str): ICS URL for calendar synchronization.
+
+#### AzureToken
+
+The `AzureToken` collection stores the Azure access tokens for users, used for authenticating with Microsoft services.
+
+**Fields:**
+- `userId` (str): ID of the user.
+- `accessToken` (str): Azure access token.
+- `expiresAt` (date): Expiry date of the access token.
+
+
