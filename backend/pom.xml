@@ -75,14 +75,14 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
-            <version>1.6.8</version> <!-- Stellen Sie sicher, dass Sie die neueste Version verwenden -->
+            <version>1.6.8</version>
         </dependency>
         
         <!-- SpringDoc OpenAPI WebMVC Core -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-webmvc-core</artifactId>
-            <version>1.6.8</version> <!-- Stellen Sie sicher, dass Sie die neueste Version verwenden -->
+            <version>1.6.8</version>
         </dependency>
         
         <!-- Spring Boot Validation -->
@@ -96,12 +96,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
-        </dependency>
-        
-        <!-- Spring Boot Actuator -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         
         <!-- Spring Boot Starter -->
@@ -126,7 +120,7 @@
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-core</artifactId>
-            <version>24.0.4</version> <!-- Bitte verwenden Sie die neueste verfügbare Version -->
+            <version>24.0.4</version>
         </dependency>
         
         <!-- Keycloak Admin Client -->
@@ -136,19 +130,6 @@
             <version>24.0.4</version>
         </dependency>
         
-        <!-- Spring Boot Starter Data JPA -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-
-        <!-- H2 Database -->
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
         <!-- MSAL4J for Microsoft Authentication -->
         <dependency>
             <groupId>com.microsoft.azure</groupId>
