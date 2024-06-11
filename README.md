@@ -458,7 +458,7 @@ If you need to run the Application locally for any reason (e.g., for debugging p
 - **Method:** `GET`
 - **Description:** Generates the Azure authentication link for the user to log in with their Microsoft account. 
 
-**Endpoint: `api/authenticate/azure/callback?code={authorization-code}`**
+**Endpoint: `/api/authenticate/azure/callback?code={authorization-code}`**
 - **Method:** `GET`
 - **Description:** This endpoint processes the authorization code received from Azure and exchanges it for an access token.
 
@@ -469,15 +469,15 @@ If you need to run the Application locally for any reason (e.g., for debugging p
 - **Description:** Retrieve profile data from authenticated Microsoft user.
 - **Response Body:** string
 
-**Endpoint: `api/outlook/events`**
+**Endpoint: `/api/outlook/events`**
 - **Method:** `GET`
 - **Description:** Retrieve event data from authenticated Microsoft user. Currently not working (Thank you Microsoft) [LINK FAQ!]
 
 #### Email API
 
-- **Endpoint: `api/email/send`**
+- **Endpoint: `/api/email/send`**
 - **Method:** `GET`
-- **Description:** [MISSING DESCRIPTION! NOT WORKING!]
+- **Description:** [MISSING DESCRIPTION! NOT WORKING! TODO!]
 - **Response Body:** string
 
 ### API Testing
@@ -487,13 +487,21 @@ If you need to run the Application locally for any reason (e.g., for debugging p
 - You can obtain the JWT token using [Insomnia](https://insomnia.rest/download) with the following details:
    - **POST** request to: `https://your-keycloak-domain/realms/your-realm/protocol/openid-connect/token`
    - **Form (URL Encoded):**
-     - `grant_type`    `password`
-     - `client_id`     `your-client-id`
-     - `username`      `your-username`
-     - `password`      `your-password`
+     - `grant_type`=`password`
+     - `client_id`=`your-client-id`
+     - `username`=`your-username`
+     - `password`=`your-password`
        
 From here, you can continue using Insomnia to test the API endpoints by including an `Authorization` header with the value `Bearer {access_token}`. Alternatively, follow the instructions below to use Swagger:
 
 #### Swagger
 
 Stroodle's API documentation and testing interface is provided via Swagger. You can access the Swagger UI at `/swagger-ui.html` once the application is running. After obtaining the JWT token, click the "Authorize" button at the top right corner and paste the token to be able to use the API.
+
+## Database Schema
+
+### ER Diagram
+
+![MongoDB Schema](assets/stroodle_mongoDB_schema.png)
+
+### Table Descriptions
