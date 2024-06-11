@@ -1,5 +1,5 @@
 # Stroodle
-#### The Scheduling Web App
+#### The Scheduling Solution for Teams and Individuals
 
 ## Table of Contents
 1. [Project Overview](#project-overview)
@@ -166,6 +166,7 @@ Once a meeting is booked, both the organizer and participants can view the poll 
 - **React Router DOM:** Enables dynamic routing in a web application.
 - **Tippy.js:** A lightweight and extensible tooltip library.
 - **uuid:** A library for generating unique identifiers.
+- **Keycloakify Starter Repo:** Used to easily style and generate a Keycloak Theme jar for Keycloak to import while building in Docker.
 - **Less:** A CSS pre-processor that extends the CSS language, adding features that allow variables, mixins, functions, and many other techniques to make CSS more maintainable and extendable. It was used to streamline the styling process and enhance the maintainability of the stylesheets.
 
 ### Database
@@ -587,6 +588,8 @@ services:
       - other-service # Ensures other-service starts before this service
     networks:
       - net-name # Specifies the network this service connects to
+    command: command-to-run # Command to run when the container starts
+    restart: restart-policy # Restart policy for the container
 
 networks:
   net-name:
@@ -611,6 +614,8 @@ volumes:
     - **environment:** Sets environment variables for the container. Each variable is defined in the format `ENV_VAR_NAME=value`.
     - **depends_on:** Specifies dependencies between services. Docker Compose will start the dependencies before the dependent service.
     - **networks:** Connects the service to one or more custom networks. Each network must be defined under the networks section.
+    - **command:** Specifies the command to run when the container starts.
+    - **restart:** Sets the restart policy for the container. Common values are `no`, `on-failure`, `always`, and `unless-stopped`.
 - **networks:** Defines custom networks for Docker services to communicate with each other.
   - **net-name:** Placeholder for the name of the network.
     - **driver:** Specifies the network driver to use. The `bridge` driver creates a private internal network on the host.
@@ -622,7 +627,7 @@ By understanding this generalized template, you can apply these concepts to your
 
 #### Full Docker Compose File
 
-For the complete setup, here is the full `docker-compose.yml` file used in this project:
+For the complete setup, here is the full `docker-compose.yml` file used for the backend, frontend and database services:
 
 ```yaml
 services:
@@ -685,6 +690,72 @@ networks:
 
 volumes:
   mongo-data:
+```
+
+Here is the full `docker-compose.yml` file used for the Keycloak service:
+
+```yaml
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak
+    environment:
+      - DB_VENDOR=postgres
+      - DB_ADDR=keycloak-postgres
+      - DB_DATABASE=keycloak
+      - DB_USER=keycloak
+      - DB_PASSWORD=password
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - PROXY_ADDRESS_FORWARDING=true
+      - KEYCLOAK_FRONTEND_URL=https://login.stroodle.online
+    ports:
+      - 8080:8080
+    depends_on:
+      - keycloak-postgres
+    command: start-dev --proxy=edge --import-realm
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+      - ./Stroodle-realm.json:/opt/keycloak/data/import/Stroodle-realm.json
+      - ./keycloakify/stroodle-theme-keycloak-theme-6.1.9.jar:/opt/keycloak/providers/stroodle-theme-keycloak-theme-6.1.9.jar:ro
+    restart: unless-stopped
+    networks:
+      - stroodle-net
+
+  keycloak-postgres:
+    image: postgres:16
+    container_name: keycloak-postgres
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - stroodle-net
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/certs:/etc/nginx/certs
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - keycloak
+    networks:
+      - stroodle-net
+
+volumes:
+  postgres_data:
+  keycloak_data:
+
+networks:
+  stroodle-net:
+    driver: bridge
 ```
 
 ### Dockerfiles
