@@ -13,6 +13,8 @@ Readme TODO:
 - write [Testing](#testing) section
 - explain CD deploy.yml in more detail, and set up CI pipeline
 
+Welcome to the documentation for the Stroodle scheduler. This document will guide you through the various aspects of the project, including its overview, interface usage, technologies used, and more. Use the Table of Contents below to navigate to different sections.
+
 ## Table of Contents <img src="assets/stroodle-logo-basic.png" width="25px" align="right">
 1. [Project Overview](#project-overview)
     - [Introduction](#introduction)
