@@ -838,7 +838,7 @@ RUN mvn dependency:go-offline
 # Bundle app source
 COPY . .
 
-# Adding system property to enable spring devtools
+# Run spring boot and add system property to enable spring devtools
 CMD ["mvn", "spring-boot:run", "-Dspring-boot.run.jvmArguments=-Dspring.devtools.restart.enabled=true"]
 
 ```
