@@ -1,4 +1,4 @@
-# Use an official Node.js runtime as the base image
+# Official Node.js runtime as the base image
 FROM node:latest
 
 # Set the working directory inside the container
@@ -17,8 +17,8 @@ RUN npm install -g less-watch-compiler
 # Copy the rest of the application code to the working directory
 COPY . .
 
-# Expose a port (if needed)
+# Expose a port
 EXPOSE 3000
 
-# Define the command to run your application
+# Command to run application
 CMD npm start & less-watch-compiler src/styles src/styles main.less
