@@ -4,6 +4,9 @@ Readme TODO:
 - write [Testing](#testing) section
 - config section for application yml and why certain settings were used
 - explain CD deploy.yml in more detail, and set up CI pipeline
+- integrate mailhog into the documentation where it should be mentioned
+- add section at the end for missing features, bugs, future enahncements
+- Licensing information? MIT?
 
 
 #
