@@ -8,6 +8,7 @@ Readme TODO:
 - mention MongoCompass?
 - add section at the end for missing features, bugs, future enahncements
 - Licensing information? MIT?
+- add contribution guidelines
 
 
 #
