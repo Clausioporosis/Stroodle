@@ -22,7 +22,7 @@ Readme TODO:
 
 ---
 
-Welcome to the documentation for the Stroodle scheduler. This document will guide you through the various aspects of the project, including its overview, interface usage, technologies used, and several other aspects. Use the Table of Contents below to navigate to different sections.
+Welcome to the documentation for Stroodle! Below you will find a comprehensive Table of Contents designed to guide you through the various sections of our project, from an overview and key features to detailed instructions on usage, technology stack, API documentation, database schema, and deployment. 
 
 ## Table of Contents <img src="assets/stroodle-logo-basic.png" width="25px" align="right">
 1. [Project Overview](#project-overview)
