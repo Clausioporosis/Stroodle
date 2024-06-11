@@ -694,6 +694,103 @@ volumes:
 
 ### Dockerfiles
 
+Dockerfiles are used to build Docker images for the different services in your application. Each service will have its own Dockerfile that specifies the instructions to set up the environment and install dependencies required to run the application.
+
+#### Generalized Dockerfile Structure
+
+```Dockerfile
+# Base image
+FROM base-image
+
+# Maintainer information
+LABEL maintainer="email@example.com"
+
+# Working directory
+WORKDIR /app
+
+# Copy application files
+COPY . .
+
+# Install dependencies
+RUN command-to-install-dependencies
+
+# Expose port
+EXPOSE port-number
+
+# Command to run the application
+CMD ["commands", "to", "run", "application"]
+```
+
+**Explanation:**
+
+- **FROM:** Specifies the base image to use for the Docker image. This is typically a lightweight OS image or an image containing a runtime environment (e.g., `node`, `openjdk`).
+- **LABEL:** Adds metadata to the image, such as maintainer information.
+- **WORKDIR:** Sets the working directory inside the container. All subsequent commands will be run from this directory.
+- **COPY:** Copies files from the host machine to the container.
+- **RUN:** Executes commands to install dependencies or perform other setup tasks.
+- **EXPOSE:** Informs Docker that the container listens on the specified network port at runtime.
+- **CMD:** Specifies the command to run when the container starts. This should be the main process for the container.
+
+#### Spring Boot Backend Dockerfile
+
+```Dockerfile
+# Base image containing Java runtime and Maven
+FROM maven:3.8.3-openjdk-17-slim
+
+
+# Make port 8080 available to the world outside this container
+EXPOSE 8080
+
+# Create app directory
+RUN mkdir /api-app
+WORKDIR /api-app
+
+# Install app dependencies and ensure that all required dependencies are downloaded and cached during the image build process. This allows the application to start faster and ensures that it can run offline without needing to download dependencies again.
+COPY pom.xml ./
+RUN mvn dependency:go-offline
+
+# Bundle app source
+COPY . .
+
+# Adding system property to enable spring devtools
+CMD ["mvn", "spring-boot:run", "-Dspring-boot.run.jvmArguments=-Dspring.devtools.restart.enabled=true"]
+
+```
+
+#### React Frontend Dockerfile
+
+```Dockerfile
+# Official Node.js runtime as the base image
+FROM node:latest
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy package.json and package-lock.json to the working directory
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Install less and less-watch-compiler globally
+RUN npm install -g less
+RUN npm install -g less-watch-compiler
+
+# Copy the rest of the application code to the working directory
+COPY . .
+
+# Expose a port
+EXPOSE 3000
+
+# Command to run application
+CMD npm start & less-watch-compiler src/styles src/styles main.less
+```
+
 ### Running the Application with Docker
 
+The instructions for running the application with Docker have already been detailed in the Getting Started section under [Running the Application](#running-with-docker). Please refer to that section for the complete setup and steps.
+
 ### Common Docker Commands
+
+Here are some common Docker commands that you might find useful for managing your Docker environment:
+
