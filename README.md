@@ -963,7 +963,7 @@ The instructions for running the application with Docker have already been detai
 
 #### Integration Tests
 
-[MISSING TEXT! DO WE EVEN BOTHER WITH THIS?]
+[MISSING TEXT!]
 
 ## Deployment  <a name="deployment"></a> <img src="assets/stroodle-logo-basic.png" width="25px" align="right">
 
