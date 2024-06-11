@@ -1,10 +1,13 @@
+<picture>
+  <source srcset="assets/stroodle-logo-white.png" media="(prefers-color-scheme: dark)">
+  <img src="assets/stroodle-logo.png" alt="Stroodle Logo">
+</picture>
+
 <p align="center">
-  <img src="assets/stroodle-logo.png" alt="Stroodle Logo" width="200"/>
+  <b>The Scheduling Solution for Teams and Individuals</b>
 </p>
 
-**The Scheduling Solution for Teams and Individuals**
-
-## Table of Contents
+## Table of Contents <img src="assets/stroodle-logo-basic.png" width="25px" align="right">
 1. [Project Overview](#project-overview)
     - [Introduction](#introduction)
     - [Key Features](#key-features)
@@ -942,97 +945,6 @@ The instructions for running the application with Docker have already been detai
 
 [MISSING TEXT! DO WE EVEN BOTHER WITH THIS?]
 
-## CI/CD Pipeline
-
-### Overview
-The CI/CD pipeline is set up to streamline the process of deploying changes to the Debian server. This ensures that the application is continuously deployed with the latest changes from the main branch. The CI is not yet set up, but the CD is fully operational.
-
-### Continuous Deployment
-The Continuous Deployment (CD) is already set up and configured to deploy changes to a Debian server whenever there is a push to the main branch.
-
-#### Deployment Workflow (.github/workflows/deploy.yml)
-
-```yaml
-name: Deploy to Debian Server
-
-on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Set up SSH
-      uses: webfactory/ssh-agent@v0.5.3
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-    - name: Create deployment directory on remote server
-      run: |
-        ssh -o StrictHostKeyChecking=no debian@193.197.230.60 'mkdir -p /home/debian/stroodle'
-    - name: Copy files via SCP
-      run: |
-        scp -r -o StrictHostKeyChecking=no $(ls | grep -v '^deployment.yml$') debian@193.197.230.60:/home/debian/stroodle
-    - name: Clean up Docker system on remote server
-      run: |
-        ssh -o StrictHostKeyChecking=no debian@193.197.230.60 << 'EOF'
-          docker system prune -f
-        EOF
-    - name: Deploy application
-      run: |
-        ssh -o StrictHostKeyChecking=no debian@193.197.230.60 << 'EOF'
-          cd /home/debian/stroodle
-          docker-compose down
-          docker-compose up -d --build
-        EOF
-```
-
-#### Setup Steps
-1. **Create SSH key without a passphrase:**
-   ```sh
-   ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
-   ```
-   
-2. **Add the public key to the Debian server:**
-   - Use WinSCP or another method to copy the public key to the server.
-   - Append the public key to the authorized_keys file:
-     ```sh
-     cat public_key.pub >> ~/.ssh/authorized_keys
-     ```
-
-3. **Set permissions (if necessary):**
-   ```sh
-   chmod 600 ~/.ssh/authorized_keys
-   ```
-
-4. **Add `SSH_PRIVATE_KEY` to GitHub repository secrets:**
-   - The value should be the content of the private key file generated in step 1 (the file without the .pub extension).
-
-5. **Write the deploy.yml file in the .github/workflows directory of the repository.**
-
-6. **Add the user 'debian' to the docker group to prevent deployment failures:**
-   ```sh
-   sudo usermod -aG docker debian
-   ```
-
-### Continuous Integration
-The Continuous Integration (CI) pipeline is not yet set up. Once set up, it will include steps to automatically test and validate changes before deployment.
-
-9. [Deployment](#deployment)
-    - [Providers](#providers)
-       - [bwCloud](#bwcloud)
-       - [IONOS](#ionos)
-    - [Setup](#setup)
-       - [Cloud VM's](#cloud-vms)
-       - [Proxy](#proxy)
-
 ## Deployment
 
 ### Providers
@@ -1279,3 +1191,86 @@ To create a symbolic link between the configuration files and /etc/nginx/sites-e
   sudo ln -s /etc/nginx/conf.d/stroodle.conf /etc/nginx/sites-enabled/
   sudo ln -s /etc/nginx/conf.d/login.stroodle.conf /etc/nginx/sites-enabled/
    ```
+
+## CI/CD Pipeline
+
+### Overview
+The CI/CD pipeline is set up to streamline the process of deploying changes to the Debian server. This ensures that the application is continuously deployed with the latest changes from the main branch. The CI is not yet set up, but the CD is fully operational.
+
+### Continuous Deployment
+The Continuous Deployment (CD) is already set up and configured to deploy changes to a Debian server whenever there is a push to the main branch.
+
+#### Deployment Workflow (.github/workflows/deploy.yml)
+
+```yaml
+name: Deploy to Debian Server
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Create deployment directory on remote server
+      run: |
+        ssh -o StrictHostKeyChecking=no debian@193.197.230.60 'mkdir -p /home/debian/stroodle'
+    - name: Copy files via SCP
+      run: |
+        scp -r -o StrictHostKeyChecking=no $(ls | grep -v '^deployment.yml$') debian@193.197.230.60:/home/debian/stroodle
+    - name: Clean up Docker system on remote server
+      run: |
+        ssh -o StrictHostKeyChecking=no debian@193.197.230.60 << 'EOF'
+          docker system prune -f
+        EOF
+    - name: Deploy application
+      run: |
+        ssh -o StrictHostKeyChecking=no debian@193.197.230.60 << 'EOF'
+          cd /home/debian/stroodle
+          docker-compose down
+          docker-compose up -d --build
+        EOF
+```
+
+#### Setup Steps
+1. **Create SSH key without a passphrase:**
+   ```sh
+   ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+   ```
+   
+2. **Add the public key to the Debian server:**
+   - Use WinSCP or another method to copy the public key to the server.
+   - Append the public key to the authorized_keys file:
+     ```sh
+     cat public_key.pub >> ~/.ssh/authorized_keys
+     ```
+
+3. **Set permissions (if necessary):**
+   ```sh
+   chmod 600 ~/.ssh/authorized_keys
+   ```
+
+4. **Add `SSH_PRIVATE_KEY` to GitHub repository secrets:**
+   - The value should be the content of the private key file generated in step 1 (the file without the .pub extension).
+
+5. **Write the deploy.yml file in the .github/workflows directory of the repository.**
+
+6. **Add the user 'debian' to the docker group to prevent deployment failures:**
+   ```sh
+   sudo usermod -aG docker debian
+   ```
+
+### Continuous Integration
+The Continuous Integration (CI) pipeline is not yet set up. Once set up, it will include steps to automatically test and validate changes before deployment.
