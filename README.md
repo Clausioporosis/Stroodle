@@ -9,6 +9,7 @@ Readme TODO:
 - add section at the end for missing features, bugs, future enahncements
 - Licensing information? MIT?
 - add contribution guidelines
+- add ne availability merge endpoint to api documentation
 
 #
 #
