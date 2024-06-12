@@ -20,36 +20,22 @@ jobs:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
     - name: Create deployment directory on remote server
-      run: |
-        ssh -o StrictHostKeyChecking=no debian@193.197.230.60 'mkdir -p /home/debian/stroodle'
+      run: ssh -o StrictHostKeyChecking=no debian@193.197.230.60 'mkdir -p /home/debian/stroodle'
 
     - name: Copy files via SCP
-      run: |
-        scp -r -o StrictHostKeyChecking=no $(ls | grep -v '^deployment.yml$') debian@193.197.230.60:/home/debian/stroodle
+      run: scp -r -o StrictHostKeyChecking=no $(ls | grep -v '^deployment.yml$') debian@193.197.230.60:/home/debian/stroodle
 
     - name: Clean up Docker volumes on remote server except mongo-data
-      run: |
-        ssh -o StrictHostKeyChecking=no debian@193.197.230.60 << 'EOF'
-          docker volume rm \$(docker volume ls -qf dangling=true | grep -v 'stroodle_mongo-data')
-        EOF
+      run: ssh -o StrictHostKeyChecking=no debian@193.197.230.60 'docker volume rm $(docker volume ls -qf dangling=true | grep -v "stroodle_mongo-data")'
 
     - name: Clean up unused Docker containers
-      run: |
-        ssh -o StrictHostKeyChecking=no debian@193.197.230.60 << 'EOF'
-          docker container prune -f
-        EOF
+      run: ssh -o StrictHostKeyChecking=no debian@193.197.230.60 'docker container prune -f'
 
     - name: Clean up unused Docker images
-      run: |
-        ssh -o StrictHostKeyChecking=no debian@193.197.230.60 << 'EOF'
-          docker image prune -f
-        EOF
+      run: ssh -o StrictHostKeyChecking=no debian@193.197.230.60 'docker image prune -f'
 
     - name: Clean up unused Docker networks
-      run: |
-        ssh -o StrictHostKeyChecking=no debian@193.197.230.60 << 'EOF'
-          docker network prune -f
-        EOF
+      run: ssh -o StrictHostKeyChecking=no debian@193.197.230.60 'docker network prune -f'
 
     - name: Deploy application
       run: |
