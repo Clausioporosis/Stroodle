@@ -1,9 +1,8 @@
-package com.stroodle.backend;
+package com.stroodle.backend.service;
 
 import com.stroodle.backend.config.KeycloakConfig;
 import com.stroodle.backend.exception.ResourceNotFoundException;
 import com.stroodle.backend.model.UserDto;
-import com.stroodle.backend.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
-
 
 import java.util.Arrays;
 import java.util.List;
@@ -42,8 +40,6 @@ public class UserServiceTest {
     @Mock
     private UserResource userResource;
 
-    
-
     @InjectMocks
     private UserService userService;
 
@@ -52,17 +48,18 @@ public class UserServiceTest {
         ReflectionTestUtils.setField(userService, "realm", "Stroodle");
         when(keycloakConfig.keycloak()).thenReturn(keycloak);// keycloak
         when(keycloak.realm("Stroodle")).thenReturn(realmResource);// realmResource
-        when(realmResource.users()).thenReturn(usersResource); // usersResource defeniert das Verhalten von usersResource und Mock-Objekte
+        when(realmResource.users()).thenReturn(usersResource); // usersResource defeniert das Verhalten von
+                                                               // usersResource und Mock-Objekte
     }
 
-
     @Test
-    public void testGetUsers() { 
+    public void testGetUsers() {
         // Arrange
-        UserRepresentation userRepresentation = createUserRepresentation("1", "testuser", "Test", "User", "test@example.com");
-    
+        UserRepresentation userRepresentation = createUserRepresentation("1", "testuser", "Test", "User",
+                "test@example.com");
+
         when(usersResource.list()).thenReturn(Arrays.asList(userRepresentation));
-    
+
         // Act
         List<UserDto> users = userService.getUsers();
         // Assert
@@ -74,16 +71,17 @@ public class UserServiceTest {
         assertEquals("testuser", user.getUsername());
         assertEquals("Test", user.getFirstName());
         assertEquals("User", user.getLastName());
-        assertEquals("test@example.com", user.getEmail());// Überprüfung, ob die Erwartungen erfüllt sind         
+        assertEquals("test@example.com", user.getEmail());// Überprüfung, ob die Erwartungen erfüllt sind
     }
-    private UserRepresentation createUserRepresentation(String id, String username, String firstName, String lastName, String email) 
-    {
+
+    private UserRepresentation createUserRepresentation(String id, String username, String firstName, String lastName,
+            String email) {
         UserRepresentation userRepresentation = new UserRepresentation();
         userRepresentation.setId(id);
         userRepresentation.setUsername(username);
         userRepresentation.setFirstName(firstName);
         userRepresentation.setLastName(lastName);
-        userRepresentation.setEmail(email); //setzen der werte für die Eingenschaften 
+        userRepresentation.setEmail(email); // setzen der werte für die Eingenschaften
         return userRepresentation;
     }
 
@@ -121,7 +119,9 @@ public class UserServiceTest {
         when(userResource.toRepresentation()).thenReturn(null);
 
         // Act & Assert
-        assertThrows(ResourceNotFoundException.class, () -> userService.getUserById(userId)); // Prüft, ob eine ResourceNotFoundException ausgelöst wird
+        assertThrows(ResourceNotFoundException.class, () -> userService.getUserById(userId)); // Prüft, ob eine
+                                                                                              // ResourceNotFoundException
+                                                                                              // ausgelöst wird
     }
 
     @Test
@@ -149,6 +149,6 @@ public class UserServiceTest {
         assertEquals("testuser", user.getUsername());
         assertEquals("Test", user.getFirstName());
         assertEquals("User", user.getLastName());
-        assertEquals("test@example.com", user.getEmail()); 
+        assertEquals("test@example.com", user.getEmail());
     }
 }

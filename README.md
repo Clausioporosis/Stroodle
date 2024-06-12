@@ -507,7 +507,7 @@ If you need to run the Application locally for any reason (e.g., for debugging p
 
 - **Endpoint: `/api/email/send`**
 - **Method:** `GET`
-- **Description:** [MISSING DESCRIPTION! NOT WORKING! TODO!]
+- **Description:** Send a test email using the MailHog email testing tool. This endpoint triggers an email to be sent to MailHog, which captures it for testing purposes.
 - **Response Body:** string
 
 ### API Testing
