@@ -77,7 +77,7 @@ const VotingStatus: React.FC<VotingStatusProps> = ({ setHasEdited, proposedDates
                 <div key={participantId} className="voter-row">
                     <div className="voter-cell first-cell">
                         <div className='first-cell-bg'>
-                            <UserInitials firstName={users[participantId]?.firstName} lastName={users[participantId]?.lastName} size={30} />
+                            <UserInitials firstName={users[participantId]?.firstName} lastName={users[participantId]?.lastName} size={30} border={'none'} />
                             {getUserName(participantId)}
                         </div>
                     </div>

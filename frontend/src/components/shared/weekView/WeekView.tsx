@@ -86,6 +86,7 @@ const WeekView: React.FC<WeekViewProps> = ({
         calendarApi.on('eventChange', updateAllDaySlot);
         calendarApi.on('eventRemove', updateAllDaySlot);
 
+
         return () => {
             calendarApi.off('eventAdd', updateAllDaySlot);
             calendarApi.off('eventChange', updateAllDaySlot);
@@ -317,15 +318,8 @@ const WeekView: React.FC<WeekViewProps> = ({
     useEffect(() => {
         if (!calendarApi) return;
 
-        calendarApi.getEvents().forEach((event: any) => {
-            if (event.id === "mergedAvailability") {
-                event.remove();
-            }
-        });
+        redrawAllBackgroundEvents();
 
-        if (mergedAvailability) {
-            addMergedAvailabilityToCalendar(mergedAvailability);
-        }
     }, [calendarApi, mergedAvailability]);
 
     function addMergedAvailabilityToCalendar(availability: Availability) {
@@ -498,7 +492,7 @@ const WeekView: React.FC<WeekViewProps> = ({
 
     // redraw all events one after another
     function redrawAllBackgroundEvents() {
-        if (!calendarApi) return;
+        if (!calendarApi || useCase !== 'poll') return;
         calendarApi.removeAllEvents();
 
         Promise.resolve()
