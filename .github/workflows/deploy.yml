@@ -27,14 +27,27 @@ jobs:
       run: |
         scp -r -o StrictHostKeyChecking=no $(ls | grep -v '^deployment.yml$') debian@193.197.230.60:/home/debian/stroodle
 
-    - name: Clean up Docker system on remote server
+    - name: Clean up Docker volumes on remote server except mongo-data
       run: |
         ssh -o StrictHostKeyChecking=no debian@193.197.230.60 << 'EOF'
-          cd /home/debian/stroodle
-          docker-compose down
-          docker system prune -af
+          docker volume rm \$(docker volume ls -qf dangling=true | grep -v 'stroodle_mongo-data')
+        EOF
+
+    - name: Clean up unused Docker containers
+      run: |
+        ssh -o StrictHostKeyChecking=no debian@193.197.230.60 << 'EOF'
           docker container prune -f
+        EOF
+
+    - name: Clean up unused Docker images
+      run: |
+        ssh -o StrictHostKeyChecking=no debian@193.197.230.60 << 'EOF'
           docker image prune -f
+        EOF
+
+    - name: Clean up unused Docker networks
+      run: |
+        ssh -o StrictHostKeyChecking=no debian@193.197.230.60 << 'EOF'
           docker network prune -f
         EOF
 
