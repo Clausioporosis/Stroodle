@@ -1,12 +1,13 @@
 package com.stroodle.backend.service;
 
 import java.time.DayOfWeek;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Optional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,13 +28,12 @@ public class AvailabilityService {
         availabilityRepository.save(availability);
     }
 
-    public Availability getAvailability(String userId) {
-        return availabilityRepository.findById(userId)
-                .orElseThrow(
-                        () -> new ResourceNotFoundException("Availability for user with id " + userId + " not found"));
+    public Optional<Availability> getAvailability(String userId) {
+        return availabilityRepository.findById(userId);
     }
 
     public Availability mergeAvailabilities(List<String> userIds) {
+        System.out.println("Merging availabilities for users: " + userIds);
         Map<DayOfWeek, List<TimePeriod>> mergedAvailability = new HashMap<>();
 
         for (DayOfWeek day : DayOfWeek.values()) {
@@ -41,7 +41,13 @@ public class AvailabilityService {
         }
 
         for (String userId : userIds) {
-            Availability availability = getAvailability(userId);
+            Optional<Availability> optionalAvailability = getAvailability(userId);
+            if (!optionalAvailability.isPresent()) {
+                System.out.println("Skipping user with no availability: " + userId);
+                continue;
+            }
+            Availability availability = optionalAvailability.get();
+
             for (Map.Entry<DayOfWeek, List<TimePeriod>> entry : availability.getAvailability().entrySet()) {
                 mergedAvailability.get(entry.getKey()).addAll(entry.getValue());
             }
@@ -52,8 +58,14 @@ public class AvailabilityService {
             entry.setValue(mergedPeriods);
         }
 
+        Map<DayOfWeek, List<TimePeriod>> invertedAvailability = new HashMap<>();
+        for (Map.Entry<DayOfWeek, List<TimePeriod>> entry : mergedAvailability.entrySet()) {
+            List<TimePeriod> invertedPeriods = invertTimePeriods(entry.getValue());
+            invertedAvailability.put(entry.getKey(), invertedPeriods);
+        }
+
         Availability result = new Availability();
-        result.setAvailability(mergedAvailability);
+        result.setAvailability(invertedAvailability);
         return result;
     }
 
@@ -79,5 +91,32 @@ public class AvailabilityService {
 
         merged.add(current);
         return merged;
+    }
+
+    private List<TimePeriod> invertTimePeriods(List<TimePeriod> periods) {
+        List<TimePeriod> inverted = new ArrayList<>();
+        LocalTime startOfDay = LocalTime.MIN;
+        LocalTime endOfDay = LocalTime.MAX;
+
+        if (periods.isEmpty()) {
+            inverted.add(new TimePeriod(startOfDay, endOfDay));
+            return inverted;
+        }
+
+        periods.sort(Comparator.comparing(TimePeriod::getStart));
+
+        if (!periods.get(0).getStart().equals(startOfDay)) {
+            inverted.add(new TimePeriod(startOfDay, periods.get(0).getStart()));
+        }
+
+        for (int i = 0; i < periods.size() - 1; i++) {
+            inverted.add(new TimePeriod(periods.get(i).getEnd(), periods.get(i + 1).getStart()));
+        }
+
+        if (!periods.get(periods.size() - 1).getEnd().equals(endOfDay)) {
+            inverted.add(new TimePeriod(periods.get(periods.size() - 1).getEnd(), endOfDay));
+        }
+
+        return inverted;
     }
 }

@@ -76,6 +76,18 @@
     border-top-color: green;
 }
 
+.tippy-box[data-theme~='mergedAvailability'] {
+    background-color: rgba(255, 0, 0, 0.6);
+}
+
+
+.tippy-box[data-theme~='mergedAvailability'][data-placement^='left']>.tippy-arrow::before {
+    border-left-color: rgba(255, 0, 0, 0.6);
+}
+
+.tippy-box[data-theme~='mergedAvailability'][data-placement^='right']>.tippy-arrow::before {
+    border-right-color: rgba(255, 0, 0, 0.6);
+}
 
 
 .events-content {

@@ -96,6 +96,13 @@ class UserService {
             user.email
         ));
     }
+
+    public async mergeAvailabilities(userIds: string[]): Promise<any> {
+        const response = await this.handleRequest(apiClient.post('users/merge', userIds, {
+            headers: this.getAuthHeader()
+        }));
+        return response;
+    }
 }
 
 export default UserService;

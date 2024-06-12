@@ -45,18 +45,20 @@ public class AvailabilityServiceTest {
 
         when(availabilityRepository.findById(userId)).thenReturn(Optional.of(availability));
 
-        Availability result = availabilityService.getAvailability(userId);
+        Optional<Availability> result = availabilityService.getAvailability(userId);
 
-        assertNotNull(result);
-        assertEquals(userId, result.getUserId());
+        assertTrue(result.isPresent());
+        assertEquals(userId, result.get().getUserId());
     }
 
     @Test
-    public void testGetAvailability_UserNotFound(){
-        String userId = "user1";
+    public void testGetAvailability_UserDoesNotExist() {
+        String userId = "user2";
 
         when(availabilityRepository.findById(userId)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> availabilityService.getAvailability(userId));
+        Optional<Availability> result = availabilityService.getAvailability(userId);
+
+        assertFalse(result.isPresent());
     }
 }

@@ -6,6 +6,7 @@ import com.stroodle.backend.model.Availability;
 import com.stroodle.backend.service.AvailabilityService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -20,7 +21,7 @@ public class AvailabilityController {
     }
 
     @GetMapping("/{userId}/availability")
-    public Availability getAvailability(@PathVariable String userId) {
+    public Optional<Availability> getAvailability(@PathVariable String userId) {
         return availabilityService.getAvailability(userId);
     }
 

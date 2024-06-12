@@ -30,6 +30,8 @@ interface WeekViewProps {
 
     icsStatus?: { isStored: boolean, isValid: boolean };
     icsEvents?: any[];
+
+    mergedAvailability?: Availability;
 }
 
 interface CalendarEvent {
@@ -58,7 +60,8 @@ const WeekView: React.FC<WeekViewProps> = ({
     removeProposedDate,
     saveProposedDate,
     icsStatus,
-    icsEvents }) => {
+    icsEvents,
+    mergedAvailability }) => {
 
     const [calendarApi, setCalendarApi] = useState<any>(null);
     const [allDaySlot, setAllDaySlot] = useState<boolean>(false);
@@ -120,7 +123,7 @@ const WeekView: React.FC<WeekViewProps> = ({
             <>
                 {((event.id !== 'expiredTimeHighlight') &&
                     <div className='events-content'>
-                        {event.id === 'icsEvent' ? (
+                        {event.id === 'icsEvent' || event.id === 'mergedAvailability' ? (
                             <p>{event.title}</p>
                         ) : !event.allDay ? (
                             <>
@@ -310,6 +313,45 @@ const WeekView: React.FC<WeekViewProps> = ({
         });
     }
 
+    // merged availability functions ------------------------------------------------------------------------------------------
+
+    useEffect(() => {
+        if (!calendarApi) return;
+
+        calendarApi.getEvents().forEach((event: any) => {
+            if (event.id === "mergedAvailability") {
+                event.remove();
+            }
+        });
+
+        if (mergedAvailability) {
+            addMergedAvailabilityToCalendar(mergedAvailability);
+        }
+    }, [calendarApi, mergedAvailability]);
+
+    function addMergedAvailabilityToCalendar(availability: Availability) {
+        for (const day in availability) {
+            const weekdayIndex = Object.values(Weekday).indexOf(day as Weekday);
+
+            const timePeriods = availability[day as Weekday];
+            if (Array.isArray(timePeriods)) {
+                timePeriods.forEach((time: TimePeriod) => {
+                    const currentAvailabilityEntry: CalendarEvent = {
+                        id: "mergedAvailability",
+                        display: 'background',
+                        color: "rgba(255, 0, 0, 0.3)",
+                        startTime: time.start,
+                        endTime: time.end,
+                        daysOfWeek: [weekdayIndex],
+                        allDay: false
+                    };
+                    calendarApi.addEvent(currentAvailabilityEntry);
+                });
+            }
+        }
+    }
+
+
     // availability functions ------------------------------------------------------------------------------------------
 
     const hasAddedAvailability = useRef<boolean>(false);
@@ -432,17 +474,31 @@ const WeekView: React.FC<WeekViewProps> = ({
 
         if (event.allDay || event.id === 'expiredTimeHighlight') return;
 
-        const startTime = start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        const endTime = end ? end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
-        content = `${startTime} - ${endTime}`;
+        if (event.id === 'mergedAvailability') {
+            content = 'Teilnehmer nicht verfügbar';
+        } else {
+            const startTime = start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const endTime = end ? end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+            content = `${startTime} - ${endTime}`;
+        }
 
-        const theme = event.id === 'icsEvent' ? 'icsEvent' : event.backgroundColor === 'green' ? 'pendingAvailability' : 'proposedDate';
+        let theme = 'proposedDate';
+        if (event.id === 'icsEvent') {
+            theme = 'icsEvent';
+        } else if (event.backgroundColor === 'green') {
+            theme = 'pendingAvailability';
+        } else if (event.id === 'mergedAvailability') {
+            theme = 'mergedAvailability';
+        }
 
         tippy(info.el, {
             content: content,
-            theme: theme
+            theme: theme,
+            placement: event.id === 'mergedAvailability' ? 'right' : 'top'
         });
     };
+
+
 
     return (
         <div className='week-view-component'>
