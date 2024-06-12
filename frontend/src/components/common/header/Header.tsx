@@ -78,8 +78,8 @@ const Header: React.FC = () => {
                                     firstName={userName.firstName}
                                     lastName={userName.lastName}
                                     size={40}
-                                    backgroundColor='var(--text-color)'
-                                    textColor='var(--base-color-1)'
+                                    backgroundColor='transparent'
+                                    textColor='var(--text-color)'
                                 />
                                 <span className='user-name'>{userName.userName}</span>
                             </>

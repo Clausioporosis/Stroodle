@@ -1,5 +1,4 @@
 # Base image containing Java runtime and Maven
-# Base image containing Java runtime and Maven
 FROM maven:3.8.3-openjdk-17-slim
 
 # Make port 8080 available to the world outside this container
@@ -16,6 +15,5 @@ RUN mvn dependency:go-offline
 # Bundle app source
 COPY . .
 
-# Run spring boot and add system property to enable spring devtools
 # Run spring boot and add system property to enable spring devtools
 CMD ["mvn", "spring-boot:run", "-Dspring-boot.run.jvmArguments=-Dspring.devtools.restart.enabled=true"]

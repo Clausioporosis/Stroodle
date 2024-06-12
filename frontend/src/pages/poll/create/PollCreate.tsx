@@ -2,7 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import PollService from '../../../services/PollService';
+import UserService from '../../../services/UserService';
 import { Poll, ProposedDate } from '../../../models/Poll';
+import { Availability } from '../../../models/User';
 
 import SearchBar from '../../../components/polls/create/searchBar/SearchBar';
 import AddedParticipants from '../../../components/polls/create/addedParticipants/AddedParticipants';
@@ -13,12 +15,12 @@ import { useKeycloak } from '@react-keycloak/web';
 import OutlookService from '../../../services/OutlookService';
 import Modal from '../../../components/shared/modal/Modal';
 
-// name genauer 
-const Create: React.FC = () => {
+const PollCreate: React.FC = () => {
     const navigate = useNavigate();
     const { pollId } = useParams();
     const { keycloak } = useKeycloak();
     const pollService = new PollService(keycloak);
+    const userService = new UserService(keycloak);
     const outlookService = new OutlookService(keycloak);
 
     const descriptionRef = useRef<HTMLTextAreaElement>(null);
@@ -32,6 +34,7 @@ const Create: React.FC = () => {
     const [proposedDates, setProposedDates] = useState<ProposedDate[] | undefined>();
     const [icsStatus, setIcsStatus] = useState<{ isStored: boolean, isValid: boolean, url: string } | undefined>();
     const [icsEvents, setIcsEvents] = useState<any[] | undefined>();
+    const [mergedAvailability, setMergedAvailability] = useState<Availability | undefined>();
 
     const [isModalOpen, setModalOpen] = useState(false);
     const [modalTitle, setModalTitle] = useState<string>('');
@@ -54,6 +57,12 @@ const Create: React.FC = () => {
     useEffect(() => {
         checkIcsStatus();
     }, []);
+
+    useEffect(() => {
+        if (participantsIds.length > 0) {
+            fetchMergedAvailability();
+        }
+    }, [participantsIds]);
 
     const adjustTextareaHeight = (textarea: HTMLTextAreaElement | null) => {
         if (textarea) {
@@ -113,6 +122,16 @@ const Create: React.FC = () => {
 
     const removeParticipant = (removedParticipantId: string) => {
         setParticipantsIds(prev => prev.filter(id => id !== removedParticipantId));
+    };
+
+    const fetchMergedAvailability = async () => {
+        try {
+            const response = await userService.mergeAvailabilities(participantsIds);
+            const availability = response.availability;
+            setMergedAvailability(availability);
+        } catch (error) {
+            console.error('Error fetching merged availability:', error);
+        }
     };
 
     const saveProposedDate = (start: Date) => {
@@ -213,7 +232,7 @@ const Create: React.FC = () => {
                         onChange={handleIcsChange}
                         placeholder="ICS-Link eingeben"
                     />
-                    {!icsStatus?.isValid && icsStatus?.url !== '' && <span className='red'><CalendarX className='icon red' />{" ICS-Link ist nicht gültig"}</span>}
+                    {!icsStatus?.isValid && icsStatus?.url !== null && icsStatus?.url !== '' && <span className='red'><CalendarX className='icon red' />{" ICS-Link ist nicht gültig"}</span>}
                 </>
             );
         }
@@ -276,7 +295,6 @@ const Create: React.FC = () => {
             const status = await outlookService.checkIcsStatus();
             setIcsUrl(status.url);
             setIcsStatus({ isStored: status.stored, isValid: status.valid, url: status.url });
-            console.log('ICS status:', status);
             if (status.stored && status.valid) {
                 const events = await outlookService.getIcsEvents();
                 setIcsEvents(events);
@@ -355,7 +373,9 @@ const Create: React.FC = () => {
                     pollId={pollId}
                     removeProposedDate={removeProposedDate}
                     icsStatus={icsStatus}
-                    icsEvents={icsEvents} />
+                    icsEvents={icsEvents}
+                    mergedAvailability={mergedAvailability}
+                />
             </div>
 
             <Modal
@@ -372,4 +392,4 @@ const Create: React.FC = () => {
     );
 };
 
-export default Create;
+export default PollCreate;

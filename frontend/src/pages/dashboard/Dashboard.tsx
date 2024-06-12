@@ -15,7 +15,7 @@ const Dashboard: React.FC = () => {
 
     useEffect(() => {
         getMyPolls();
-        getInvitedPols();
+        getInvitedPolls();
     }, []);
 
     async function getMyPolls() {
@@ -23,7 +23,7 @@ const Dashboard: React.FC = () => {
         setMyPolls(allPolls);
     }
 
-    async function getInvitedPols() {
+    async function getInvitedPolls() {
         const allPolls = await pollService.getInvitedPolls();
         setRunningPolls(allPolls);
     }
@@ -56,7 +56,7 @@ const Dashboard: React.FC = () => {
                     Events
                 </h1>
                 {runningPolls.length === 0 ? (
-                    <p className="no-data-text">Keine Events vorhanden</p>
+                    <p className="no-data-text">Keine anstehenden Events</p>
                 ) : (
                     <InfoCards useCase={'runningPolls'} pollData={runningPolls} />
                 )}

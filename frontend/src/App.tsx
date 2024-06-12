@@ -9,8 +9,8 @@ import { useKeycloak } from '@react-keycloak/web';
 import Header from './components/common/header/Header';
 import Dashboard from './pages/dashboard/Dashboard';
 import Availability from './pages/availability/Availability';
-import CreatePoll from './pages/poll/create/Create';
-import ViewPoll from './pages/poll/view/View';
+import CreatePoll from './pages/poll/create/PollCreate';
+import ViewPoll from './pages/poll/view/PollView';
 
 import SpinningLoader from './components/shared/loading/SpinningLoader';
 

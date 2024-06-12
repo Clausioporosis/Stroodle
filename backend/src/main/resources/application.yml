@@ -43,3 +43,6 @@ server:
       cookie:
         same-site: lax # Ensures the session cookie is sent during cross-origin redirects, allowing the session to be maintained between the authentication request and the callback.
                        # Used for Azure AD authentication
+
+email:
+  default-recipient: your.email@example.com

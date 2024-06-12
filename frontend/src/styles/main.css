@@ -578,6 +578,15 @@ a:active {
 .tippy-box[data-theme~='pendingAvailability'][data-placement^='top'] > .tippy-arrow::before {
   border-top-color: green;
 }
+.tippy-box[data-theme~='mergedAvailability'] {
+  background-color: rgba(255, 0, 0, 0.6);
+}
+.tippy-box[data-theme~='mergedAvailability'][data-placement^='left'] > .tippy-arrow::before {
+  border-left-color: rgba(255, 0, 0, 0.6);
+}
+.tippy-box[data-theme~='mergedAvailability'][data-placement^='right'] > .tippy-arrow::before {
+  border-right-color: rgba(255, 0, 0, 0.6);
+}
 .events-content {
   padding: 0 3px 0 3px;
   position: relative;
@@ -1059,8 +1068,8 @@ p {
 }
 .no-data-text {
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   margin-top: 20px;
   font-size: 18px;
   color: #555;

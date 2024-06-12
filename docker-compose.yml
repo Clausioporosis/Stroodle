@@ -13,6 +13,7 @@ services:
       - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/StroodleDatabase
       - SPRING_PROFILES_ACTIVE=default
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=https://login.stroodle.online/realms/Stroodle
+      - email.default-recipient=your.email@example.com
     depends_on:
       - mongo
     networks:
@@ -51,6 +52,15 @@ services:
     depends_on:
       - springboot-app
       - react-app
+    networks:
+      - stroodle-net
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog
+    ports:
+      - "8025:8025"
+      - "1025:1025"
     networks:
       - stroodle-net
 
