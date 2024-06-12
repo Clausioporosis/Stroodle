@@ -32,6 +32,7 @@ jobs:
         ssh -o StrictHostKeyChecking=no debian@193.197.230.60 << 'EOF'
           cd /home/debian/stroodle
           docker-compose down
+          docker system prune -af
           docker container prune -f
           docker image prune -f
           docker network prune -f
