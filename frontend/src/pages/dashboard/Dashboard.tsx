@@ -15,7 +15,7 @@ const Dashboard: React.FC = () => {
 
     useEffect(() => {
         getMyPolls();
-        getInvitedPols();
+        getInvitedPolls();
     }, []);
 
     async function getMyPolls() {
@@ -23,7 +23,7 @@ const Dashboard: React.FC = () => {
         setMyPolls(allPolls);
     }
 
-    async function getInvitedPols() {
+    async function getInvitedPolls() {
         const allPolls = await pollService.getInvitedPolls();
         setRunningPolls(allPolls);
     }
