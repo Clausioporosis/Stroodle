@@ -71,7 +71,6 @@ const WeekView: React.FC<WeekViewProps> = ({
         setCalendarApi(calendarRef.current?.getApi());
     }, []);
 
-    // only show all day slot if there are all day events
     useEffect(() => {
         if (!calendarApi) return;
 
@@ -339,7 +338,7 @@ const WeekView: React.FC<WeekViewProps> = ({
                     const currentAvailabilityEntry: CalendarEvent = {
                         id: "mergedAvailability",
                         display: 'background',
-                        color: "rgba(255, 0, 0, 0.3)",
+                        color: "rgba(255, 0, 0, 0.2)",
                         startTime: time.start,
                         endTime: time.end,
                         daysOfWeek: [weekdayIndex],
@@ -350,7 +349,6 @@ const WeekView: React.FC<WeekViewProps> = ({
             }
         }
     }
-
 
     // availability functions ------------------------------------------------------------------------------------------
 
@@ -431,7 +429,7 @@ const WeekView: React.FC<WeekViewProps> = ({
 
     // set calendar settings based on use case ----------------------------------------------------------------------------
 
-    // now indicator taking some time to render at the correct time, dunno why
+    // indicator taking some time to render at the correct time, dunno why
     const [nowIndicator, setNowIndicator] = useState<boolean>();
     const [selectable, setSelectable] = useState<boolean>();
     const [headerToolbar, setHeaderToolbar] = useState<any>();
@@ -498,7 +496,31 @@ const WeekView: React.FC<WeekViewProps> = ({
         });
     };
 
+    // redraw all events one after another
+    function redrawAllBackgroundEvents() {
+        if (!calendarApi) return;
+        calendarApi.removeAllEvents();
 
+        Promise.resolve()
+            .then(() => {
+                return new Promise<void>((resolve) => {
+                    if (mergedAvailability) {
+                        addMergedAvailabilityToCalendar(mergedAvailability);
+                    }
+                    resolve();
+                });
+            })
+            .then(() => {
+                addExpiredTimeHighlightToCalender();
+            })
+            .then(() => {
+                addIcsEventsToCalendar();
+            })
+            .then(() => {
+                hasPoposedDates.current = false;
+                setProposedDatesToCalendar();
+            });
+    }
 
     return (
         <div className='week-view-component'>
@@ -536,6 +558,8 @@ const WeekView: React.FC<WeekViewProps> = ({
                 select={handleCalenderSelection}
                 dateClick={handleCalenderClick}
                 eventDidMount={eventDidMount}
+
+                datesSet={redrawAllBackgroundEvents}
             />
         </div>
     );
