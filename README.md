@@ -142,7 +142,7 @@ When clicking on Availability in the navigation bar, the availability view will 
 
 ![Poll Creation](assets/stroodle_poll_edit.jpeg)
 
-When creating a poll, you can add a title, description, and location. Participants can be added via the search bar. You can also integrate your ICS calendar link using the button above the week view. There is an option to select multiple preset meeting durations (15, **25**, 30, 45 minutes, all day an custom) to simplify scheduling.
+When creating a poll, you can add a title, description, and location. Participants can be added via the search bar. You can also integrate your ICS calendar link using the button above the week view. There is an option to select multiple preset meeting durations (15, **25**, 30, 45 minutes, all day and custom) to simplify scheduling.
 
 ### Participant View
 
@@ -369,12 +369,12 @@ If you need to run the Application locally for any reason (e.g., for debugging p
 - **Method:** `DELETE`
 - **Description:** Delete a poll.
 
-**Endpoint: `/api/polls/search/{id}`**
+**Endpoint: `/api/polls/{id}`**
 - **Method:** `GET`
 - **Description:** Search polls by ID.
 - **[Response Body:](#poll-response-body)**
 
-**Endpoint: `/api/polls/search/title`**
+**Endpoint: `/api/polls/title`**
 - **Method:** `GET`
 - **Description:** Search polls by title.
 - **[Response Body:](#poll-response-body)**
@@ -986,7 +986,7 @@ BWCloud provides detailed instructions on how to set up SSH access and configure
 
 **Access via SSH:**
 To access the Debian 10 instance via SSH tools like [Putty](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html) and [WinSCP](https://winscp.net/eng/download.php) can be used.
-To connect to said debain machines, use the right IP address and username (debian) of the instance and provide the private key file `private_ssh_key.ppk` you set up for bwCloud.
+To connect to said Debian machines, use the right IP address and username (debian) of the instance and provide the private key file `private_ssh_key.ppk` you set up for bwCloud.
 
 **Installing Docker and Docker Compose:**
 
