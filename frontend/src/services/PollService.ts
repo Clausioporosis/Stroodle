@@ -48,7 +48,7 @@ class PollService {
     }
 
     public async getPollById(id: string): Promise<Poll | undefined> {
-        return this.handleRequest(apiClient.get(`/polls/search/${id}`, {
+        return this.handleRequest(apiClient.get(`/polls/${id}`, {
             headers: this.getAuthHeader()
         }));
     }
