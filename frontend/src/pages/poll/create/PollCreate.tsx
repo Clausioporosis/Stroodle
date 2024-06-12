@@ -15,7 +15,7 @@ import { useKeycloak } from '@react-keycloak/web';
 import OutlookService from '../../../services/OutlookService';
 import Modal from '../../../components/shared/modal/Modal';
 
-const Create: React.FC = () => {
+const PollCreate: React.FC = () => {
     const navigate = useNavigate();
     const { pollId } = useParams();
     const { keycloak } = useKeycloak();
@@ -232,7 +232,7 @@ const Create: React.FC = () => {
                         onChange={handleIcsChange}
                         placeholder="ICS-Link eingeben"
                     />
-                    {!icsStatus?.isValid && icsStatus?.url !== '' && <span className='red'><CalendarX className='icon red' />{" ICS-Link ist nicht gültig"}</span>}
+                    {!icsStatus?.isValid && icsStatus?.url !== null && icsStatus?.url !== '' && <span className='red'><CalendarX className='icon red' />{" ICS-Link ist nicht gültig"}</span>}
                 </>
             );
         }
@@ -295,7 +295,6 @@ const Create: React.FC = () => {
             const status = await outlookService.checkIcsStatus();
             setIcsUrl(status.url);
             setIcsStatus({ isStored: status.stored, isValid: status.valid, url: status.url });
-            console.log('ICS status:', status);
             if (status.stored && status.valid) {
                 const events = await outlookService.getIcsEvents();
                 setIcsEvents(events);
@@ -393,4 +392,4 @@ const Create: React.FC = () => {
     );
 };
 
-export default Create;
+export default PollCreate;

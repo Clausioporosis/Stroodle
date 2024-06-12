@@ -56,7 +56,7 @@ const Dashboard: React.FC = () => {
                     Events
                 </h1>
                 {runningPolls.length === 0 ? (
-                    <p className="no-data-text">Keine Events vorhanden</p>
+                    <p className="no-data-text">Keine anstehenden Events</p>
                 ) : (
                     <InfoCards useCase={'runningPolls'} pollData={runningPolls} />
                 )}
