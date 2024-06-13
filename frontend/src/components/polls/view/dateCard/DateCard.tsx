@@ -11,10 +11,11 @@ interface DateCardProps {
     isMostVotedDate?: boolean;
     matchesAvailability?: boolean;
     matchesIcsEvent?: boolean;
+    icsEventTitle?: string;
     onDateClick: () => void;
 }
 
-const DateCard: React.FC<DateCardProps> = ({ proposedDate, isOrganizer, onDateClick, isActive = false, isMostVotedDate, matchesAvailability: isAvailable, matchesIcsEvent }) => {
+const DateCard: React.FC<DateCardProps> = ({ proposedDate, isOrganizer, onDateClick, isActive = false, isMostVotedDate, matchesAvailability: isAvailable, matchesIcsEvent, icsEventTitle }) => {
     const cardRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -26,11 +27,12 @@ const DateCard: React.FC<DateCardProps> = ({ proposedDate, isOrganizer, onDateCl
         }
         if (matchesIcsEvent && cardRef.current) {
             tippy(cardRef.current, {
-                content: 'Konflikt mit Kalenderereignis',
+                content: `<div style="text-align: center;"><strong>Konflikt mit Kalenderereignis:</strong><br/>${icsEventTitle}</div>`,
+                allowHTML: true,
                 theme: 'conflicting-date',
             });
         }
-    }, [isAvailable, matchesIcsEvent]);
+    }, [isAvailable, matchesIcsEvent, icsEventTitle]);
 
     const formatTime = (date: Date) => {
         const hours = date.getHours();

@@ -20,7 +20,7 @@ interface VotingStatusProps {
     setSelectedDateIndex: (index: number | undefined) => void;
     votedDates: number[] | undefined;
     setVotedDates: (index: number[] | undefined) => void;
-    icsEvents?: any[]; // Add icsEvents to props
+    icsEvents?: any[];
 }
 
 const VotingStatus: React.FC<VotingStatusProps> = ({ setHasEdited, proposedDates, participantIds, isOrganizer, setSelectedDateIndex, selectedDateIndex, votedDates, setVotedDates, icsEvents }) => {
@@ -28,7 +28,7 @@ const VotingStatus: React.FC<VotingStatusProps> = ({ setHasEdited, proposedDates
     const [mostVotedDates, setMostVotedDates] = useState<number[]>([]);
     const [userAvailability, setUserAvailability] = useState<Availability | undefined>(undefined);
     const [availableDates, setAvailableDates] = useState<number[]>([]);
-    const [conflictingDates, setConflictingDates] = useState<number[]>([]);
+    const [conflictingDates, setConflictingDates] = useState<{ index: number, title: string }[]>([]);
 
     const { keycloak } = useKeycloak();
     const userService = new UserService(keycloak);
@@ -69,17 +69,21 @@ const VotingStatus: React.FC<VotingStatusProps> = ({ setHasEdited, proposedDates
         return dayAvailability.some(slot => time >= slot.start && time <= slot.end);
     };
 
-    const checkIcsConflict = (date: ProposedDate): boolean => {
-        if (!icsEvents) return false;
+    const checkIcsConflict = (date: ProposedDate): { conflict: boolean, title: string } => {
+        if (!icsEvents) return { conflict: false, title: '' };
 
         const dateStart = new Date(date.date);
         const dateEnd = new Date(dateStart.getTime() + Number(date.duration) * 60000);
 
-        return icsEvents.some((event: any) => {
+        for (const event of icsEvents) {
             const eventStart = new Date(event.start);
             const eventEnd = new Date(event.end);
-            return (dateStart < eventEnd && dateEnd > eventStart);
-        });
+            if (dateStart < eventEnd && dateEnd > eventStart) {
+                return { conflict: true, title: event.title };
+            }
+        }
+
+        return { conflict: false, title: '' };
     };
 
     function handleDateClick(index: number) {
@@ -91,7 +95,6 @@ const VotingStatus: React.FC<VotingStatusProps> = ({ setHasEdited, proposedDates
                 setVotedDates(votedDates?.filter(i => i !== index));
             } else {
                 setVotedDates([...(votedDates || []), index]);
-
             }
         }
     }
@@ -100,7 +103,10 @@ const VotingStatus: React.FC<VotingStatusProps> = ({ setHasEdited, proposedDates
         const availableDatesIndices = proposedDates?.map((date, index) => checkOverlap(date) ? index : -1).filter(index => index !== -1);
         setAvailableDates(availableDatesIndices || []);
 
-        const conflictingDatesIndices = proposedDates?.map((date, index) => checkIcsConflict(date) ? index : -1).filter(index => index !== -1);
+        const conflictingDatesIndices = proposedDates?.map((date, index) => {
+            const conflictCheck = checkIcsConflict(date);
+            return conflictCheck.conflict ? { index, title: conflictCheck.title } : null;
+        }).filter((conflict): conflict is { index: number, title: string } => conflict !== null);
         setConflictingDates(conflictingDatesIndices || []);
     }, [proposedDates, userAvailability, icsEvents]);
 
@@ -110,7 +116,6 @@ const VotingStatus: React.FC<VotingStatusProps> = ({ setHasEdited, proposedDates
         setMostVotedDates(mostVotedDates || []);
     }, [proposedDates]);
 
-
     return (
         <div className="grid">
             <div className="date-row">
@@ -119,19 +124,23 @@ const VotingStatus: React.FC<VotingStatusProps> = ({ setHasEdited, proposedDates
                         <p>Teilnehmer</p>
                     </div>
                 </div>
-                {proposedDates?.map((date, index) => (
-                    <div key={index} className="date-cell">
-                        <DateCard
-                            proposedDate={date}
-                            isOrganizer={isOrganizer}
-                            onDateClick={() => handleDateClick(index)}
-                            isActive={isOrganizer ? index === selectedDateIndex : votedDates?.includes(index)}
-                            isMostVotedDate={mostVotedDates.includes(index)}
-                            matchesAvailability={availableDates.includes(index)}
-                            matchesIcsEvent={conflictingDates.includes(index)}
-                        />
-                    </div>
-                ))}
+                {proposedDates?.map((date, index) => {
+                    const conflict = conflictingDates.find(conflict => conflict.index === index);
+                    return (
+                        <div key={index} className="date-cell">
+                            <DateCard
+                                proposedDate={date}
+                                isOrganizer={isOrganizer}
+                                onDateClick={() => handleDateClick(index)}
+                                isActive={isOrganizer ? index === selectedDateIndex : votedDates?.includes(index)}
+                                isMostVotedDate={mostVotedDates.includes(index)}
+                                matchesAvailability={availableDates.includes(index)}
+                                matchesIcsEvent={!!conflict}
+                                icsEventTitle={conflict?.title}
+                            />
+                        </div>
+                    );
+                })}
             </div>
 
             {participantIds?.map(participantId => (
