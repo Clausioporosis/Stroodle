@@ -125,10 +125,19 @@ const WeekView: React.FC<WeekViewProps> = ({
                     <div className='events-content'>
                         {event.id === 'icsEvent' || event.id === 'mergedAvailability' ? (
                             <p>{event.title}</p>
+                        ) : event.id === 'availability' ? (
+                            <>
+                                <p>
+                                    {event.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {event.end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                </p>
+                                <button className='event-button' onClick={() => handleEventDelete(event)}>
+                                    x
+                                </button>
+                            </>
                         ) : !event.allDay ? (
                             <>
                                 <p>
-                                    {event.start.toLocaleTimeString().substring(0, 5)}
+                                    {event.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                 </p>
                                 <button className='event-button' onClick={() => handleEventDelete(event)}>
                                     x
@@ -149,6 +158,7 @@ const WeekView: React.FC<WeekViewProps> = ({
             </>
         );
     }
+
 
     // poll functions --------------------------------------------------------------------------------------------------
 
@@ -378,7 +388,7 @@ const WeekView: React.FC<WeekViewProps> = ({
             timePeriods?.forEach((time: TimePeriod) => {
 
                 const currentAvailabilityEntry: CalendarEvent = {
-                    id: uuidv4(),
+                    id: 'availability',
                     display: 'background',
                     color: color,
                     startTime: time.start,
@@ -517,7 +527,6 @@ const WeekView: React.FC<WeekViewProps> = ({
     }
 
 
-
     useEffect(() => {
         const calendarApi = calendarRef.current?.getApi();
 
@@ -537,7 +546,7 @@ const WeekView: React.FC<WeekViewProps> = ({
                     const rect = timeGridEl.getBoundingClientRect();
                     const y = event.clientY - rect.top;
 
-                    const totalMinutes = (y / rect.height) * (24 * 60);
+                    const totalMinutes = Math.round((y / rect.height) * (24 * 60) / 5) * 5;
 
                     const hour = Math.floor(totalMinutes / 60);
                     const minute = Math.floor(totalMinutes % 60);
@@ -547,7 +556,7 @@ const WeekView: React.FC<WeekViewProps> = ({
                     time.setMinutes(minute);
 
                     const formattedTime = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                    tooltip.setContent(`Time: ${formattedTime}`);
+                    tooltip.setContent(`${formattedTime} Uhr`);
                     tooltip.show();
                     tooltip.setProps({
                         getReferenceClientRect: () => ({
@@ -570,7 +579,6 @@ const WeekView: React.FC<WeekViewProps> = ({
             }
         }
     }, []);
-
 
     return (
         <div className='week-view-component'>
@@ -596,7 +604,7 @@ const WeekView: React.FC<WeekViewProps> = ({
                         let startDay = selectInfo.start.getDay();
                         let endDay = selectInfo.end.getDay();
                         let duration = (selectInfo.end.getTime() - selectInfo.start.getTime()) / 1000 / 60;
-                        return startDay === endDay && duration >= 30;
+                        return startDay === endDay && duration >= 10;
                     }}
 
                 headerToolbar={headerToolbar}
