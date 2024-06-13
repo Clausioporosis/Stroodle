@@ -1,16 +1,37 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ProposedDate } from '../../../../models/Poll';
 import { People, Star, StarFill, Check2 } from 'react-bootstrap-icons';
+import tippy from 'tippy.js';
+import 'tippy.js/dist/tippy.css';
 
 interface DateCardProps {
     proposedDate?: ProposedDate;
     isOrganizer: boolean;
     isActive?: boolean;
     isMostVotedDate?: boolean;
+    matchesAvailability?: boolean;
+    matchesIcsEvent?: boolean;
     onDateClick: () => void;
 }
 
-const DateCard: React.FC<DateCardProps> = ({ proposedDate, isOrganizer, onDateClick, isActive = false, isMostVotedDate }) => {
+const DateCard: React.FC<DateCardProps> = ({ proposedDate, isOrganizer, onDateClick, isActive = false, isMostVotedDate, matchesAvailability: isAvailable, matchesIcsEvent }) => {
+    const cardRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (isAvailable && cardRef.current) {
+            tippy(cardRef.current, {
+                content: 'Verfügbar',
+                theme: 'available-date',
+            });
+        }
+        if (matchesIcsEvent && cardRef.current) {
+            tippy(cardRef.current, {
+                content: 'Konflikt mit Kalenderereignis',
+                theme: 'conflicting-date',
+            });
+        }
+    }, [isAvailable, matchesIcsEvent]);
+
     const formatTime = (date: Date) => {
         const hours = date.getHours();
         const minutes = date.getMinutes();
@@ -44,7 +65,7 @@ const DateCard: React.FC<DateCardProps> = ({ proposedDate, isOrganizer, onDateCl
     const { weekday, month, day, year, startTime, endTime, duration, isAllDay } = formatDate(proposedDate!);
 
     return (
-        <div className={`date-card-component ${isActive ? 'selected' : ''}`} onClick={onDateClick}>
+        <div ref={cardRef} className={`date-card-component ${isAvailable ? 'available-date' : (matchesIcsEvent && 'conflicting-date')} ${matchesIcsEvent && 'conflict-date'} ${isActive ? 'selected' : ''}`} onClick={onDateClick}>
             <div className='date-section'>
                 <p className='weekday'>
                     <span className='first'>{weekday.substring(0, 2)}</span>
@@ -86,7 +107,6 @@ const DateCard: React.FC<DateCardProps> = ({ proposedDate, isOrganizer, onDateCl
 
                 <p className={`voter-count ${isMostVotedDate && "most-voted"}`}><People className='icon' />{proposedDate?.voterIds.length}</p>
             </div >
-
         </div>
     );
 };
