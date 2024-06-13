@@ -16,12 +16,17 @@ jobs:
         image: mongo
         env:
           MONGO_INITDB_DATABASE: StroodleDatabase
+        options: >-
+          --health-cmd "echo 'db.runCommand({ping: 1})' | mongo localhost:27017/test --quiet"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
         ports:
           - 27017:27017
 
     strategy:
       matrix:
-        java-version: [17]  # Verwenden Sie die gleiche Java-Version wie in Ihrem Maven-Setup
+        java-version: [17] 
 
     steps:
     - uses: actions/checkout@v2
@@ -53,10 +58,13 @@ jobs:
       working-directory: backend
       run: mvn package
 
-    - name: Start MongoDB service
+    - name: Run Docker Compose for MongoDB
       run: |
         docker-compose -f docker-compose.yml up -d mongo
 
     - name: Integration tests
       working-directory: backend
       run: mvn verify
+
+    - name: Tear down Docker Compose
+      run: docker-compose -f docker-compose.yml down
