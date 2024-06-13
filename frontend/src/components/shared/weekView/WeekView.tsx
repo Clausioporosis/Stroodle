@@ -516,6 +516,62 @@ const WeekView: React.FC<WeekViewProps> = ({
             });
     }
 
+
+
+    useEffect(() => {
+        const calendarApi = calendarRef.current?.getApi();
+
+        if (calendarApi) {
+            const tooltip = tippy(document.body, {
+                content: '',
+                allowHTML: true,
+                followCursor: 'horizontal',
+                placement: 'top',
+                trigger: 'manual'
+            });
+
+            const timeGridEl = document.querySelector('.fc-timegrid-body');
+
+            if (timeGridEl) {
+                timeGridEl.addEventListener('mousemove', (event: any) => {
+                    const rect = timeGridEl.getBoundingClientRect();
+                    const y = event.clientY - rect.top;
+
+                    const totalMinutes = (y / rect.height) * (24 * 60);
+
+                    const hour = Math.floor(totalMinutes / 60);
+                    const minute = Math.floor(totalMinutes % 60);
+
+                    const time = new Date();
+                    time.setHours(hour);
+                    time.setMinutes(minute);
+
+                    const formattedTime = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    tooltip.setContent(`Time: ${formattedTime}`);
+                    tooltip.show();
+                    tooltip.setProps({
+                        getReferenceClientRect: () => ({
+                            width: 0,
+                            height: 0,
+                            top: event.clientY,
+                            bottom: event.clientY,
+                            left: event.clientX,
+                            right: event.clientX,
+                            x: event.clientX,
+                            y: event.clientY,
+                            toJSON: () => { }
+                        })
+                    });
+                });
+
+                timeGridEl.addEventListener('mouseleave', () => {
+                    tooltip.hide();
+                });
+            }
+        }
+    }, []);
+
+
     return (
         <div className='week-view-component'>
             <FullCalendar
