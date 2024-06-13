@@ -533,6 +533,9 @@ a:active {
   --fc-border-color: var(--text-color);
   width: 100%;
 }
+.fc .fc-v-event {
+  width: 85%;
+}
 .fc .fc-bg-event {
   opacity: 0.85;
 }
