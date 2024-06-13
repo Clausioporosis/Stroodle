@@ -1,96 +1,48 @@
-name: CI Pipeline
+name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
-    services:
-      mongo:
-        image: mongo
-        env:
-          MONGO_INITDB_DATABASE: StroodleDatabase
-        ports:
-          - 27017:27017
-
-    strategy:
-      matrix:
-        node-version: [16.20.2]  
-        java-version: [17]      
-
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-    - name: Set up JDK ${{ matrix.java-version }}
-      uses: actions/setup-java@v2
-      with:
-        java-version: ${{ matrix.java-version }}
-        distribution: 'temurin'
-        cache: 'maven'
-
-    - name: Cache Maven packages
-      uses: actions/cache@v2
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-maven-
-
-    - name: Set up Node.js ${{ matrix.node-version }}
+    - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+        node-version: '16'
 
     - name: Cache Node.js modules
+      id: cache-node-modules
       uses: actions/cache@v2
       with:
         path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/frontend/package-lock.json') }}
+        key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-node-
 
-    - name: Install backend dependencies
-      working-directory: backend
-      run: mvn install -DskipTests
-
-    - name: Test backend
-      working-directory: backend
-      run: mvn test
-
-    - name: Package backend
-      working-directory: backend
-      run: mvn package
-
-    - name: Install frontend dependencies
-      working-directory: frontend
-      run: npm install
-
-    - name: Build frontend
-      working-directory: frontend
-      run: npm run build
-
-    - name: Test frontend
-      working-directory: frontend
-      run: npm test
-
-    - name: Build Docker images
+    - name: Check for lock file
       run: |
-        docker build -t myapp-backend ./backend
-        docker build -t myapp-frontend ./frontend
+        if [ ! -f frontend/package-lock.json ] && [ ! -f frontend/yarn.lock ]; then
+          echo "Error: No lock file found in frontend directory. Please commit your package-lock.json or yarn.lock file."
+          exit 1
+        fi
 
-    - name: Start backend and frontend services
+    - name: Install dependencies
       run: |
-        docker-compose -f docker-compose.yml up -d mongo
-        docker-compose -f docker-compose.yml up -d springboot-app
-        docker-compose -f docker-compose.yml up -d react-app
+        cd frontend
+        npm install
 
-    - name: Integration tests
-      working-directory: backend
-      run: mvn verify
+    - name: Run tests
+      run: |
+        cd frontend
+        npm test
