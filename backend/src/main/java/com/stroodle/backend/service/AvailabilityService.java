@@ -58,14 +58,8 @@ public class AvailabilityService {
             entry.setValue(mergedPeriods);
         }
 
-        Map<DayOfWeek, List<TimePeriod>> invertedAvailability = new HashMap<>();
-        for (Map.Entry<DayOfWeek, List<TimePeriod>> entry : mergedAvailability.entrySet()) {
-            List<TimePeriod> invertedPeriods = invertTimePeriods(entry.getValue());
-            invertedAvailability.put(entry.getKey(), invertedPeriods);
-        }
-
         Availability result = new Availability();
-        result.setAvailability(invertedAvailability);
+        result.setAvailability(mergedAvailability);
         return result;
     }
 
@@ -91,32 +85,5 @@ public class AvailabilityService {
 
         merged.add(current);
         return merged;
-    }
-
-    private List<TimePeriod> invertTimePeriods(List<TimePeriod> periods) {
-        List<TimePeriod> inverted = new ArrayList<>();
-        LocalTime startOfDay = LocalTime.MIN;
-        LocalTime endOfDay = LocalTime.MAX;
-
-        if (periods.isEmpty()) {
-            inverted.add(new TimePeriod(startOfDay, endOfDay));
-            return inverted;
-        }
-
-        periods.sort(Comparator.comparing(TimePeriod::getStart));
-
-        if (!periods.get(0).getStart().equals(startOfDay)) {
-            inverted.add(new TimePeriod(startOfDay, periods.get(0).getStart()));
-        }
-
-        for (int i = 0; i < periods.size() - 1; i++) {
-            inverted.add(new TimePeriod(periods.get(i).getEnd(), periods.get(i + 1).getStart()));
-        }
-
-        if (!periods.get(periods.size() - 1).getEnd().equals(endOfDay)) {
-            inverted.add(new TimePeriod(periods.get(periods.size() - 1).getEnd(), endOfDay));
-        }
-
-        return inverted;
     }
 }

@@ -3,6 +3,38 @@
     background-color: var(--base-color-2);
 }
 
+.available-date {
+    background-color: rgba(0, 170, 255, 0.1);
+
+    &:hover {
+        background-color: rgba(0, 170, 255, 0.2) !important;
+    }
+}
+
+.conflicting-date {
+    background-color: rgba(255, 200, 0, 0.1);
+
+    &:hover {
+        background-color: rgba(255, 200, 0, 0.2) !important;
+    }
+}
+
+.tippy-box[data-theme~='available-date'] {
+    background-color: rgba(0, 170, 255, 0.2);
+}
+
+.tippy-box[data-theme~='available-date'][data-placement^='top']>.tippy-arrow::before {
+    border-top-color: rgba(0, 170, 255, 0.2);
+}
+
+.tippy-box[data-theme~='conflicting-date'] {
+    background-color: rgba(255, 200, 0, 0.2);
+}
+
+.tippy-box[data-theme~='conflicting-date'][data-placement^='top']>.tippy-arrow::before {
+    border-top-color: rgba(255, 200, 0, 0.2);
+}
+
 .date-card-component {
     border: transparent 1px solid;
     border-radius: 5px;
@@ -16,6 +48,8 @@
     margin: 2.5px;
     padding: 3px 0 3px 0;
     text-align: center;
+
+    font-weight: bold;
 
     &:hover {
         cursor: pointer;
@@ -110,6 +144,10 @@
                 margin-bottom: -2.5px;
                 margin-right: 10px;
             }
+        }
+
+        .most-voted {
+            color: mediumseagreen
         }
     }
 }

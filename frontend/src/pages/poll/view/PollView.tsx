@@ -6,8 +6,12 @@ import { Poll } from '../../../models/Poll';
 
 import VotingStatus from '../../../components/polls/view/votingStatus/VotingStatus';
 import Card from '../../../components/shared/infoCards/card/Card';
+import Modal from '../../../components/shared/modal/Modal'; // Import Modal component
 
+import { CalendarX, CalendarCheck, CalendarPlus } from 'react-bootstrap-icons'; // Import icons
 import { useKeycloak } from "@react-keycloak/web";
+
+import OutlookService from '../../../services/OutlookService'; // Import OutlookService
 
 const View: React.FC = () => {
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -26,6 +30,18 @@ const View: React.FC = () => {
     const { keycloak } = useKeycloak();
     const pollService = new PollService(keycloak);
 
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [modalTitle, setModalTitle] = useState<string>('');
+    const [confirmButtonText, setConfirmButtonText] = useState<string | undefined>(undefined);
+    const [showCloseButton, setShowCloseButton] = useState<boolean>(true);
+    const [cancelButtonText, setCancelButtonText] = useState<string | undefined>();
+    const [icsUrl, setIcsUrl] = useState<string>('');
+    const [customDuration, setCustomDuration] = useState('');
+    const [icsStatus, setIcsStatus] = useState<{ isStored: boolean, isValid: boolean, url: string } | undefined>();
+    const [icsEvents, setIcsEvents] = useState<any[] | undefined>();
+
+    const outlookService = new OutlookService(keycloak); // Initialize OutlookService
+
     useEffect(() => {
         getPoll();
     }, []);
@@ -37,6 +53,10 @@ const View: React.FC = () => {
             }
         }
     }, [hasEdited, selectedDateIndex, votedDates]);
+
+    useEffect(() => {
+        checkIcsStatus();
+    }, []);
 
     function getPoll() {
         pollService.getPollById(pollId!)
@@ -66,6 +86,76 @@ const View: React.FC = () => {
                 console.error('Es gab einen Fehler beim Abrufen des Polls!', error);
             });
     }
+
+    const checkIcsStatus = async () => {
+        try {
+            const status = await outlookService.checkIcsStatus();
+            setIcsUrl(status.url);
+            setIcsStatus({ isStored: status.stored, isValid: status.valid, url: status.url });
+            if (status.stored && status.valid) {
+                const events = await outlookService.getIcsEvents();
+                setIcsEvents(events);
+            }
+        } catch (error) {
+            console.error('Error checking ICS status:', error);
+        }
+    };
+
+    const handleIcsButtonClick = () => {
+        setModalOpen(true);
+        setModalTitle('Kalender verknüpfen');
+        setConfirmButtonText('Speichern');
+        setCancelButtonText("Abbrechen");
+        setShowCloseButton(false);
+    };
+
+    const handleIcsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setIcsUrl(event.target.value);
+    };
+
+    const handleCustomDurationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setCustomDuration(event.target.value);
+    };
+
+    const handleConfirm = () => {
+        if (modalTitle === 'Kalender verknüpfen') {
+            outlookService.submitIcsUrl(icsUrl)
+                .then(() => {
+                    setIcsEvents(undefined);
+                    checkIcsStatus();
+                })
+                .catch(error => {
+                    console.error('Error saving ICS URL:', error);
+                });
+        }
+        setModalOpen(false);
+    };
+
+    const handleCancel = () => {
+        setModalOpen(false);
+    };
+
+    const renderModalContent = () => {
+        if (modalTitle === 'Kalender verknüpfen') {
+            return (
+                <>
+                    <p>Veröffentlichen und speichern Sie den ICS-Link Ihres Kalenders, um diesen zu Importieren.</p>
+                    <p className='calendar-links'>
+                        <a className='link' href="https://outlook.live.com/calendar/0/options/calendar/SharedCalendars" target="_blank" rel="noopener noreferrer">Outlook</a>
+                        <a className='link' href="https://calendar.google.com/calendar/u/1/r/settings" target="_blank" rel="noopener noreferrer">Google</a>
+                    </p>
+                    <input
+                        type="text"
+                        value={icsUrl}
+                        onChange={handleIcsChange}
+                        placeholder="ICS-Link eingeben"
+                    />
+                    {!icsStatus?.isValid && icsStatus?.url !== null && icsStatus?.url !== '' && <span className='red'><CalendarX className='icon red' />{" ICS-Link ist nicht gültig"}</span>}
+                </>
+            );
+        }
+        return null;
+    };
 
     function handleButtonClick() {
         if (!poll?.organizerId) return;
@@ -160,6 +250,20 @@ const View: React.FC = () => {
                 {isOrganizer ? (
                     <h1>{isBooked ? 'Termin gebucht' : 'Termin buchen'}
                         <div className='header-button-group'>
+
+                            <button className="header-button" onClick={handleIcsButtonClick}>
+                                {icsStatus ?
+                                    (icsStatus.isStored && icsStatus.url !== '' ?
+                                        (icsStatus.isValid ?
+                                            <><CalendarCheck className='icon orange' /> Kalender</>
+                                            :
+                                            <><CalendarX className='icon red' /> Kalender</>)
+                                        :
+                                        <><CalendarPlus className='icon' /> Kalender</>)
+                                    :
+                                    'laden...'}
+                            </button>
+
                             {(!isBooked) ? (
                                 <button className="header-button" onClick={handleButtonClick} disabled={!hasEdited}>
                                     {getOrganizerButtonText()}
@@ -199,10 +303,21 @@ const View: React.FC = () => {
                             isOrganizer={isOrganizer}
                             votedDates={votedDates}
                             setVotedDates={setVotedDates}
+                            icsEvents={icsEvents} // Pass icsEvents to VotingStatus
                         />}
                     </div>
                 }
 
+                <Modal
+                    isOpen={isModalOpen}
+                    title={modalTitle}
+                    content={renderModalContent()}
+                    onConfirm={handleConfirm}
+                    onCancel={handleCancel}
+                    confirmButtonText={confirmButtonText}
+                    cancelButtonText={cancelButtonText}
+                    showCloseButton={showCloseButton}
+                />
 
             </div>
         </div>
