@@ -22,6 +22,7 @@ interface VotingStatusProps {
 const VotingStatus: React.FC<VotingStatusProps> = ({ setHasEdited, proposedDates, participantIds, isOrganizer, setSelectedDateIndex, selectedDateIndex, votedDates, setVotedDates }) => {
     const [users, setUsers] = useState<{ [key: string]: User }>({});
     const userService = new UserService(keycloak);
+    const [mostVotedDates, setMostVotedDates] = useState<number[]>([]);
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -52,6 +53,12 @@ const VotingStatus: React.FC<VotingStatusProps> = ({ setHasEdited, proposedDates
         }
     }
 
+    useEffect(() => {
+        const maxVotes = Math.max(...(proposedDates?.map(date => date.voterIds.length) || [0]));
+        const mostVotedDates = proposedDates?.map((date, index) => date.voterIds.length === maxVotes ? index : -1).filter(index => index !== -1);
+        setMostVotedDates(mostVotedDates || []);
+    }, [proposedDates]);
+
     return (
         <div className="grid">
 
@@ -67,7 +74,8 @@ const VotingStatus: React.FC<VotingStatusProps> = ({ setHasEdited, proposedDates
                             proposedDate={date}
                             isOrganizer={isOrganizer}
                             onDateClick={() => handleDateClick(index)}
-                            isActive={isOrganizer ? index === selectedDateIndex : votedDates?.includes(index)} />
+                            isActive={isOrganizer ? index === selectedDateIndex : votedDates?.includes(index)}
+                            isMostVotedDate={mostVotedDates.includes(index)} />
                     </div>
                 ))}
             </div>

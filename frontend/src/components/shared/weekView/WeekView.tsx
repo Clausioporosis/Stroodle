@@ -332,7 +332,7 @@ const WeekView: React.FC<WeekViewProps> = ({
                     const currentAvailabilityEntry: CalendarEvent = {
                         id: "mergedAvailability",
                         display: 'background',
-                        color: "rgba(255, 0, 0, 0.2)",
+                        color: "rgba(0, 255, 0, 0.3)",
                         startTime: time.start,
                         endTime: time.end,
                         daysOfWeek: [weekdayIndex],
@@ -467,7 +467,7 @@ const WeekView: React.FC<WeekViewProps> = ({
         if (event.allDay || event.id === 'expiredTimeHighlight') return;
 
         if (event.id === 'mergedAvailability') {
-            content = 'Teilnehmer nicht verfügbar';
+            content = 'Teilnehmer vefügbar';
         } else {
             const startTime = start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             const endTime = end ? end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';

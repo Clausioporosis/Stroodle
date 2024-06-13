@@ -6,10 +6,11 @@ interface DateCardProps {
     proposedDate?: ProposedDate;
     isOrganizer: boolean;
     isActive?: boolean;
+    isMostVotedDate?: boolean;
     onDateClick: () => void;
 }
 
-const DateCard: React.FC<DateCardProps> = ({ proposedDate, isOrganizer, onDateClick, isActive = false }) => {
+const DateCard: React.FC<DateCardProps> = ({ proposedDate, isOrganizer, onDateClick, isActive = false, isMostVotedDate }) => {
     const formatTime = (date: Date) => {
         const hours = date.getHours();
         const minutes = date.getMinutes();
@@ -83,7 +84,7 @@ const DateCard: React.FC<DateCardProps> = ({ proposedDate, isOrganizer, onDateCl
                     </div>
                 )}
 
-                <p className={'voter-count'}><People className='icon' />{proposedDate?.voterIds.length}</p>
+                <p className={`voter-count ${isMostVotedDate && "most-voted"}`}><People className='icon' />{proposedDate?.voterIds.length}</p>
             </div >
 
         </div>
