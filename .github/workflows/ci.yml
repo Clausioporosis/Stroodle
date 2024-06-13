@@ -21,8 +21,8 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x]
-        java-version: [17]
+        node-version: [16.20.2]  
+        java-version: [17]      
 
     steps:
     - uses: actions/checkout@v2
@@ -52,7 +52,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        key: ${{ runner.os }}-node-${{ hashFiles('**/frontend/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-node-
 
