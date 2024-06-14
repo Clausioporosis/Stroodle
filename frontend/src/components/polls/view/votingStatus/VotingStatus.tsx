@@ -112,7 +112,7 @@ const VotingStatus: React.FC<VotingStatusProps> = ({ setHasEdited, proposedDates
 
     useEffect(() => {
         const maxVotes = Math.max(...(proposedDates?.map(date => date.voterIds.length) || [0]));
-        const mostVotedDates = proposedDates?.map((date, index) => date.voterIds.length === maxVotes ? index : -1).filter(index => index !== -1);
+        const mostVotedDates = proposedDates?.map((date, index) => date.voterIds.length > 0 && date.voterIds.length === maxVotes ? index : -1).filter(index => index !== -1);
         setMostVotedDates(mostVotedDates || []);
     }, [proposedDates]);
 
