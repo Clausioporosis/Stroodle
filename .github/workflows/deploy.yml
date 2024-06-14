@@ -10,6 +10,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    env:
+      SERVER_IP: ${{ secrets.SERVER_IP }}
+      REMOTE_PATH: /home/debian/stroodle
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -21,7 +25,7 @@ jobs:
 
     - name: Stop and clean up Docker
       run: |
-        ssh -o StrictHostKeyChecking=no debian@193.197.230.60 << 'EOF'
+        ssh -o StrictHostKeyChecking=no debian@${{ env.SERVER_IP }} << 'EOF'
           docker stop $(docker ps -aq)
           docker container prune -f
           docker image prune -f
@@ -30,14 +34,14 @@ jobs:
         EOF
 
     - name: Clean up old files on remote server
-      run: ssh -o StrictHostKeyChecking=no debian@193.197.230.60 'sudo rm -rf /home/debian/stroodle/*'
+      run: ssh -o StrictHostKeyChecking=no debian@${{ env.SERVER_IP }} 'sudo rm -rf ${{ env.REMOTE_PATH }}/*'
 
     - name: Copy files via SCP
-      run: scp -r -o StrictHostKeyChecking=no $(ls | grep -v '^deployment.yml$') debian@193.197.230.60:/home/debian/stroodle
+      run: scp -r -o StrictHostKeyChecking=no $(ls | grep -v '^deployment.yml$') debian@${{ env.SERVER_IP }}:${{ env.REMOTE_PATH }}
 
     - name: Deploy application
       run: |
-        ssh -o StrictHostKeyChecking=no debian@193.197.230.60 << 'EOF'
-          cd /home/debian/stroodle
+        ssh -o StrictHostKeyChecking=no debian@${{ env.SERVER_IP }} << 'EOF'
+          cd ${{ env.REMOTE_PATH }}
           docker-compose up -d --build
         EOF
