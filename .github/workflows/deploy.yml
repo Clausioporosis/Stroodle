@@ -28,8 +28,8 @@ jobs:
     - name: Copy files via SCP
       run: scp -r -o StrictHostKeyChecking=no $(ls | grep -v '^deployment.yml$') debian@193.197.230.60:/home/debian/stroodle
 
-    - name: Clean up Docker volumes on remote server except mongo-data
-      run: ssh -o StrictHostKeyChecking=no debian@193.197.230.60 'docker volume rm $(docker volume ls -qf dangling=true | grep -v "stroodle_mongo-data")'
+    - name: Remove all Docker volumes except mongo-data
+      run: ssh -o StrictHostKeyChecking=no debian@193.197.230.60 'docker volume ls -q | grep -v "stroodle_mongo-data" | xargs -r docker volume rm'
 
     - name: Clean up unused Docker containers
       run: ssh -o StrictHostKeyChecking=no debian@193.197.230.60 'docker container prune -f'
