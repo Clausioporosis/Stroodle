@@ -535,7 +535,7 @@ const WeekView: React.FC<WeekViewProps> = ({
                 content: '',
                 allowHTML: true,
                 followCursor: 'horizontal',
-                placement: 'top',
+                placement: 'left',
                 trigger: 'manual'
             });
 
