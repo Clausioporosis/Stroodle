@@ -24,20 +24,21 @@ jobs:
         SERVER_IP: ${{ secrets.SERVER_IP }}
         DEPLOY_PATH: /home/debian/stroodle
       run: |
-        ssh -o StrictHostKeyChecking=no debian@$SERVER_IP << 'EOF'
+        ssh -o StrictHostKeyChecking=no debian@$SERVER_IP << EOF
           set -e
-
+          export DEPLOY_PATH=${DEPLOY_PATH}
+          
           # Create deployment directory if not exists
-          mkdir -p $DEPLOY_PATH
+          mkdir -p \$DEPLOY_PATH
 
           # Clean up old files
-          sudo rm -rf $DEPLOY_PATH/*
+          sudo rm -rf \$DEPLOY_PATH/*
 
           # Copy files
-          scp -r -o StrictHostKeyChecking=no $(ls | grep -v '^deployment.yml$') debian@$SERVER_IP:$DEPLOY_PATH
+          scp -r -o StrictHostKeyChecking=no \$(ls | grep -v '^deployment.yml$') debian@\$SERVER_IP:\$DEPLOY_PATH
 
           # Clean up Docker volumes except mongo-data
-          docker volume rm $(docker volume ls -qf dangling=true | grep -v "stroodle_mongo-data")
+          docker volume rm \$(docker volume ls -qf dangling=true | grep -v "stroodle_mongo-data")
 
           # Clean up unused Docker resources
           docker container prune -f
@@ -45,7 +46,7 @@ jobs:
           docker network prune -f
 
           # Deploy application
-          cd $DEPLOY_PATH
+          cd \$DEPLOY_PATH
           docker-compose down
           docker-compose up -d --build
         EOF
