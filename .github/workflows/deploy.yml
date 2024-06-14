@@ -34,10 +34,15 @@ jobs:
         EOF
 
     - name: Clean up old files on remote server
-      run: ssh -o StrictHostKeyChecking=no debian@${{ env.SERVER_IP }} 'sudo rm -rf ${{ env.REMOTE_PATH }}/*'
+      run: |
+        ssh -o StrictHostKeyChecking=no \
+        debian@${{ env.SERVER_IP }} 'sudo rm -rf ${{ env.REMOTE_PATH }}/*'
 
     - name: Copy files via SCP
-      run: scp -r -o StrictHostKeyChecking=no $(ls | grep -v '^deployment.yml$') debian@${{ env.SERVER_IP }}:${{ env.REMOTE_PATH }}
+      run: |
+        scp -r -o StrictHostKeyChecking=no \
+        $(ls | grep -v '^deploy.yml$') \
+        debian@${{ env.SERVER_IP }}:${{ env.REMOTE_PATH }}
 
     - name: Deploy application
       run: |
@@ -45,3 +50,5 @@ jobs:
           cd ${{ env.REMOTE_PATH }}
           docker-compose up -d --build
         EOF
+
+
