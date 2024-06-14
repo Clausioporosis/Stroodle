@@ -29,7 +29,11 @@ jobs:
       run: ssh -o StrictHostKeyChecking=no debian@$SERVER_IP "sudo rm -rf $DEPLOY_PATH/*"
 
     - name: Copy files via SCP
-      run: scp -r -o StrictHostKeyChecking=no $(ls | grep -v '^deployment.yml$') debian@$SERVER_IP:$DEPLOY_PATH
+      run: |
+        scp -r -o StrictHostKeyChecking=no $(ls | grep -v '^deployment.yml$') debian@$SERVER_IP:$DEPLOY_PATH
+
+    - name: Verify deployment directory on remote server
+      run: ssh -o StrictHostKeyChecking=no debian@$SERVER_IP "ls -al $DEPLOY_PATH"
 
     - name: Clean up Docker volumes on remote server except mongo-data
       run: ssh -o StrictHostKeyChecking=no debian@$SERVER_IP 'docker volume rm $(docker volume ls -qf dangling=true | grep -v "stroodle_mongo-data")'
@@ -47,6 +51,11 @@ jobs:
       run: |
         ssh -o StrictHostKeyChecking=no debian@$SERVER_IP << 'EOF'
           cd $DEPLOY_PATH
-          docker-compose down
-          docker-compose up -d --build
+          if [ -f docker-compose.yml ]; then
+            docker-compose down
+            docker-compose up -d --build
+          else
+            echo "docker-compose.yml not found in $DEPLOY_PATH"
+            exit 1
+          fi
         EOF
