@@ -19,31 +19,33 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-    - name: Create deployment directory on remote server
-      run: ssh -o StrictHostKeyChecking=no debian@193.197.230.60 'mkdir -p /home/debian/stroodle'
-
-    - name: Clean up old files on remote server
-      run: ssh -o StrictHostKeyChecking=no debian@193.197.230.60 'sudo rm -rf /home/debian/stroodle/*'
-
-    - name: Copy files via SCP
-      run: scp -r -o StrictHostKeyChecking=no $(ls | grep -v '^deployment.yml$') debian@193.197.230.60:/home/debian/stroodle
-
-    - name: Clean up Docker volumes on remote server except mongo-data
-      run: ssh -o StrictHostKeyChecking=no debian@193.197.230.60 'docker volume rm $(docker volume ls -qf dangling=true | grep -v "stroodle_mongo-data")'
-
-    - name: Clean up unused Docker containers
-      run: ssh -o StrictHostKeyChecking=no debian@193.197.230.60 'docker container prune -f'
-
-    - name: Clean up unused Docker images
-      run: ssh -o StrictHostKeyChecking=no debian@193.197.230.60 'docker image prune -f'
-
-    - name: Clean up unused Docker networks
-      run: ssh -o StrictHostKeyChecking=no debian@193.197.230.60 'docker network prune -f'
-
-    - name: Deploy application
+    - name: Deploy to server
+      env:
+        SERVER_IP: ${{ secrets.SERVER_IP }}
+        DEPLOY_PATH: /home/debian/stroodle
       run: |
-        ssh -o StrictHostKeyChecking=no debian@193.197.230.60 << 'EOF'
-          cd /home/debian/stroodle
+        ssh -o StrictHostKeyChecking=no debian@$SERVER_IP << 'EOF'
+          set -e
+
+          # Create deployment directory if not exists
+          mkdir -p $DEPLOY_PATH
+
+          # Clean up old files
+          sudo rm -rf $DEPLOY_PATH/*
+
+          # Copy files
+          scp -r -o StrictHostKeyChecking=no $(ls | grep -v '^deployment.yml$') debian@$SERVER_IP:$DEPLOY_PATH
+
+          # Clean up Docker volumes except mongo-data
+          docker volume rm $(docker volume ls -qf dangling=true | grep -v "stroodle_mongo-data")
+
+          # Clean up unused Docker resources
+          docker container prune -f
+          docker image prune -f
+          docker network prune -f
+
+          # Deploy application
+          cd $DEPLOY_PATH
           docker-compose down
           docker-compose up -d --build
         EOF
