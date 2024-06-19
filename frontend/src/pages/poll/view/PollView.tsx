@@ -276,6 +276,20 @@ const View: React.FC = () => {
                 ) : (
                     <h1> {isBooked ? 'Termin Informationen' : 'Verfügbarkeit auswählen'}
                         <div className='header-button-group'>
+
+                            <button className="header-button" onClick={handleIcsButtonClick}>
+                                {icsStatus ?
+                                    (icsStatus.isStored && icsStatus.url !== '' ?
+                                        (icsStatus.isValid ?
+                                            <><CalendarCheck className='icon orange' /> Kalender</>
+                                            :
+                                            <><CalendarX className='icon red' /> Kalender</>)
+                                        :
+                                        <><CalendarPlus className='icon' /> Kalender</>)
+                                    :
+                                    'laden...'}
+                            </button>
+
                             {!isBooked && <button className="header-button" onClick={handleButtonClick} disabled={!hasEdited}>Auswahl speichern</button>}
                         </div>
                     </h1>
