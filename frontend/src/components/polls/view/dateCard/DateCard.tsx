@@ -15,22 +15,31 @@ interface DateCardProps {
     onDateClick: () => void;
 }
 
+
+
 const DateCard: React.FC<DateCardProps> = ({ proposedDate, isOrganizer, onDateClick, isActive = false, isMostVotedDate, matchesAvailability: isAvailable, matchesIcsEvent, icsEventTitle }) => {
     const cardRef = useRef<HTMLDivElement>(null);
+    const tooltipInstanceRef = useRef<any>(null);
 
     useEffect(() => {
-        if (isAvailable && cardRef.current) {
-            tippy(cardRef.current, {
-                content: 'Verfügbar',
-                theme: 'available-date',
-            });
-        }
-        if (matchesIcsEvent && cardRef.current) {
-            tippy(cardRef.current, {
-                content: `<div style="text-align: center;"><strong>Konflikt mit Kalenderereignis:</strong><br/>${icsEventTitle}</div>`,
-                allowHTML: true,
-                theme: 'conflicting-date',
-            });
+        if (cardRef.current) {
+            if (tooltipInstanceRef.current) {
+                tooltipInstanceRef.current.destroy();
+                tooltipInstanceRef.current = null;
+            }
+
+            if (matchesIcsEvent) {
+                tooltipInstanceRef.current = tippy(cardRef.current, {
+                    content: `<div style="text-align: center;"><strong>Konflikt mit Kalenderereignis:</strong><br/>${icsEventTitle}</div>`,
+                    allowHTML: true,
+                    theme: 'conflicting-date',
+                });
+            } else if (isAvailable) {
+                tooltipInstanceRef.current = tippy(cardRef.current, {
+                    content: 'Verfügbar',
+                    theme: 'available-date',
+                });
+            }
         }
     }, [isAvailable, matchesIcsEvent, icsEventTitle]);
 
@@ -67,7 +76,7 @@ const DateCard: React.FC<DateCardProps> = ({ proposedDate, isOrganizer, onDateCl
     const { weekday, month, day, year, startTime, endTime, duration, isAllDay } = formatDate(proposedDate!);
 
     return (
-        <div ref={cardRef} className={`date-card-component ${isAvailable ? 'available-date' : (matchesIcsEvent && 'conflicting-date')} ${matchesIcsEvent && 'conflict-date'} ${isActive ? 'selected' : ''}`} onClick={onDateClick}>
+        <div ref={cardRef} className={`date-card-component ${matchesIcsEvent ? 'conflicting-date' : (isAvailable && 'available-date')} ${isActive ? 'selected' : ''}`} onClick={onDateClick}>
             <div className='date-section'>
                 <p className='weekday'>
                     <span className='first'>{weekday.substring(0, 2)}</span>
