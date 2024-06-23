@@ -20,10 +20,35 @@ public class UserService {
 
     @Autowired
     private KeycloakConfig keycloakConfig;
-/*   
+
+    /*
+     * public List<UserDto> getUsers() {
+     * Keycloak keycloak = keycloakConfig.keycloak();
+     * List<UserRepresentation> users = keycloak.realm(realm).users().list();
+     * return users.stream()
+     * .map(user -> {
+     * UserDto dto = new UserDto();
+     * dto.setId(user.getId());
+     * dto.setUsername(user.getUsername());
+     * dto.setFirstName(user.getFirstName());
+     * dto.setLastName(user.getLastName());
+     * dto.setEmail(user.getEmail());
+     * return dto;
+     * })
+     * .collect(Collectors.toList());
+     * }
+     */
     public List<UserDto> getUsers() {
         Keycloak keycloak = keycloakConfig.keycloak();
         List<UserRepresentation> users = keycloak.realm(realm).users().list();
+
+        // Debug-Ausgabe zur Überprüfung
+        System.out.println("Number of users: " + users.size());
+
+        if (users.isEmpty()) {
+            throw new ResourceNotFoundException("No users found");
+        }
+
         return users.stream()
                 .map(user -> {
                     UserDto dto = new UserDto();
@@ -36,30 +61,6 @@ public class UserService {
                 })
                 .collect(Collectors.toList());
     }
-                */
-public List<UserDto> getUsers() {
-    Keycloak keycloak = keycloakConfig.keycloak();
-    List<UserRepresentation> users = keycloak.realm(realm).users().list();
-                    
-                    // Debug-Ausgabe zur Überprüfung
-    System.out.println("Number of users: " + users.size());
-                
-        if (users.isEmpty()) {
-               throw new ResourceNotFoundException("No users found");
-           }
-                
-                    return users.stream()
-                            .map(user -> {
-                                UserDto dto = new UserDto();
-                                dto.setId(user.getId());
-                                dto.setUsername(user.getUsername());
-                                dto.setFirstName(user.getFirstName());
-                                dto.setLastName(user.getLastName());
-                                dto.setEmail(user.getEmail());
-                                return dto;
-                            })
-                            .collect(Collectors.toList());
-                }
 
     public UserDto getUserById(String userId) {
         Keycloak keycloak = keycloakConfig.keycloak();
@@ -75,10 +76,50 @@ public List<UserDto> getUsers() {
         dto.setEmail(user.getEmail());
         return dto;
     }
-/*
+    /*
+     * public List<UserDto> searchUsers(String query) {
+     * Keycloak keycloak = keycloakConfig.keycloak();
+     * List<UserRepresentation> users = keycloak.realm(realm).users().search(query,
+     * 0, Integer.MAX_VALUE);
+     * return users.stream()
+     * .map(user -> {
+     * UserDto dto = new UserDto();
+     * dto.setId(user.getId());
+     * dto.setUsername(user.getUsername());
+     * dto.setFirstName(user.getFirstName());
+     * dto.setLastName(user.getLastName());
+     * dto.setEmail(user.getEmail());
+     * return dto;
+     * })
+     * .collect(Collectors.toList());
+     * }
+     * List<UserRepresentation> users = keycloak.realm(realm).users().search(query,
+     * 0, Integer.MAX_VALUE);
+     * return users.stream()
+     * .map(user -> {
+     * UserDto dto = new UserDto();
+     * dto.setId(user.getId());
+     * dto.setUsername(user.getUsername());
+     * dto.setFirstName(user.getFirstName());
+     * dto.setLastName(user.getLastName());
+     * dto.setEmail(user.getEmail());
+     * return dto;
+     * })
+     * .collect(Collectors.toList());
+     * }
+     */
+
     public List<UserDto> searchUsers(String query) {
         Keycloak keycloak = keycloakConfig.keycloak();
         List<UserRepresentation> users = keycloak.realm(realm).users().search(query, 0, Integer.MAX_VALUE);
+
+        // Debug-Ausgabe zur Überprüfung
+        System.out.println("Number of users found: " + users.size());
+
+        if (users.isEmpty()) {
+            throw new ResourceNotFoundException("No users found for query: " + query);
+        }
+
         return users.stream()
                 .map(user -> {
                     UserDto dto = new UserDto();
@@ -91,31 +132,4 @@ public List<UserDto> getUsers() {
                 })
                 .collect(Collectors.toList());
     }
-                 */
-
-
-    
-                 public List<UserDto> searchUsers(String query) {
-                    Keycloak keycloak = keycloakConfig.keycloak();
-                    List<UserRepresentation> users = keycloak.realm(realm).users().search(query, 0, Integer.MAX_VALUE);
-                
-                    // Debug-Ausgabe zur Überprüfung
-                    System.out.println("Number of users found: " + users.size());
-                
-                    if (users.isEmpty()) {
-                        throw new ResourceNotFoundException("No users found for query: " + query);
-                    }
-                
-                    return users.stream()
-                            .map(user -> {
-                                UserDto dto = new UserDto();
-                                dto.setId(user.getId());
-                                dto.setUsername(user.getUsername());
-                                dto.setFirstName(user.getFirstName());
-                                dto.setLastName(user.getLastName());
-                                dto.setEmail(user.getEmail());
-                                return dto;
-                            })
-                            .collect(Collectors.toList());
-                }
 }

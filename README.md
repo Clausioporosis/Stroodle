@@ -1,21 +1,3 @@
-Readme TODO:
-- fix spelling an check for consistency (add lines with errors below)
-   - [   ]
-- write [Testing](#testing) section
-- config section for application yml and why certain settings were used
-- explain CD deploy.yml in more detail, and set up CI pipeline
-- integrate mailhog into the documentation where it should be mentioned
-- mention MongoCompass and how to access mongodb in cloud vm
-- add section at the end for missing features, bugs, future enahncements
-- Licensing information? MIT?
-- add contribution guidelines
-- add ne availability merge endpoint to api documentation
-
-#
-#
-#
-#
-
 <picture>
   <source srcset="assets/stroodle-logo-white.png" media="(prefers-color-scheme: dark)">
   <img src="assets/stroodle-logo.png" alt="Stroodle Logo">

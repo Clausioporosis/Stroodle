@@ -1,6 +1,5 @@
 package com.stroodle.backend.service;
 
-import com.stroodle.backend.exception.ResourceNotFoundException;
 import com.stroodle.backend.model.Availability;
 import com.stroodle.backend.repository.AvailabilityRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
