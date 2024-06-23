@@ -408,7 +408,7 @@ const WeekView: React.FC<WeekViewProps> = ({
         const weekday = Object.values(Weekday)[weekdayIndex];
 
         const newAvailabilityEntry: CalendarEvent = {
-            id: uuidv4(),
+            id: 'availability',
             display: 'background',
             color: 'green',
             startTime: startTime,

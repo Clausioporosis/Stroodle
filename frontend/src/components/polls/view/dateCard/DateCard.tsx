@@ -15,21 +15,31 @@ interface DateCardProps {
     onDateClick: () => void;
 }
 
+
+
 const DateCard: React.FC<DateCardProps> = ({ proposedDate, isOrganizer, onDateClick, isActive = false, isMostVotedDate, matchesAvailability: isAvailable, matchesIcsEvent, icsEventTitle }) => {
     const cardRef = useRef<HTMLDivElement>(null);
+    const tooltipInstanceRef = useRef<any>(null);
 
     useEffect(() => {
-        if (matchesIcsEvent && cardRef.current) {
-            tippy(cardRef.current, {
-                content: `<div style="text-align: center;"><strong>Konflikt mit Kalenderereignis:</strong><br/>${icsEventTitle}</div>`,
-                allowHTML: true,
-                theme: 'conflicting-date',
-            });
-        } else if (isAvailable && cardRef.current) {
-            tippy(cardRef.current, {
-                content: 'Verfügbar',
-                theme: 'available-date',
-            });
+        if (cardRef.current) {
+            if (tooltipInstanceRef.current) {
+                tooltipInstanceRef.current.destroy();
+                tooltipInstanceRef.current = null;
+            }
+
+            if (matchesIcsEvent) {
+                tooltipInstanceRef.current = tippy(cardRef.current, {
+                    content: `<div style="text-align: center;"><strong>Konflikt mit Kalenderereignis:</strong><br/>${icsEventTitle}</div>`,
+                    allowHTML: true,
+                    theme: 'conflicting-date',
+                });
+            } else if (isAvailable) {
+                tooltipInstanceRef.current = tippy(cardRef.current, {
+                    content: 'Verfügbar',
+                    theme: 'available-date',
+                });
+            }
         }
     }, [isAvailable, matchesIcsEvent, icsEventTitle]);
 

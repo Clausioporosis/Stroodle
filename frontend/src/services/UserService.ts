@@ -67,6 +67,9 @@ class UserService {
             const response = await this.handleRequest(apiClient.get(`users/${userId}/availability`, {
                 headers: this.getAuthHeader()
             }));
+            if (!response) {
+                return {} as Availability;
+            }
             return response.availability as Availability;
         } catch (error: any) {
             if (error.response?.status === 404) {
