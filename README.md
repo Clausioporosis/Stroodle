@@ -1246,7 +1246,7 @@ jobs:
    ```
 
 ### Continuous Integration
-Continuous Integration (CI) is an essential practice that will be set up to automatically test and validate changes before deployment. 
+The Continuous Integration (CI) is set up to automatically test and validate changes before deployment. 
 
 ```yaml
 name: Continuous Integration
