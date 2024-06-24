@@ -60,20 +60,14 @@ Welcome to the Stroodle documentation! The Table of Contents will guide you thro
     - [Dockerfiles](#dockerfiles)
     - [Running the Application with Docker](#running-the-application-with-docker)
     - [Common Docker Commands](#common-docker-commands)
-8. [Testing](#testing)
-    - [Frontend Testing](#frontend-testing)
-        - [Manual Testing](#manual-testing)
-    - [Backend Testing](#backend-testing)
-        - [Unit Tests](#unit-tests)
-        - [Integration Tests](#integration-tests)
-9. [Deployment](#deployment)
+8. [Deployment](#deployment)
     - [Providers](#providers)
        - [bwCloud](#bwcloud)
        - [IONOS](#ionos)
     - [Setup](#setup)
        - [Cloud VM's](#cloud-vms)
        - [Proxy](#proxy)
-10. [CI/CD Pipeline](#cicd-pipeline)
+9. [CI/CD Pipeline](#cicd-pipeline)
     - [Overview](#overview)
     - [Continuous Deployment](#continuous-deployment)
     - [Continuous Integration](#continuous-integration)
@@ -926,28 +920,6 @@ The instructions for running the application with Docker have already been detai
   docker-compose logs
   ```
 
-## Testing  <a name="testing"></a> <img src="assets/stroodle-logo-basic.png" width="25px" align="right">
-
-### Frontend Testing
-
-[MISSING TEXT!]
-
-#### Manual Testing
-
-[MISSING TEXT!]
-
-### Backend Testing
-
-[MISSING TEXT!]
-
-#### Unit Tests
-
-[MISSING TEXT!]
-
-#### Integration Tests
-
-[MISSING TEXT!]
-
 ## Deployment  <a name="deployment"></a> <img src="assets/stroodle-logo-basic.png" width="25px" align="right">
 
 ### Providers
@@ -1201,9 +1173,7 @@ To create a symbolic link between the configuration files and /etc/nginx/sites-e
 The CI/CD pipeline is set up to streamline the process of deploying changes to the Debian server. This ensures that the application is continuously deployed with the latest changes from the main branch. The CI is not yet set up, but the CD is fully operational.
 
 ### Continuous Deployment
-The Continuous Deployment (CD) is already set up and configured to deploy changes to a Debian server whenever there is a push to the main branch.
-
-#### Deployment Workflow (.github/workflows/deploy.yml)
+The Continuous Deployment (CD) is configured to deploy changes to a Debian server whenever there is a push to the main branch.
 
 ```yaml
 name: Deploy to Debian Server
@@ -1276,4 +1246,43 @@ jobs:
    ```
 
 ### Continuous Integration
-The Continuous Integration (CI) pipeline is not yet set up. Once set up, it will include steps to automatically test and validate changes before deployment.
+Continuous Integration (CI) is an essential practice that will be set up to automatically test and validate changes before deployment. 
+
+```yaml
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Cache Maven packages
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+
+    - name: Set up Maven
+      run: mvn -B -f ./backend/pom.xml dependency:resolve
+
+    - name: Run unit tests
+      run: mvn -B -f ./backend/pom.xml test
+```
