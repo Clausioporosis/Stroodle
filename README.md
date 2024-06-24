@@ -60,20 +60,14 @@ Welcome to the Stroodle documentation! The Table of Contents will guide you thro
     - [Dockerfiles](#dockerfiles)
     - [Running the Application with Docker](#running-the-application-with-docker)
     - [Common Docker Commands](#common-docker-commands)
-8. [Testing](#testing)
-    - [Frontend Testing](#frontend-testing)
-        - [Manual Testing](#manual-testing)
-    - [Backend Testing](#backend-testing)
-        - [Unit Tests](#unit-tests)
-        - [Integration Tests](#integration-tests)
-9. [Deployment](#deployment)
+8. [Deployment](#deployment)
     - [Providers](#providers)
        - [bwCloud](#bwcloud)
        - [IONOS](#ionos)
     - [Setup](#setup)
        - [Cloud VM's](#cloud-vms)
        - [Proxy](#proxy)
-10. [CI/CD Pipeline](#cicd-pipeline)
+9. [CI/CD Pipeline](#cicd-pipeline)
     - [Overview](#overview)
     - [Continuous Deployment](#continuous-deployment)
     - [Continuous Integration](#continuous-integration)
@@ -925,28 +919,6 @@ The instructions for running the application with Docker have already been detai
   ```sh
   docker-compose logs
   ```
-
-## Testing  <a name="testing"></a> <img src="assets/stroodle-logo-basic.png" width="25px" align="right">
-
-### Frontend Testing
-
-[MISSING TEXT!]
-
-#### Manual Testing
-
-[MISSING TEXT!]
-
-### Backend Testing
-
-[MISSING TEXT!]
-
-#### Unit Tests
-
-[MISSING TEXT!]
-
-#### Integration Tests
-
-[MISSING TEXT!]
 
 ## Deployment  <a name="deployment"></a> <img src="assets/stroodle-logo-basic.png" width="25px" align="right">
 
